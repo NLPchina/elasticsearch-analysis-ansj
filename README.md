@@ -6,49 +6,28 @@
 
 * 第一步，你要有一个`elasticsearch`的服务器(废话)
 
-* 第二步，把代码clone到本地(抱歉，我不会plugin安装，谁会教我)
+* 第二步，把代码clone到本地
 
-* 第三步，mvn clean package(这是啥？我也不知道)
+* 第三步，mvn clean assembly:assembly(破maven。今天把我整崩溃了。发誓以后能不用maven发布项目就不用了。受不了这个破玩意)
 
-* 第四步，进入$Project_Home/target/releases/，并将里面的压缩包解开，不要问我为啥还要有个zip包
+* 第四步，进入$Project_Home/target/ 目录，
 
-* 第五步，将解压开的文件夹内的analysis-ansj拷贝至$ES_HOME/plugins目录下
+* 第五步，拷贝$Project_Home/target/elasticsearch-analysis-ansj-0.1-jar-with-dependencies.jar 到es的lib目录中
 
-* 第六步，将解压开的文件夹内的ansj拷贝至$ES_HOME/config目录下 
+* 第六步，将$Project_Home/target/config目录合并到es中的config目录
 
-* 第七步，配置分词插件(下面的是示例)
+* 第七步，配置分词插件，将下面配置粘贴到，es下config/elasticsearch.yml 文件末尾。
 ```javascript
-index:
-  analysis:
-    analyzer:
-      index_ansj:
-          alias: [ansj_index_analyzer]
-          type: ansj_index
-          user_path: ansj/user
-          ambiguity: ansj/ambiguity.dic
-          stop_path: ansj/stopLibrary.dic
-          redis:
-              pool:
-                  maxactive: 20
-                  maxidle: 10
-                  maxwait: 100
-                  testonborrow: true
-              ip: publish.redis.master.yao.com:6379
-              channel: ansj_term
-      query_ansj:
-          alias: [ansj_query_analyzer]
-          type: ansj_query
-          user_path: ansj/user
-          ambiguity: ansj/ambiguity.dic
-          stop_path: ansj/stopLibrary.dic
-          redis:
-              pool:
-                  maxactive: 20
-                  maxidle: 10
-                  maxwait: 100
-                  testonborrow: true
-              ip: publish.redis.master.yao.com:6379
-              channel: ansj_term
+################################## ANSJ PLUG CONFIG ################################
+index.analysis.analyzer.default.type : org.ansj.elasticsearch.index.analysis.AnsjIndexAnalyzerProvider
+#是否提取词干默认为false
+ansj_pstemming : false
+#用户自定义辞典。如果是目录的话辞典文件必须以dic结尾
+ansj_user_path : library/default.dic
+#歧义排错
+ansj_ambiguity : library/ambiguity.dic
+#停用词辞典路径
+stop_path : library/stop.dic
 ```
 以上配置中redis并不是必需的，user_path可以是一个目录。
 如果使用redis功能，请确认一下，在user_path下有ext.dic这个文件
