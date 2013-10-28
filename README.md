@@ -72,13 +72,26 @@ curl -XGET http://host:9200/_analyze?analyzer=query_ansj&text=视康 隐形眼�
 然后通过redis发布一个新词看看
 ```
 redis-cli
-publish ansj_term c:视康
+publish ansj_term u:c:视康
 
 ```
 是不是分词发生了变化
 ```
 redis-cli
-publish ansj_term d:视康
+publish ansj_term u:d:视康
+```
+又回来了
+
+然后通过redis发布一个歧义词
+```
+redis-cli
+publish ansj_term a:c:减肥瘦身-减肥,nr,瘦身,v
+
+```
+是不是分词发生了变化
+```
+redis-cli
+publish ansj_term a:d:减肥瘦身
 ```
 又回来了
 
