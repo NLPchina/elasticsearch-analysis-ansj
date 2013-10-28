@@ -13,7 +13,6 @@ public class AnsjAnalysisBinderProcessor extends AnalysisModule.AnalysisBinderPr
 
     @Override
     public void processAnalyzers(AnalyzersBindings analyzersBindings) {
-        System.out.println("aaaa");
         analyzersBindings.processAnalyzer("ansj_index", AnsjIndexAnalyzerProvider.class);
         analyzersBindings.processAnalyzer("ansj_query", AnsjQueryAnalyzerProvider.class);
         super.processAnalyzers(analyzersBindings);
@@ -21,7 +20,7 @@ public class AnsjAnalysisBinderProcessor extends AnalysisModule.AnalysisBinderPr
 
     @Override
     public void processTokenizers(TokenizersBindings tokenizersBindings) {
-        //      tokenizersBindings.processTokenizer("ansj", AnsjTokenizerFactory.class);
-        //      super.processTokenizers(tokenizersBindings);
+//		tokenizersBindings.processTokenizer("ansj_index", AnsjTokenizerFactory.class);
+//		super.processTokenizers(tokenizersBindings);
     }
 }

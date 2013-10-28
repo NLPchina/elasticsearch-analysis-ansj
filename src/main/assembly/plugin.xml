@@ -9,8 +9,8 @@
     </formats>
     <fileSets>  
         <fileSet>  
-            <directory>${project.basedir}\src\main\ansj</directory>  
-            <outputDirectory>\ansj</outputDirectory>  
+            <directory>${project.basedir}/src/main/ansj</directory>  
+            <outputDirectory>/ansj</outputDirectory>  
         </fileSet>  
     </fileSets>
     <dependencySets>

@@ -11,7 +11,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<elasticsearch.version>0.90.5</elasticsearch.version>
+		<elasticsearch.version>0.90.2</elasticsearch.version>
 	</properties>
 
 	<repositories>
@@ -38,6 +38,14 @@
 		</dependency>
 
 		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.0.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
 			<version>${elasticsearch.version}</version>
@@ -60,43 +68,48 @@
 
 	</dependencies>
 	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resource</directory>
-			</resource>
-		</resources>
+		
 
 		<plugins>
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-			</plugin>
-
-
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<tasks>
-						<mkdir dir="target/config/" />
-						<copy todir="target/config/">
-							<fileset dir="src/main/resources/"></fileset>
-						</copy>
-					</tasks>
-				</configuration>
-			</plugin>
-
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/releases/</outputDirectory>
+                    <descriptors>
+                        <descriptor>${basedir}/src/main/assembly/plugin.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 </project>
