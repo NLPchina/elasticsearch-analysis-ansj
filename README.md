@@ -56,6 +56,15 @@ index:
 以上配置中redis并不是必需的，user_path可以是一个目录，注释了的都具有默认值，可不配置
 如果使用redis功能，请确认一下，在user_path下有ext.dic这个文件
 
+如果你的log日志中出现如下字样，恭喜你，成功了。(日志在$ES_HOME/logs下，哪个文件，当然就是你的集群名称啦，知道的无视这段吧)
+```
+[2013-10-25 18:23:55,427][INFO ][ansj-analyzer            ] ansj停止词典加载完毕!
+[2013-10-25 18:24:01,509][INFO ][ansj-analyzer            ] ansj分词器预热完毕，可以使用!
+[2013-10-25 18:24:01,523][INFO ][ansj-redis-pool          ] master.redis.yao.com:6379
+[2013-10-25 18:24:01,607][INFO ][ansj-analyzer            ] redis守护线程准备完毕,ip:master.redis.yao.com:6379,port:6379,channel:ansj_term
+[2013-10-25 18:24:01,617][INFO ][ansj-redis-msg           ] subscribe channel:ansj_term and subscribedChannels:1
+```
+
 ##使用
 在mapping中，加入analyzer设置，请注意，分词和索引使用不一样的分词器
 ```javascript
