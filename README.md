@@ -30,6 +30,9 @@ index:
           #user_path: ansj/user
           #ambiguity: ansj/ambiguity.dic
           #stop_path: ansj/stopLibrary.dic
+          is_name: false #人名识别
+          #is_num: true 
+          #is_quantifier: true
           redis:
              # pool: 
               #    maxactive: 20
@@ -44,6 +47,9 @@ index:
           #user_path: ansj/user
           #ambiguity: ansj/ambiguity.dic
           #stop_path: ansj/stopLibrary.dic
+          is_name: false #人名识别
+          #is_num: true
+          #is_quantifier: true
           redis:
               #pool:
               #maxactive: 20
