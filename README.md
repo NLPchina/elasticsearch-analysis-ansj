@@ -58,7 +58,8 @@ index:
               #testonborrow: true
               ip: master.redis.yao.com:6379
               channel: ansj_term
-         
+人名识别,建议先去看看我发表的问题.http://es-bbs.medcl.net/discussion/514/onni%E9%98%BF%E9%94%AEm%E5%A4%A7%E5%BF%AB%E6%9D%A5%E7%9C%8B%E7%9C%8B%E5%90%A7%E5%85%B3%E4%BA%8Equery_string%E5%A6%82%E4%BD%95%E5%B0%86query%E5%8F%82%E6%95%B0%E5%81%9A%E4%B8%BA%E4%B8%80%E4%B8%AA%E6%95%B4%E4%BD%93%E5%BC%95%E5%8F%91%E7%9A%84%E8%A1%80%E6%A1%88%E6%8D%AE%E8%AF%B4%E6%A0%87%E9%A2%98%E8%A6%81%E9%86%92%E7%9B%AE
+如果有和我一样问题的同学，建议关闭人名识别
 以上配置中redis并不是必需的，user_path可以是一个目录，注释了的都具有默认值，可不配置
 如果使用redis功能，请确认一下，在user_path下有ext.dic这个文件
 
