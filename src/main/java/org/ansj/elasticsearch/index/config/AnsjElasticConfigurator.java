@@ -32,6 +32,9 @@ public class AnsjElasticConfigurator {
     public static String DEFAULT_USER_LIB_PATH = "ansj/user";
     public static String DEFAULT_AMB_FILE_LIB_PATH = "ansj/ambiguity.dic";
     public static String DEFAULT_STOP_FILE_LIB_PATH = "ansj/stopLibrary.dic";
+    public static boolean DEFAULT_IS_NAME_RECOGNITION = true;
+    public static boolean DEFAULT_IS_NUM_RECOGNITION = true;
+    public static boolean DEFAUT_IS_QUANTIFIE_RRECOGNITION = true;
 
     public static void init(Settings indexSettings, Settings settings) {
     	if (isLoaded()) {
@@ -100,6 +103,12 @@ public class AnsjElasticConfigurator {
         path = new File(environment.configFile(),settings.get("ambiguity",DEFAULT_AMB_FILE_LIB_PATH));
         MyStaticValue.ambiguityLibrary = path.getAbsolutePath();
         logger.debug("歧义词典路径:{}",MyStaticValue.ambiguityLibrary );
+
+        MyStaticValue.isNameRecognition = settings.getAsBoolean("is_name",DEFAULT_IS_NAME_RECOGNITION);
+
+        MyStaticValue.isNumRecognition = settings.getAsBoolean("is_num",DEFAULT_IS_NUM_RECOGNITION);
+
+        MyStaticValue.isQuantifierRecognition = settings.getAsBoolean("is_quantifier",DEFAUT_IS_QUANTIFIE_RRECOGNITION);
         
     }
 
