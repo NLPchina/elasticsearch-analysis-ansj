@@ -1,7 +1,10 @@
 ##前言
 这是一个elasticsearch的中文分词插件，基于ansj，感谢作者阿键，感谢群内热心的朋友。
 并宣传一下我们的群QQ211682609
-
+##版本对应
+plugin==>elasticsearch
+1.0.0Release==>0.90.2
+master==>1.0.0
 ##插件安装
 
 * 第一步，你要有一个`elasticsearch`的服务器(废话)
