@@ -4,14 +4,14 @@
 
 	<groupId>org.ansj</groupId>
 	<artifactId>elasticsearch-analysis-ansj</artifactId>
-	<version>0.1</version>
+	<version>0.2</version>
 
 	<name>elasticsearch-analysis-ansj</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<elasticsearch.version>0.90.2</elasticsearch.version>
+		<elasticsearch.version>1.0.0</elasticsearch.version>
 	</properties>
 
 	<repositories>
