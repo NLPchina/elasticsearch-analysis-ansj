@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
-import love.cq.util.IOUtil;
 
 import org.ansj.elasticsearch.pubsub.redis.AddTermRedisPubSub;
 import org.ansj.elasticsearch.pubsub.redis.RedisPoolBuilder;
@@ -20,6 +19,7 @@ import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 
+import org.nlpcn.commons.lang.util.IOUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -42,7 +42,10 @@ public class AnsjElasticConfigurator {
 		}
     	environment  =new Environment(indexSettings);
         initConfigPath(settings);
-        loadFilter(settings);
+        boolean enabledStopFilter = settings.getAsBoolean("enabled_stop_filter", false);
+        if(enabledStopFilter) {
+            loadFilter(settings);
+        }
         try{
         	preheat();
         	logger.info("ansj分词器预热完毕，可以使用!");

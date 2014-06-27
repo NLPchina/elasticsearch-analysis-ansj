@@ -1,12 +1,13 @@
 package org.ansj.elasticsearch.pubsub.redis;
 
-import love.cq.domain.Value;
-import love.cq.library.Library;
+
 
 import org.ansj.library.UserDefineLibrary;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.Loggers;
 
+import org.nlpcn.commons.lang.tire.domain.Value;
+import org.nlpcn.commons.lang.tire.library.Library;
 import redis.clients.jedis.JedisPubSub;
 
 public class AddTermRedisPubSub extends JedisPubSub {
