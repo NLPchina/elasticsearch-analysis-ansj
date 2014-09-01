@@ -22,7 +22,9 @@ master==>1.0.0
 * 第七步    将解压后的ansj拷贝到$ES_HOME/config目录下
 
 * 第七步，配置分词插件，将下面配置粘贴到，es下config/elasticsearch.yml 文件末尾。
-```javascript
+
+
+```yaml
 ################################## ANSJ PLUG CONFIG ################################
 index:
   analysis:
@@ -61,12 +63,17 @@ index:
               #testonborrow: true
               ip: master.redis.yao.com:6379
               channel: ansj_term
+              
+              
+              
 人名识别,建议先去看看我发表的问题.http://es-bbs.medcl.net/discussion/514/onni%E9%98%BF%E9%94%AEm%E5%A4%A7%E5%BF%AB%E6%9D%A5%E7%9C%8B%E7%9C%8B%E5%90%A7%E5%85%B3%E4%BA%8Equery_string%E5%A6%82%E4%BD%95%E5%B0%86query%E5%8F%82%E6%95%B0%E5%81%9A%E4%B8%BA%E4%B8%80%E4%B8%AA%E6%95%B4%E4%BD%93%E5%BC%95%E5%8F%91%E7%9A%84%E8%A1%80%E6%A1%88%E6%8D%AE%E8%AF%B4%E6%A0%87%E9%A2%98%E8%A6%81%E9%86%92%E7%9B%AE
+
 如果有和我一样问题的同学，建议关闭人名识别
 以上配置中redis并不是必需的，user_path可以是一个目录，注释了的都具有默认值，可不配置
 如果使用redis功能，请确认一下，在user_path下有ext.dic这个文件
 
 如果你的log日志中出现如下字样，恭喜你，成功了。(日志在$ES_HOME/logs下，哪个文件，当然就是你的集群名称啦，知道的无视这段吧)
+
 ```
 [2013-10-25 18:23:55,427][INFO ][ansj-analyzer            ] ansj停止词典加载完毕!
 [2013-10-25 18:24:01,509][INFO ][ansj-analyzer            ] ansj分词器预热完毕，可以使用!
@@ -77,6 +84,7 @@ index:
 
 ##使用
 在mapping中，加入analyzer设置，请注意，分词和索引使用不一样的分词器
+
 ```javascript
 "byName": {
   "type": "string",
