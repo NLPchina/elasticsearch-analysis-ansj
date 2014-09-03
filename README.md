@@ -5,9 +5,9 @@
 
 ##版本对应
 
-plugin==>elasticsearch
-1.0.0Release==>0.90.2
-master==>1.0.0
+- plugin        ==>     elasticsearch
+- 1.0.0Release  ==>     0.90.2
+- master        ==>     1.0.0
 
 ##插件安装
 
@@ -27,46 +27,74 @@ master==>1.0.0
 
 * 第七步，配置分词插件，将下面配置粘贴到，es下config/elasticsearch.yml 文件末尾。
 
-
+配置文件样例:
 ```yaml
 ################################## ANSJ PLUG CONFIG ################################
-index:
-  analysis:
-    analyzer:
-      index_ansj:
-          alias: [ansj_index_analyzer]
-          type: ansj_index
-          #user_path: ansj/user
-          #ambiguity: ansj/ambiguity.dic
-          #stop_path: ansj/stopLibrary.dic
-          is_name: false #人名识别
-          #is_num: true 
-          #is_quantifier: true
-          redis:
-             # pool: 
-              #    maxactive: 20
-               #   maxidle: 10
-                #  maxwait: 100
-                 # testonborrow: true
-              ip: master.redis.yao.com:6379
-              channel: ansj_term
-      query_ansj:
-          alias: [ansj_index_analyzer]
-          type: ansj_query
-          #user_path: ansj/user
-          #ambiguity: ansj/ambiguity.dic
-          #stop_path: ansj/stopLibrary.dic
-          is_name: false #人名识别
-          #is_num: true
-          #is_quantifier: true
-          redis:
-              #pool:
-              #maxactive: 20
-              #maxidle: 10
-              #maxwait: 100
-              #testonborrow: true
-              ip: master.redis.yao.com:6379
-              channel: ansj_term
+ndex:
+   analysis:
+     analyzer:
+       index_ansj:
+           alias: [ansj_index_analyzer]
+           type: ansj_index
+           is_name: false
+           redis:
+               pool:
+                   maxactive: 20
+                   maxidle: 10
+                   maxwait: 100
+                   testonborrow: true
+               ip: master.redis.yao.com:6379
+               channel: ansj_term
+       query_ansj:
+           alias: [ansj_query_analyzer]
+           type: ansj_query
+           is_name: false
+           redis:
+               pool:
+                   maxactive: 20
+                   maxidle: 10
+                   maxwait: 100
+                   testonborrow: true
+               ip: master.redis.yao.com:6379
+               channel: ansj_term
+       customer_ansj_index:
+           tokenizer: index_ansj_token
+           filter: [sysfilter]
+       customer_ansj_query:
+           tokenizer: query_ansj_token
+           filter: [sysfilter]
+     tokenizer:
+        index_ansj_token:
+            type: ansj_index_token
+            is_name: false
+            is_num: false
+            is_quantifier: false
+            redis:
+                pool:
+                    maxactive: 20
+                    maxidle: 10
+                    maxwait: 100
+                    testonborrow: true
+                ip: master.redis.yao.com:6379
+                channel: ansj_term
+        query_ansj_token:
+            type: ansj_query_token
+            is_name: false
+            is_num: false
+            is_quantifier: false
+            redis:
+                pool:
+                    maxactive: 20
+                    maxidle: 10
+                    maxwait: 100
+                    testonborrow: true
+                ip: master.redis.yao.com:6379
+                channel: ansj_term
+      filter:
+        sysfilter:
+            type: synonym
+            synonyms:
+                - 片,颗 =>粒
 ```
 
 人名识别,建议先去看看我发表的[问题](http://es-bbs.medcl.net/discussion/514/onni%E9%98%BF%E9%94%AEm%E5%A4%A7%E5%BF%AB%E6%9D%A5%E7%9C%8B%E7%9C%8B%E5%90%A7%E5%85%B3%E4%BA%8Equery_string%E5%A6%82%E4%BD%95%E5%B0%86query%E5%8F%82%E6%95%B0%E5%81%9A%E4%B8%BA%E4%B8%80%E4%B8%AA%E6%95%B4%E4%BD%93%E5%BC%95%E5%8F%91%E7%9A%84%E8%A1%80%E6%A1%88%E6%8D%AE%E8%AF%B4%E6%A0%87%E9%A2%98%E8%A6%81%E9%86%92%E7%9B%AE)
@@ -88,14 +116,19 @@ index:
 
 ##使用
 
-在mapping中，加入analyzer设置，请注意，分词和索引使用不一样的分词器
+在mapping中，加入analyzer设置和tokenizer设置，请注意，分词和索引使用不一样的分词器
 
 ```javascript
 "byName": {
   "type": "string",
   "index_analyzer": "index_ansj",
   "search_analyzer": "query_ansj"
-}
+},
+"name": {
+  "type": "string",
+  "index_analyzer": "customer_ansj_index",
+  "search_analyzer": "customer_ansj_query"
+},
 ```
 
 可以使用分词器测试接口还看到效果:
