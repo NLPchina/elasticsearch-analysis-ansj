@@ -30,5 +30,5 @@ public class AnsjTokenizerFactory extends AbstractTokenizerFactory {
 	public Tokenizer create(Reader reader) {
 		return new AnsjTokenizer(new IndexAnalysis(new BufferedReader(reader)), reader, filter, pstemming);
 	}
-	  
+
 }
