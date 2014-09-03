@@ -7,7 +7,6 @@ import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.filter
 import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.init;
 import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.pstemming;
 
-import love.cq.domain.Forest;
 import org.ansj.lucene.util.AnsjTokenizer;
 import org.ansj.splitWord.analysis.IndexAnalysis;
 import org.apache.lucene.analysis.Tokenizer;
