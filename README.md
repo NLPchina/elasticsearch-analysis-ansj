@@ -1,6 +1,6 @@
 ##前言
 
-这是一个elasticsearch的中文分词插件，基于ansj，感谢作者阿键，感谢群内热心的朋友。
+这是一个elasticsearch的中文分词插件，基于ansj，感谢本人，感谢群内热心的朋友。
 并宣传一下我们的群QQ211682609
 
 ##版本对应
@@ -9,7 +9,23 @@
 - 1.0.0Release  ==>     0.90.2
 - master        ==>     1.0.0
 
+
+==========
+
 ##插件安装
+
+进入Elasticsearch目录运行如下命令 
+
+````
+./bin/plugin -u http://maven.ansj.org/org/ansj/elasticsearch-analysis-ansj/1.x.1/elasticsearch-analysis-ansj-1.x.1-release.zip -i ansj
+````
+
+##下载安装
+
+进入[http://maven.ansj.org/org/ansj/elasticsearch-analysis-ansj/](http://maven.ansj.org/org/ansj/elasticsearch-analysis-ansj/) 直接下 载zip包解压到plugin目录下..
+
+
+##编译安装
 
 * 第一步，你要有一个`elasticsearch`的服务器(废话)
 
@@ -26,6 +42,12 @@
 * 第七步    将解压后的ansj拷贝到$ES_HOME/config目录下
 
 * 第七步，配置分词插件，将下面配置粘贴到，es下config/elasticsearch.yml 文件末尾。
+
+
+
+==========
+
+##分词文件配置:
 
 配置文件样例:
 ```yaml
