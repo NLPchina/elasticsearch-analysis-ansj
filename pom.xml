@@ -4,7 +4,7 @@
 
     <groupId>org.ansj</groupId>
     <artifactId>elasticsearch-analysis-ansj</artifactId>
-    <version>0.2</version>
+    <version>1.x.1</version>
 
     <name>elasticsearch-analysis-ansj</name>
     <url>http://maven.apache.org</url>
@@ -20,6 +20,13 @@
             <url>http://maven.ansj.org/</url>
         </repository>
     </repositories>
+    
+    <distributionManagement>
+		<repository>
+			<id>mvn-repo</id>
+			<url>scpexe://ansj/home/mvn-repo/ROOT</url>
+		</repository>
+	</distributionManagement>
 
     <dependencies>
 
@@ -34,7 +41,7 @@
             <groupId>org.ansj</groupId>
             <artifactId>ansj_seg</artifactId>
             <classifier>min</classifier>
-            <version>2.0.3</version>
+            <version>2.0.7</version>
             <scope>compile</scope>
         </dependency>
 
@@ -119,5 +126,13 @@
                 </executions>
             </plugin>
         </plugins>
+        
+        <extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh-external</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
     </build>
 </project>
