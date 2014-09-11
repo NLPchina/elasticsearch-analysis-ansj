@@ -9,13 +9,13 @@
     </formats>
     <fileSets>  
         <fileSet>  
-            <directory>${project.basedir}/src/main/ansj</directory>  
-            <outputDirectory>/ansj</outputDirectory>  
+            <directory>${project.basedir}/src/main/dic</directory>  
+            <outputDirectory>/dic</outputDirectory>  
         </fileSet>  
     </fileSets>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>/analysis-ansj</outputDirectory>
+            <outputDirectory>/lib</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <excludes>
                 <exclude>org.elasticsearch:elasticsearch</exclude>

@@ -1,7 +1,13 @@
 package org.ansj.elasticsearch.index.tokenizer;
 
+import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.filter;
+import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.init;
+import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.pstemming;
+
+import java.io.BufferedReader;
+import java.io.Reader;
+
 import org.ansj.lucene.util.AnsjTokenizer;
-import org.ansj.splitWord.analysis.IndexAnalysis;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.inject.Inject;
@@ -10,13 +16,6 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.Index;
 import org.elasticsearch.index.analysis.AbstractTokenizerFactory;
 import org.elasticsearch.index.settings.IndexSettings;
-
-import java.io.BufferedReader;
-import java.io.Reader;
-
-import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.filter;
-import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.init;
-import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.pstemming;
 
 /**
  * Created by zhangqinghua on 14-9-3.
