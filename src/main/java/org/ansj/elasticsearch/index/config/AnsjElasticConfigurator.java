@@ -29,9 +29,9 @@ public class AnsjElasticConfigurator {
     public static Set<String> filter;
     public static boolean pstemming = false;
     public static Environment environment;
-    public static String DEFAULT_USER_LIB_PATH = "dic/user";
-    public static String DEFAULT_AMB_FILE_LIB_PATH = "dic/ambiguity.dic";
-    public static String DEFAULT_STOP_FILE_LIB_PATH = "dic/stopLibrary.dic";
+    public static String DEFAULT_USER_LIB_PATH = "ansj/dic/user";
+    public static String DEFAULT_AMB_FILE_LIB_PATH = "ansj/dic/ambiguity.dic";
+    public static String DEFAULT_STOP_FILE_LIB_PATH = "ansj/dic/stopLibrary.dic";
     public static boolean DEFAULT_IS_NAME_RECOGNITION = true;
     public static boolean DEFAULT_IS_NUM_RECOGNITION = true;
     public static boolean DEFAUT_IS_QUANTIFIE_RRECOGNITION = true;
@@ -99,11 +99,11 @@ public class AnsjElasticConfigurator {
         //是否提取词干
         pstemming = settings.getAsBoolean("pstemming", false);
         //用户自定义辞典
-        File path = new File(environment.configFile(),settings.get("user_path",DEFAULT_USER_LIB_PATH));
+        File path = new File(environment.pluginsFile(),settings.get("user_path",DEFAULT_USER_LIB_PATH));
         MyStaticValue.userLibrary = path.getAbsolutePath();
         logger.debug("用户词典路径:{}",MyStaticValue.userLibrary );
         //用户自定义辞典
-        path = new File(environment.configFile(),settings.get("ambiguity",DEFAULT_AMB_FILE_LIB_PATH));
+        path = new File(environment.pluginsFile(),settings.get("ambiguity",DEFAULT_AMB_FILE_LIB_PATH));
         MyStaticValue.ambiguityLibrary = path.getAbsolutePath();
         logger.debug("歧义词典路径:{}",MyStaticValue.ambiguityLibrary );
 

@@ -39,7 +39,7 @@
 
 * 第六步，将解压后的analysis-ansj拷贝到$ES_HOME/plugins目录下
 
-* 第七步    将解压后的ansj拷贝到$ES_HOME/config目录下
+* 第七步    将解压后的dic文件夹拷贝到$ES_HOME/config目录下
 
 * 第七步，配置分词插件，将下面配置粘贴到，es下config/elasticsearch.yml 文件末尾。
 
