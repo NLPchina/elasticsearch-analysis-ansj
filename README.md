@@ -66,7 +66,7 @@ index.analysis.analyzer.default.type: ansj_index
 ```
 
 
-#####全功能配置:
+#####高级配置:
 ```yaml
 ################################## ANSJ PLUG CONFIG ################################
 index:
@@ -155,6 +155,22 @@ index:
 
 ##使用
 
+## 测试
+可以使用分词器测试接口还看到效果:
+
+* 索引分词
+
+```
+curl -XGET http://host:9200/[index]/_analyze?analyzer=ansj_index&text=%E5%8C%97%E4%BA%AC%E9%A6%96%E9%83%BD%E6%9C%BA%E5%9C%BA%E5%8D%97%E8%B7%AF
+```
+
+* 查询分词
+ 
+````
+curl -XGET http://[host]:9200/[index]/_analyze?analyzer=ansj_query&text=%E5%8C%97%E4%BA%AC%E9%A6%96%E9%83%BD%E6%9C%BA%E5%9C%BA%E5%8D%97%E8%B7%AF
+`````
+
+
 在mapping中，加入analyzer设置和tokenizer设置，请注意，分词和索引使用不一样的分词器
 
 ```javascript
@@ -169,22 +185,6 @@ index:
   "search_analyzer": "customer_ansj_query"
 },
 ```
-
-
-## 测试
-可以使用分词器测试接口还看到效果:
-
-* 索引分词
-
-```
-curl -XGET http://127.0.0.1:9200/doc/_analyze?analyzer=ansj_index&text=%E5%8C%97%E4%BA%AC%E9%A6%96%E9%83%BD%E6%9C%BA%E5%9C%BA%E5%8D%97%E8%B7%AF
-```
-
-* 查询分词
- 
-````
-curl -XGET http://127.0.0.1:9200/doc/_analyze?analyzer=ansj_query&text=%E5%8C%97%E4%BA%AC%E9%A6%96%E9%83%BD%E6%9C%BA%E5%9C%BA%E5%8D%97%E8%B7%AF
-`````
 
 然后通过redis发布一个新词看看
 
