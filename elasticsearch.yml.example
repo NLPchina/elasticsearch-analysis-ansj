@@ -1,0 +1,65 @@
+index:
+  analysis:
+    analyzer:
+      index_ansj:
+        alias: [ansj_index_analyzer]
+        type: ansj_index
+        is_name: false
+        redis:
+          pool:
+            maxactive: 20
+            maxidle: 10
+            maxwait: 100
+            testonborrow: true
+          ip: master.redis.yao.com:6379
+          channel: ansj_term
+      query_ansj:
+        alias: [ansj_query_analyzer]
+        type: ansj_query
+        is_name: false
+        redis:
+          pool:
+            maxactive: 20
+            maxidle: 10
+            maxwait: 100
+            testonborrow: true
+          ip: master.redis.yao.com:6379
+          channel: ansj_term
+      customer_ansj_index:
+        tokenizer: index_ansj_token
+        filter: [sysfilter]
+      customer_ansj_query:
+        tokenizer: query_ansj_token
+        filter: [sysfilter]
+    tokenizer:
+      index_ansj_token:
+        type: ansj_index_token
+        is_name: false
+        is_num: false
+        is_quantifier: false
+        redis:
+          pool:
+            maxactive: 20
+            maxidle: 10
+            maxwait: 100
+            testonborrow: true
+          ip: master.redis.yao.com:6379
+          channel: ansj_term
+      query_ansj_token:
+        type: ansj_query_token
+        is_name: false
+        is_num: false
+        is_quantifier: false
+        redis:
+          pool:
+            maxactive: 20
+            maxidle: 10
+            maxwait: 100
+            testonborrow: true
+          ip: master.redis.yao.com:6379
+          channel: ansj_term
+    filter:
+      sysfilter:
+        type: synonym
+        synonyms:
+          - 片,颗 =>粒
