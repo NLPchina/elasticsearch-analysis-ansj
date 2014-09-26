@@ -45,19 +45,19 @@ index:
             testonborrow: true
           ip: master.redis.yao.com:6379
           channel: ansj_term
-        query_ansj_token:
-          type: ansj_query_token
-          is_name: false
-          is_num: false
-          is_quantifier: false
-          redis:
-            pool:
-              maxactive: 20
-              maxidle: 10
-              maxwait: 100
-              testonborrow: true
-            ip: master.redis.yao.com:6379
-            channel: ansj_term
+      query_ansj_token:
+        type: ansj_query_token
+        is_name: false
+        is_num: false
+        is_quantifier: false
+        redis:
+          pool:
+            maxactive: 20
+            maxidle: 10
+            maxwait: 100
+            testonborrow: true
+          ip: master.redis.yao.com:6379
+          channel: ansj_term
     filter:
       sysfilter:
         type: synonym
