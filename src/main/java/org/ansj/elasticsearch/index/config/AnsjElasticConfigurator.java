@@ -42,7 +42,7 @@ public class AnsjElasticConfigurator {
 		}
     	environment  =new Environment(indexSettings);
         initConfigPath(settings);
-        boolean enabledStopFilter = settings.getAsBoolean("enabled_stop_filter", false);
+        boolean enabledStopFilter = settings.getAsBoolean("enabled_stop_filter", true);
         if(enabledStopFilter) {
             loadFilter(settings);
         }
