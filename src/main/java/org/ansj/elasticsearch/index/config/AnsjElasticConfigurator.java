@@ -42,7 +42,7 @@ public class AnsjElasticConfigurator {
 		}
     	environment  =new Environment(indexSettings);
         initConfigPath(settings);
-        boolean enabledStopFilter = settings.getAsBoolean("enabled_stop_filter", false);
+        boolean enabledStopFilter = settings.getAsBoolean("enabled_stop_filter", true);
         if(enabledStopFilter) {
             loadFilter(settings);
         }
@@ -123,7 +123,7 @@ public class AnsjElasticConfigurator {
             return;
         }
 
-        File stopLibrary = new File(environment.configFile(), stopLibraryPath);
+        File stopLibrary = new File(environment.pluginsFile(), stopLibraryPath);
         logger.debug("停止词典路径:{}",stopLibrary.getAbsolutePath() );
         if (!stopLibrary.isFile()) {
             logger.info("Can't find the file:" + stopLibraryPath
