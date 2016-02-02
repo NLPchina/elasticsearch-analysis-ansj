@@ -4,51 +4,42 @@
 
     <groupId>org.ansj</groupId>
     <artifactId>elasticsearch-analysis-ansj</artifactId>
-    <version>1.x.1</version>
+    <version>2.1.1</version>
 
     <name>elasticsearch-analysis-ansj</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <elasticsearch.version>1.4.5</elasticsearch.version>
+        <elasticsearch.version>2.1.1</elasticsearch.version>
     </properties>
 
     <repositories>
         <repository>
             <id>mvn-repo</id>
-            <url>http://maven.ansj.org/</url>
+            <url>http://maven.nlpcn.org/</url>
         </repository>
     </repositories>
-    
+
     <distributionManagement>
-		<repository>
-			<id>mvn-repo</id>
-			<url>scpexe://ansj/home/mvn-repo/ROOT</url>
-		</repository>
-	</distributionManagement>
+        <repository>
+            <id>mvn-repo</id>
+            <url>scpexe://ansj/home/mvn-repo/ROOT</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
-
-
-        <dependency>
-            <groupId>org.nlpcn</groupId>
-            <artifactId>nlp-lang</artifactId>
-            <version>0.2</version>
-        </dependency>
 
         <dependency>
             <groupId>org.ansj</groupId>
             <artifactId>ansj_seg</artifactId>
-            <classifier>min</classifier>
-            <version>2.0.8</version>
-            <scope>compile</scope>
+            <version>3.3</version>
         </dependency>
 
         <dependency>
             <groupId>org.ansj</groupId>
-            <artifactId>ansj_lucene4_plug</artifactId>
-            <version>2.0.2</version>
+            <artifactId>ansj_lucene5_plug</artifactId>
+            <version>3.0</version>
             <scope>compile</scope>
         </dependency>
 
@@ -83,19 +74,17 @@
 
     </dependencies>
     <build>
-
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.5</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
-           
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -114,13 +103,13 @@
                 </executions>
             </plugin>
         </plugins>
-        
+
         <extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>1.0-beta-6</version>
-			</extension>
-		</extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh-external</artifactId>
+                <version>1.0-beta-6</version>
+            </extension>
+        </extensions>
     </build>
 </project>

@@ -2,13 +2,14 @@ package org.ansj.elasticsearch.index.config;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
+import org.ansj.domain.Term;
 import org.ansj.elasticsearch.pubsub.redis.AddTermRedisPubSub;
 import org.ansj.elasticsearch.pubsub.redis.RedisPoolBuilder;
 import org.ansj.elasticsearch.pubsub.redis.RedisUtils;
@@ -24,38 +25,38 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 public class AnsjElasticConfigurator {
-    public static ESLogger logger = Loggers.getLogger("ansj-analyzer");
-    private static boolean loaded = false;
+    public static ESLogger logger = Loggers.getLogger("ansj-initializer");
+    private static volatile boolean loaded = false;
     public static Set<String> filter;
-    public static boolean pstemming = false;
     public static Environment environment;
     public static String DEFAULT_USER_LIB_PATH = "ansj/dic/user";
     public static String DEFAULT_AMB_FILE_LIB_PATH = "ansj/dic/ambiguity.dic";
     public static String DEFAULT_STOP_FILE_LIB_PATH = "ansj/dic/stopLibrary.dic";
     public static boolean DEFAULT_IS_NAME_RECOGNITION = true;
     public static boolean DEFAULT_IS_NUM_RECOGNITION = true;
-    public static boolean DEFAUT_IS_QUANTIFIE_RRECOGNITION = true;
+    public static boolean DEFAUT_IS_QUANTIFIE_RRECOGNITION = false;
 
-    public static void init(Settings indexSettings, Settings settings) {
-    	if (isLoaded()) {
-			return;
-		}
-    	environment  =new Environment(indexSettings);
-        initConfigPath(settings);
-        boolean enabledStopFilter = settings.getAsBoolean("enabled_stop_filter", true);
+    public static void init(Settings settings,Environment env){
+        if (isLoaded()) {
+            return;
+        }
+        environment = env;
+        Settings ansjSettings = settings.getAsSettings("ansj");
+        initConfig(ansjSettings,env);
+        boolean enabledStopFilter = ansjSettings.getAsBoolean("enabled_stop_filter", true);
         if(enabledStopFilter) {
-            loadFilter(settings);
+            loadFilter(ansjSettings,env);
         }
         try{
-        	preheat();
-        	logger.info("ansj分词器预热完毕，可以使用!");
+            preheat();
+            logger.info("ansj分词器预热完毕，可以使用!");
         }catch(Exception e){
-        	logger.error("ansj分词预热失败，请检查路径");
+            logger.error("ansj分词预热失败，请检查路径");
         }
-        initRedis(settings);
+        initRedis(ansjSettings);
         setLoaded(true);
     }
-    
+
     private static void initRedis(final Settings settings) {
 		if(null==settings.get("redis.ip")){
 			logger.info("没有找到redis相关配置!");
@@ -92,58 +93,61 @@ public class AnsjElasticConfigurator {
 	}
 
     private static void preheat() {
-        ToAnalysis.parse("一个词");
+
+        List<Term> terms = ToAnalysis.parse("这是一个基于ansj的分词插件");
+        for(Term t: terms){
+            System.out.println(t);
+        }
     }
 
-    private static void initConfigPath(Settings settings) {
-        //是否提取词干
-        pstemming = settings.getAsBoolean("pstemming", false);
-        //用户自定义辞典
-        File path = new File(environment.pluginsFile(),settings.get("user_path",DEFAULT_USER_LIB_PATH));
-        MyStaticValue.userLibrary = path.getAbsolutePath();
-        logger.debug("用户词典路径:{}",MyStaticValue.userLibrary );
-        //用户自定义辞典
-        path = new File(environment.pluginsFile(),settings.get("ambiguity",DEFAULT_AMB_FILE_LIB_PATH));
-        MyStaticValue.ambiguityLibrary = path.getAbsolutePath();
-        logger.debug("歧义词典路径:{}",MyStaticValue.ambiguityLibrary );
+    private static void initConfig(Settings settings, Environment environment) {
 
-        MyStaticValue.isNameRecognition = settings.getAsBoolean("is_name",DEFAULT_IS_NAME_RECOGNITION);
+        Path path = environment.configFile().resolve(settings.get("dic_path",DEFAULT_USER_LIB_PATH));
+        MyStaticValue.userLibrary = path.toAbsolutePath().toString();
+        logger.info("用户词典路径:{}",MyStaticValue.userLibrary );
 
-        MyStaticValue.isNumRecognition = settings.getAsBoolean("is_num",DEFAULT_IS_NUM_RECOGNITION);
+        path = environment.configFile().resolve(settings.get("ambiguity_path",DEFAULT_AMB_FILE_LIB_PATH));
+        MyStaticValue.ambiguityLibrary = path.toAbsolutePath().toString();
+        logger.info("歧义词典路径:{}",MyStaticValue.ambiguityLibrary );
 
-        MyStaticValue.isQuantifierRecognition = settings.getAsBoolean("is_quantifier",DEFAUT_IS_QUANTIFIE_RRECOGNITION);
+        path = environment.configFile().resolve(settings.get("crf_model_path","ansj/dic/crf.model"));
+        MyStaticValue.crfModel = path.toAbsolutePath().toString();
+        logger.info("crfModel:{}",MyStaticValue.crfModel );
+
+        MyStaticValue.isRealName = true;
+
+        MyStaticValue.isNameRecognition = settings.getAsBoolean("enable_name_recognition",DEFAULT_IS_NAME_RECOGNITION);
+
+        MyStaticValue.isNumRecognition = settings.getAsBoolean("enable_num_recognition",DEFAULT_IS_NUM_RECOGNITION);
+
+        MyStaticValue.isQuantifierRecognition = settings.getAsBoolean("enable_quantifier_recognition",DEFAUT_IS_QUANTIFIE_RRECOGNITION);
         
     }
 
-    private static void loadFilter(Settings settings) {
-        Set<String> filters = new HashSet<String>();
+    private static void loadFilter(Settings settings, Environment environment) {
+        Set<String> filters = new HashSet<>();
         String stopLibraryPath = settings.get("stop_path",DEFAULT_STOP_FILE_LIB_PATH);
 
         if (stopLibraryPath == null) {
             return;
         }
 
-        File stopLibrary = new File(environment.pluginsFile(), stopLibraryPath);
-        logger.debug("停止词典路径:{}",stopLibrary.getAbsolutePath() );
+        File stopLibrary = new File(environment.configFile().toFile(), stopLibraryPath);
+        logger.info("停止词典路径:{}",stopLibrary.getAbsolutePath() );
         if (!stopLibrary.isFile()) {
             logger.info("Can't find the file:" + stopLibraryPath
                         + ", no such file or directory exists!");
             emptyFilter();
-            setLoaded(true);
             return;
         }
 
         BufferedReader br;
         try {
             br = IOUtil.getReader(stopLibrary.getAbsolutePath(), "UTF-8");
-            String temp = null;
+            String temp;
             while ((temp = br.readLine()) != null) {
                 filters.add(temp);
             }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -152,7 +156,7 @@ public class AnsjElasticConfigurator {
     }
 
     private static void emptyFilter() {
-        filter = new HashSet<String>();
+        filter = new HashSet<>();
     }
 
     public static boolean isLoaded() {

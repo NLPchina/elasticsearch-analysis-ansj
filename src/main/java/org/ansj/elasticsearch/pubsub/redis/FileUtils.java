@@ -21,7 +21,7 @@ public class FileUtils {
 
 	  public static void remove(String content) {
 	    try {
-	      File file = new File(AnsjElasticConfigurator.environment.configFile(), "ansj/user/ext.dic");
+	      File file = new File(AnsjElasticConfigurator.environment.configFile().toFile(), "ansj/user/ext.dic");
 	      removeFile(content, file, false);
 	    }
 	    catch (FileNotFoundException e) {
@@ -36,7 +36,7 @@ public class FileUtils {
 	  public static void append(String content)
 	  {
 	    try {
-	      File file = new File(AnsjElasticConfigurator.environment.configFile(), "ansj/user/ext.dic");
+	      File file = new File(AnsjElasticConfigurator.environment.configFile().toFile(), "ansj/user/ext.dic");
 	      appendFile(content, file);
 	    } catch (IOException e) {
 	      logger.error("read exception", e, new Object[0]);
@@ -46,7 +46,7 @@ public class FileUtils {
 
 	  public static void removeAMB(String content) {
 	    try {
-	      File file = new File(AnsjElasticConfigurator.environment.configFile(), "ansj/ambiguity.dic");
+	      File file = new File(AnsjElasticConfigurator.environment.configFile().toFile(), "ansj/ambiguity.dic");
 	      removeFile(content, file, true);
 	    }
 	    catch (FileNotFoundException e) {
@@ -61,7 +61,7 @@ public class FileUtils {
 	  public static void appendAMB(String content)
 	  {
 	    try {
-	      File file = new File(AnsjElasticConfigurator.environment.configFile(), "ansj/ambiguity.dic");
+	      File file = new File(AnsjElasticConfigurator.environment.configFile().toFile(), "ansj/ambiguity.dic");
 	      appendFile(content, file);
 	    } catch (IOException e) {
 	      logger.error("read exception", e, new Object[0]);
