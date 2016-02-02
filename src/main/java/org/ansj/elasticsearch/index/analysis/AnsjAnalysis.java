@@ -39,6 +39,10 @@ public class AnsjAnalysis {
 
         indicesAnalysisService.analyzerProviderFactories().put("query_ansj",
                 new PreBuiltAnalyzerProviderFactory("query_ansj", AnalyzerScope.GLOBAL,new AnsjAnalyzer("query")));
+        
+        indicesAnalysisService.analyzerProviderFactories().put("user_ansj",
+                new PreBuiltAnalyzerProviderFactory("user_ansj", AnalyzerScope.GLOBAL,new AnsjAnalyzer("user")));
+
 
         indicesAnalysisService.tokenizerFactories().put("index_ansj",
                 new PreBuiltTokenizerFactoryFactory(new TokenizerFactory() {
@@ -65,6 +69,21 @@ public class AnsjAnalysis {
                     public Tokenizer create() {
                         logger.info("create query_ansj tokenizer");
                         return new AnsjTokenizer(new ToAnalysis());
+                    }
+                }));
+        
+        
+        indicesAnalysisService.tokenizerFactories().put("user_ansj",
+                new PreBuiltTokenizerFactoryFactory(new TokenizerFactory() {
+                    @Override
+                    public String name() {
+                        return "user_ansj";
+                    }
+
+                    @Override
+                    public Tokenizer create() {
+                        logger.info("create user_ansj tokenizer");
+                        return new AnsjTokenizer(new UserDefineAnalysis());
                     }
                 }));
 

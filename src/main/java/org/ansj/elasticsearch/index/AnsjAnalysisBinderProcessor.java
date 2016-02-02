@@ -2,6 +2,7 @@ package org.ansj.elasticsearch.index;
 
 import org.ansj.elasticsearch.index.analysis.AnsjIndexAnalyzerProvider;
 import org.ansj.elasticsearch.index.analysis.AnsjQueryAnalyzerProvider;
+import org.ansj.elasticsearch.index.analysis.AnsjUserAnalyzerProvider;
 import org.ansj.elasticsearch.index.tokenizer.AnsjIndexTokenizerFactory;
 import org.ansj.elasticsearch.index.tokenizer.AnsjQueryTokenizerFactory;
 import org.elasticsearch.index.analysis.AnalysisModule;
@@ -17,6 +18,7 @@ public class AnsjAnalysisBinderProcessor extends AnalysisModule.AnalysisBinderPr
     public void processAnalyzers(AnalyzersBindings analyzersBindings) {
         analyzersBindings.processAnalyzer("ansj_index", AnsjIndexAnalyzerProvider.class);
         analyzersBindings.processAnalyzer("ansj_query", AnsjQueryAnalyzerProvider.class);
+        analyzersBindings.processAnalyzer("ansj_user", AnsjUserAnalyzerProvider.class);
         super.processAnalyzers(analyzersBindings);
     }
 
@@ -24,6 +26,7 @@ public class AnsjAnalysisBinderProcessor extends AnalysisModule.AnalysisBinderPr
     public void processTokenizers(TokenizersBindings tokenizersBindings) {
 		tokenizersBindings.processTokenizer("ansj_index_token", AnsjIndexTokenizerFactory.class);
         tokenizersBindings.processTokenizer("ansj_query_token", AnsjQueryTokenizerFactory.class);
+        tokenizersBindings.processTokenizer("ansj_user_token", AnsjIndexTokenizerFactory.class);
 		super.processTokenizers(tokenizersBindings);
     }
 }
