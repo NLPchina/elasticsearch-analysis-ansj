@@ -3,6 +3,7 @@ package org.ansj.elasticsearch.index.config;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +21,7 @@ import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
-
+import org.jboss.netty.channel.DefaultFileRegion;
 import org.nlpcn.commons.lang.util.IOUtil;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -124,19 +125,23 @@ public class AnsjElasticConfigurator {
         MyStaticValue.isQuantifierRecognition = settings.getAsBoolean("enable_quantifier_recognition",DEFAUT_IS_QUANTIFIE_RRECOGNITION);
         
         
+          
     	
     	//init default用户自定义词典
-		File deaultPath = new File(environment.pluginsFile().toFile(),"ansj/default.dic") ;
+		File defaultPath =  null;
     	try {
-			UserDefineLibrary.loadFile(UserDefineLibrary.FOREST, deaultPath);
-			logger.info("加载系统内置词典:{}",deaultPath.getAbsolutePath() +" 成功!");
+    		String jarPath = java.net.URLDecoder.decode(AnsjElasticConfigurator.class.getProtectionDomain().getCodeSource().getLocation().getFile(),"UTF-8") ;
+    		defaultPath = new File(new File(jarPath).getParent(),"default.dic") ;
+			UserDefineLibrary.loadFile(UserDefineLibrary.FOREST, defaultPath);
+			logger.info("加载系统内置词典:{}",defaultPath.getAbsolutePath() +" 成功!");
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("加载系统内置词典:{}",deaultPath.getAbsolutePath() +" 失败!");
+			logger.error("加载系统内置词典:{}",defaultPath +" 失败!");
 		}
 
         
     }
+    
 
     private static void loadFilter(Settings settings, Environment environment) {
         Set<String> filters = new HashSet<>();
