@@ -102,18 +102,8 @@ public class AnsjElasticConfigurator {
     }
 
     private static void initConfig(Settings settings, Environment environment) {
-    	
-    	//init default用户自定义词典
-		File deaultPath = new File(environment.pluginsFile().toFile(),DEFAULT_USER_LIB_PATH) ;
-    	try {
-			UserDefineLibrary.loadFile(UserDefineLibrary.FOREST, deaultPath);
-			logger.info("加载系统内置词典:{}",deaultPath.getAbsolutePath() +" 成功!");
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("加载系统内置词典:{}",deaultPath.getAbsolutePath() +" 失败!");
-		}
 
-        Path path = environment.configFile().resolve(settings.get("dic_path",DEFAULT_USER_LIB_PATH));
+    	Path path = environment.configFile().resolve(settings.get("dic_path",DEFAULT_USER_LIB_PATH));
         MyStaticValue.userLibrary = path.toAbsolutePath().toString();
         logger.info("用户词典路径:{}",MyStaticValue.userLibrary );
 
@@ -132,6 +122,19 @@ public class AnsjElasticConfigurator {
         MyStaticValue.isNumRecognition = settings.getAsBoolean("enable_num_recognition",DEFAULT_IS_NUM_RECOGNITION);
 
         MyStaticValue.isQuantifierRecognition = settings.getAsBoolean("enable_quantifier_recognition",DEFAUT_IS_QUANTIFIE_RRECOGNITION);
+        
+        
+    	
+    	//init default用户自定义词典
+		File deaultPath = new File(environment.pluginsFile().toFile(),"ansj/default.dic") ;
+    	try {
+			UserDefineLibrary.loadFile(UserDefineLibrary.FOREST, deaultPath);
+			logger.info("加载系统内置词典:{}",deaultPath.getAbsolutePath() +" 成功!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("加载系统内置词典:{}",deaultPath.getAbsolutePath() +" 失败!");
+		}
+
         
     }
 

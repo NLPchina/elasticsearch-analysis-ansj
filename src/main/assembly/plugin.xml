@@ -10,7 +10,7 @@
     <fileSets>  
         <fileSet>  
             <directory>${project.basedir}/src/main/dic</directory>  
-            <outputDirectory>/dic</outputDirectory>  
+            <outputDirectory>/</outputDirectory>  
         </fileSet>  
     </fileSets>
     <files>
