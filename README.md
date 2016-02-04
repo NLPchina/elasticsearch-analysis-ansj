@@ -107,7 +107,7 @@ ansj:
   ip: 10.0.85.51:6379
   channel: ansj_term ## publish时的channel名称
   write:
-    dic: "ext.dic" ##如果有使用redis的pubsub方式更新词典，默认使用
+    dic: "ext.dic" ##如果有使用redis的pubsub方式更新词典，默认使用 这个目录是相对于dic_path
 ```
 
 现在让我们配置几个分词器看看:
