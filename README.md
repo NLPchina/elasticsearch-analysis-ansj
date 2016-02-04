@@ -78,7 +78,7 @@ name		real_name		nature		offset
 
 
 
-
+ 
 现在,你的es集群已经有下面三个名字的analyzer
 
 + index_ansj (建议索引使用)
