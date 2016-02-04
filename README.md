@@ -1,6 +1,6 @@
 ##前言
 
-这是一个elasticsearch的中文分词插件，基于ansj，感谢本人，感谢群内热心的朋友。
+这是一个elasticsearch的中文分词插件，基于ansj,感谢群内热心的朋友。
 并宣传一下我们的群QQ211682609
 
 ## 版本对应
@@ -11,6 +11,18 @@
 | 1.x        |     1.x     |
 | 2.1.1        |     2.1.1     |
 | master        |     2.1.1     |
+
+
+
+##插件安装
+
+进入Elasticsearch目录运行如下命令 
+
+````
+进入es目录执行如下命令
+
+./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.1.1/elasticsearch-analysis-ansj-2.1.1-release.zip
+````
 
 
 ==========
@@ -28,23 +40,23 @@
 ```shell
 ✘  ~  curl -XGET http://127.0.0.1:9200/_cat/test/analyze\?text\=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B86%E9%A2%97\&analyzer\=customer_ansj_query\&v
 term		start_offset		end_offset		position		type
-六味  		0           		2         		0       		word
-地黄  		2           		4         		1       		word
-丸   		4           		5         		2       		word
-6   		5           		6         		3       		word
-粒   		6           		7         		4       		SYNONYM
+六味		0		2		0		word
+地黄		2		4		1		word
+丸		4		5		2		word
+6		5		6		3		word
+粒		6		7		4		SYNONYM
 ```
 
 ```shell
 ~  curl -XGET http://127.0.0.1:9200/_cat/ansj\?text\=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B86%E9%A2%97\&analyzer\=customer_ansj_query\&v
 name		real_name		nature		offset
-六味  		六味       		nz    		0
-地黄  		地黄       		n     		2
-丸   		丸        		ng    		4
-6   		6        		m     		5
-颗   		颗        		q     		6
-六味地黄		六味地黄     		nhm   		0
-地黄丸 		地黄丸      		nz    		2
+六味		六味		nz		0
+地黄		地黄		n		2
+丸		丸		ng		4
+6		6		m		5
+颗		颗		q		6
+六味地黄		六味地黄		nhm		0
+地黄丸		地黄丸		nz		2
 ```
 
 ```shell
