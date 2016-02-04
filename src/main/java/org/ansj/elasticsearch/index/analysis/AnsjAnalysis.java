@@ -53,7 +53,7 @@ public class AnsjAnalysis {
 
                     @Override
                     public Tokenizer create() {
-                        logger.info("create index_ansj tokenizer");
+                        logger.debug("create index_ansj tokenizer");
                         return new AnsjTokenizer(new IndexAnalysis());
                     }
                 }));
@@ -67,7 +67,7 @@ public class AnsjAnalysis {
 
                     @Override
                     public Tokenizer create() {
-                        logger.info("create query_ansj tokenizer");
+                        logger.debug("create query_ansj tokenizer");
                         return new AnsjTokenizer(new ToAnalysis());
                     }
                 }));
@@ -82,7 +82,7 @@ public class AnsjAnalysis {
 
                     @Override
                     public Tokenizer create() {
-                        logger.info("create user_ansj tokenizer");
+                        logger.debug("create user_ansj tokenizer");
                         return new AnsjTokenizer(new UserDefineAnalysis());
                     }
                 }));

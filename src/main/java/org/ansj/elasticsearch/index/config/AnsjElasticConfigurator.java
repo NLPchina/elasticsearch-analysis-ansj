@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -31,7 +32,9 @@ public class AnsjElasticConfigurator {
     private static volatile boolean loaded = false;
     public static Set<String> filter;
     public static Environment environment;
-    public static String DEFAULT_USER_LIB_PATH = "ansj/dic/user";
+    public static String DEFAULT_USER_LIB_PATH = "ansj/dic/user/";
+    public static String DEFAULT_REDIS_LIB_PATH = DEFAULT_USER_LIB_PATH+"ext.dic";
+    public static File REDIS_LIB_FILE = null;
     public static String DEFAULT_AMB_FILE_LIB_PATH = "ansj/dic/ambiguity.dic";
     public static String DEFAULT_STOP_FILE_LIB_PATH = "ansj/dic/stopLibrary.dic";
     public static boolean DEFAULT_IS_NAME_RECOGNITION = true;
@@ -64,7 +67,8 @@ public class AnsjElasticConfigurator {
 			logger.info("没有找到redis相关配置!");
 			return;
 		}
-		new Thread(new  Runnable() {
+        REDIS_LIB_FILE = environment.configFile().resolve(settings.get("redis.write.dic",DEFAULT_REDIS_LIB_PATH)).toFile();
+        new Thread(new  Runnable() {
 			@Override
 			public void run() {
 				RedisPoolBuilder redisPoolBuilder = new RedisPoolBuilder();
@@ -86,7 +90,8 @@ public class AnsjElasticConfigurator {
 				
 				logger.debug("pool:"+(pool==null)+",jedis:"+(jedis==null));
 				logger.info("redis守护线程准备完毕,ip:{},port:{},channel:{}",ipAndport,port,channel );
-				jedis.subscribe(new AddTermRedisPubSub(), new String[]{channel});
+                Objects.requireNonNull(jedis);
+                jedis.subscribe(new AddTermRedisPubSub(), channel);
 				RedisUtils.closeConnection(jedis);
 				
 			}
@@ -95,26 +100,24 @@ public class AnsjElasticConfigurator {
 	}
 
     private static void preheat() {
-
-        List<Term> terms = ToAnalysis.parse("这是一个基于ansj的分词插件");
-        for(Term t: terms){
-            System.out.println(t);
-        }
+        ToAnalysis.parse("这是一个基于ansj的分词插件");
     }
 
     private static void initConfig(Settings settings, Environment environment) {
 
     	Path path = environment.configFile().resolve(settings.get("dic_path",DEFAULT_USER_LIB_PATH));
         MyStaticValue.userLibrary = path.toAbsolutePath().toString();
-        logger.info("用户词典路径:{}",MyStaticValue.userLibrary );
+        logger.debug("用户词典路径:{}",MyStaticValue.userLibrary );
 
         path = environment.configFile().resolve(settings.get("ambiguity_path",DEFAULT_AMB_FILE_LIB_PATH));
         MyStaticValue.ambiguityLibrary = path.toAbsolutePath().toString();
-        logger.info("歧义词典路径:{}",MyStaticValue.ambiguityLibrary );
+        logger.debug("歧义词典路径:{}",MyStaticValue.ambiguityLibrary );
+        //todo 目前没有使用
+//        path = environment.configFile().resolve(settings.get("crf_model_path","ansj/dic/crf.model"));
+//        MyStaticValue.crfModel = path.toAbsolutePath().toString();
+//        logger.debug("crfModel:{}",MyStaticValue.crfModel );
 
-        path = environment.configFile().resolve(settings.get("crf_model_path","ansj/dic/crf.model"));
-        MyStaticValue.crfModel = path.toAbsolutePath().toString();
-        logger.info("crfModel:{}",MyStaticValue.crfModel );
+
 
         MyStaticValue.isRealName = true;
 
@@ -133,7 +136,7 @@ public class AnsjElasticConfigurator {
     		String jarPath = java.net.URLDecoder.decode(AnsjElasticConfigurator.class.getProtectionDomain().getCodeSource().getLocation().getFile(),"UTF-8") ;
     		defaultPath = new File(new File(jarPath).getParent(),"default.dic") ;
 			UserDefineLibrary.loadFile(UserDefineLibrary.FOREST, defaultPath);
-			logger.info("加载系统内置词典:{}",defaultPath.getAbsolutePath() +" 成功!");
+			logger.debug("加载系统内置词典:{}",defaultPath.getAbsolutePath() +" 成功!");
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("加载系统内置词典:{}",defaultPath +" 失败!");
@@ -152,7 +155,7 @@ public class AnsjElasticConfigurator {
         }
 
         File stopLibrary = new File(environment.configFile().toFile(), stopLibraryPath);
-        logger.info("停止词典路径:{}",stopLibrary.getAbsolutePath() );
+        logger.debug("停止词典路径:{}",stopLibrary.getAbsolutePath() );
         if (!stopLibrary.isFile()) {
             logger.info("Can't find the file:" + stopLibraryPath
                         + ", no such file or directory exists!");

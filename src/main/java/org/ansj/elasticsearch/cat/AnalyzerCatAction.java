@@ -24,6 +24,7 @@ public class AnalyzerCatAction extends AbstractCatAction {
     public AnalyzerCatAction(Settings settings, RestController controller, Client client) {
         super(settings, controller, client);
         controller.registerHandler(RestRequest.Method.GET, "/_cat/analyze", this);
+        controller.registerHandler(RestRequest.Method.GET, "/_cat/{index}/analyze", this);
     }
 
     @Override
@@ -39,7 +40,7 @@ public class AnalyzerCatAction extends AbstractCatAction {
         client.admin().indices().analyze(analyzeRequest, new RestResponseListener<AnalyzeResponse>(channel) {
             @Override
             public RestResponse buildResponse(final AnalyzeResponse analyzeResponse) throws Exception {
-                return RestTable.buildResponse(buildTable(analyzeResponse, request), channel);
+                return ChineseRestTable.buildResponse(buildTable(analyzeResponse, request), channel);
             }
         });
     }

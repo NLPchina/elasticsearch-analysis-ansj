@@ -40,7 +40,7 @@ public class AnsjCatAction extends AbstractCatAction {
         client.execute(AnsjAction.INSTANCE, ansjRequest, new RestResponseListener<AnsjResponse>(channel) {
             @Override
             public RestResponse buildResponse(final AnsjResponse ansjResponse) throws Exception {
-                return RestTable.buildResponse(buildTable(ansjResponse, request), channel);
+                return ChineseRestTable.buildResponse(buildTable(ansjResponse, request), channel);
             }
         });
     }
