@@ -4,7 +4,7 @@ import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.filter
 import static org.ansj.elasticsearch.index.config.AnsjElasticConfigurator.init;
 
 import org.ansj.lucene.util.AnsjTokenizer;
-import org.ansj.splitWord.analysis.UserDefineAnalysis;
+import org.ansj.splitWord.analysis.DicAnalysis;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.inject.assistedinject.Assisted;
@@ -29,6 +29,6 @@ public class AnsjUserTokenizerFactory extends AbstractTokenizerFactory {
 
     @Override
     public Tokenizer create() {
-        return new AnsjTokenizer(new UserDefineAnalysis(), filter);
+        return new AnsjTokenizer(new DicAnalysis(), filter);
     }
 }

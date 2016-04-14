@@ -10,7 +10,7 @@
 | 1.0.0  |     0.90.2    |
 | 1.x        |     1.x     |
 | 2.1.1        |     2.1.1     |
-| master        |     2.1.1     |
+| master        |     2.3.1     |
 
 
 
@@ -21,7 +21,7 @@
 ````
 进入es目录执行如下命令
 
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.1.1/elasticsearch-analysis-ansj-2.1.1-release.zip
+./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.1.1/elasticsearch-analysis-ansj-2.2.1-release.zip
 ````
 
 

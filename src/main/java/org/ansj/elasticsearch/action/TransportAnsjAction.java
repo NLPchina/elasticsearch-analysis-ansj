@@ -1,12 +1,12 @@
 package org.ansj.elasticsearch.action;
 
+import java.util.List;
+
 import org.ansj.domain.Term;
+import org.ansj.splitWord.analysis.DicAnalysis;
 import org.ansj.splitWord.analysis.IndexAnalysis;
 import org.ansj.splitWord.analysis.ToAnalysis;
-import org.ansj.splitWord.analysis.UserDefineAnalysis;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.support.ActionFilters;
-import org.elasticsearch.action.support.HandledTransportAction;
 import org.elasticsearch.action.support.single.shard.TransportSingleShardAction;
 import org.elasticsearch.cluster.ClusterService;
 import org.elasticsearch.cluster.ClusterState;
@@ -18,8 +18,6 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.shard.ShardId;
 import org.elasticsearch.threadpool.ThreadPool;
 import org.elasticsearch.transport.TransportService;
-
-import java.util.List;
 
 /**
  *
@@ -44,7 +42,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
         if(type.equals("index")){
             terms = IndexAnalysis.parse(text);
         }else if(type.equals("user")){
-            terms = UserDefineAnalysis.parse(text);
+            terms = DicAnalysis.parse(text);
         }else{
             terms = ToAnalysis.parse(text);
         }

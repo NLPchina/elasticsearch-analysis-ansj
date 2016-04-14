@@ -3,12 +3,11 @@ package org.ansj.elasticsearch.index.analysis;
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.lucene.util.AnsjTokenizer;
 import org.ansj.lucene5.AnsjAnalyzer;
+import org.ansj.splitWord.analysis.DicAnalysis;
 import org.ansj.splitWord.analysis.IndexAnalysis;
 import org.ansj.splitWord.analysis.ToAnalysis;
-import org.ansj.splitWord.analysis.UserDefineAnalysis;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.inject.assistedinject.Assisted;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.ESLoggerFactory;
 import org.elasticsearch.common.settings.Settings;
@@ -17,9 +16,7 @@ import org.elasticsearch.index.analysis.AnalyzerScope;
 import org.elasticsearch.index.analysis.PreBuiltAnalyzerProviderFactory;
 import org.elasticsearch.index.analysis.PreBuiltTokenizerFactoryFactory;
 import org.elasticsearch.index.analysis.TokenizerFactory;
-import org.elasticsearch.index.settings.IndexSettingsService;
 import org.elasticsearch.indices.analysis.IndicesAnalysisService;
-import org.nlpcn.commons.lang.tire.domain.Forest;
 
 /**
  *
@@ -83,7 +80,7 @@ public class AnsjAnalysis {
                     @Override
                     public Tokenizer create() {
                         logger.debug("create user_ansj tokenizer");
-                        return new AnsjTokenizer(new UserDefineAnalysis());
+                        return new AnsjTokenizer(new DicAnalysis());
                     }
                 }));
 
