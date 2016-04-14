@@ -36,6 +36,12 @@
 
 ==========
 
+
+## 此次更新
++ elasticsearch更新2.3.1
++ ansj_seg升级至3.7.3
+
+
 ## 此次更新
 + elasticsearch更新2.1.1
 + ansj_seg升级至3.5
