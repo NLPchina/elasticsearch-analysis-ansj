@@ -14,7 +14,7 @@
 
 
 
-##2.x 插件安装
+##2.3.1 插件安装
 
 进入Elasticsearch目录运行如下命令 
 
@@ -24,6 +24,16 @@
 ./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.1/elasticsearch-analysis-ansj-2.3.1-release.zip
 ````
 
+
+##2.1.1 插件安装
+
+进入Elasticsearch目录运行如下命令 
+
+````
+进入es目录执行如下命令
+
+./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.1.1/elasticsearch-analysis-ansj-2.1.1-release.zip
+````
 
 ##1.x 插件安装
 
@@ -40,7 +50,6 @@
 ## 此次更新
 + elasticsearch更新2.3.1
 + ansj_seg升级至3.7.3
-+ 目前发现es分词插件基本是乡下兼容的.所以建议大版本号不变.的情况下建议用最新版.新版本是无数人踏坑过来的.你值得拥有
 
 
 ## 此次更新
