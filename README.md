@@ -108,13 +108,13 @@ name		real_name		nature		offset
 
 + index_ansj (建议索引使用)
 + query_ansj (建议搜索使用)
-+ user_ansj
++ dic_ansj
 
 三个名字的tokenizer
 
 + index_ansj (建议索引使用)
 + query_ansj (建议搜索使用)
-+ user_ansj
++ dic_ansj
 
 
 ## 分词文件配置:
@@ -172,7 +172,7 @@ index:
 * 创建测试索引
 
 ```linux
-curl -XPUT localhost:9200/test -d '{
+curl -XPUT 127.0.0.1:9200/test -d '{
     "settings" : {
         "number_of_shards" : 1,
         "number_of_replicas" : 0
@@ -182,12 +182,29 @@ curl -XPUT localhost:9200/test -d '{
         "type1" : {
             "_all" : { "enabled" : false },
             "properties" : {
-                "name" : { "type" : "string", "analyzer" : "customer_ansj_index", "search_analyzer" : "customer_ansj_query" }
+                "name" : { "type" : "string", "analyzer" : "index_ansj", "search_analyzer" : "query_ansj" }
             }
         }
     }
 }'
-```
+````
+
+* 添加索引内容
+
+````
+curl -XPUT 'http://127.0.0.1:9200/test/test/1' -d '{
+    "name" : "中国人民万岁",
+    "post_date" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}'
+````
+
+* 查询索引
+
+````
+浏览器访问:
+http://127.0.0.1:9200/test/test/_search?q=name:%E4%B8%AD%E5%9B%BD
+````
 
 * 查询分词
 
