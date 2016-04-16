@@ -69,12 +69,12 @@
 
 当然如果你有心仔细观察日志看到了实例化了n多分词器如下
 
-[2016-04-16 20:58:46,457][INFO ][ansj-initializer         ] regedit analyzer named : index_ansj
-[2016-04-16 20:58:46,460][INFO ][ansj-initializer         ] regedit analyzer named : query_ansj
-[2016-04-16 20:58:46,460][INFO ][ansj-initializer         ] regedit analyzer named : to_ansj
-[2016-04-16 20:58:46,461][INFO ][ansj-initializer         ] regedit analyzer named : dic_ansj
-[2016-04-16 20:58:46,461][INFO ][ansj-initializer         ] regedit analyzer named : user_ansj
-[2016-04-16 20:58:46,461][INFO ][ansj-initializer         ] regedit analyzer named : search_ansj
+ regedit analyzer named : index_ansj
+ regedit analyzer named : query_ansj
+ regedit analyzer named : to_ansj
+ regedit analyzer named : dic_ansj
+ regedit analyzer named : user_ansj
+ regedit analyzer named : search_ansj
 
 why????
 额 只有三个其他都是别名
