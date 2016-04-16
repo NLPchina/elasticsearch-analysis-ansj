@@ -47,12 +47,12 @@
 ==========
 
 
-## 此次更新
+## 2016年04月16日
 + elasticsearch更新2.3.1
 + ansj_seg升级至3.7.3
 
 
-## 此次更新
+## 1770年01月01日
 + elasticsearch更新2.1.1
 + ansj_seg升级至3.5
 + 新增http的_ansj接口，用于查看ansj分词词性
@@ -96,6 +96,12 @@ curl -XPUT 'http://127.0.0.1:9200/test/test/1' -d '{
 }'
 ````
 
+* 查询索引
+
+````
+浏览器访问:
+http://127.0.0.1:9200/test/test/_search?q=name:%E4%B8%AD%E5%9B%BD
+````
 
 
 * 如果你想把ansj作为你的默认分词需要在elasticsearch.xml加入如下配置:
@@ -110,12 +116,6 @@ index.analysis.analyzer.default.type :index_ansj
 index.analysis.analyzer.default_search.type :query_ansj
 ```
 
-* 查询索引
-
-````
-浏览器访问:
-http://127.0.0.1:9200/test/test/_search?q=name:%E4%B8%AD%E5%9B%BD
-````
 
 
 ## 关于分词器不得不说的那点小事
