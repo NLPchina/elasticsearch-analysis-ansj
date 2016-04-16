@@ -3,15 +3,11 @@ package org.ansj.elasticsearch.index.config;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-
-import org.ansj.domain.Term;
 import org.ansj.elasticsearch.pubsub.redis.AddTermRedisPubSub;
 import org.ansj.elasticsearch.pubsub.redis.RedisPoolBuilder;
 import org.ansj.elasticsearch.pubsub.redis.RedisUtils;
@@ -22,8 +18,8 @@ import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
-import org.jboss.netty.channel.DefaultFileRegion;
 import org.nlpcn.commons.lang.util.IOUtil;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 

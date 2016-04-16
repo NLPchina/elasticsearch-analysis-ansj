@@ -1,5 +1,8 @@
 package org.ansj.elasticsearch.plugin;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.ansj.elasticsearch.action.AnsjAction;
 import org.ansj.elasticsearch.action.TransportAnsjAction;
 import org.ansj.elasticsearch.cat.AnalyzerCatAction;
@@ -7,21 +10,15 @@ import org.ansj.elasticsearch.cat.AnsjCatAction;
 import org.ansj.elasticsearch.index.analysis.AnsjAnalysis;
 import org.ansj.elasticsearch.rest.RestAnsjAction;
 import org.elasticsearch.action.ActionModule;
-import org.elasticsearch.action.GenericAction;
-import org.elasticsearch.action.support.TransportAction;
 import org.elasticsearch.common.inject.AbstractModule;
 import org.elasticsearch.common.inject.Module;
-import org.elasticsearch.common.inject.multibindings.MapBinder;
 import org.elasticsearch.common.inject.multibindings.Multibinder;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestModule;
 import org.elasticsearch.rest.action.cat.AbstractCatAction;
 
-import java.util.Collection;
-import java.util.Collections;
-
 public class AnalysisAnsjPlugin extends Plugin {
-
+	
     @Override
     public String name() {
         return "analysis-ansj";

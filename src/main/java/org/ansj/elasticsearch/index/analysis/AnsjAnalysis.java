@@ -1,11 +1,7 @@
 package org.ansj.elasticsearch.index.analysis;
 
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
-import org.ansj.lucene.util.AnsjTokenizer;
 import org.ansj.lucene5.AnsjAnalyzer;
-import org.ansj.splitWord.analysis.DicAnalysis;
-import org.ansj.splitWord.analysis.IndexAnalysis;
-import org.ansj.splitWord.analysis.ToAnalysis;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.logging.ESLogger;
@@ -24,66 +20,42 @@ import org.elasticsearch.indices.analysis.IndicesAnalysisService;
  */
 public class AnsjAnalysis {
 
-    private final static ESLogger logger = ESLoggerFactory.getLogger("ansj-module");
+	public static final ESLogger LOG = ESLoggerFactory.getLogger("ansj-module");
 
-    @Inject public AnsjAnalysis(final Settings settings,
-                                IndicesAnalysisService indicesAnalysisService, Environment env){
+	private static final String SUFFIX = "_ansj";
+	
+	@Inject
+	public AnsjAnalysis(final Settings settings, IndicesAnalysisService indicesAnalysisService, Environment env) {
 
-        AnsjElasticConfigurator.init(settings,env);
+		AnsjElasticConfigurator.init(settings, env);
 
-        indicesAnalysisService.analyzerProviderFactories().put("index_ansj",
-                new PreBuiltAnalyzerProviderFactory("index_ansj", AnalyzerScope.GLOBAL,new AnsjAnalyzer("index")));
+		AnsjAnalyzer.TYPE[] values = AnsjAnalyzer.TYPE.values();
 
-        indicesAnalysisService.analyzerProviderFactories().put("query_ansj",
-                new PreBuiltAnalyzerProviderFactory("query_ansj", AnalyzerScope.GLOBAL,new AnsjAnalyzer("query")));
-        
-        indicesAnalysisService.analyzerProviderFactories().put("user_ansj",
-                new PreBuiltAnalyzerProviderFactory("user_ansj", AnalyzerScope.GLOBAL,new AnsjAnalyzer("user")));
+		for (int i = 0; i < values.length; i++) {
 
+			final AnsjAnalyzer.TYPE type = values[i];
 
-        indicesAnalysisService.tokenizerFactories().put("index_ansj",
-                new PreBuiltTokenizerFactoryFactory(new TokenizerFactory() {
-                    @Override
-                    public String name() {
-                        return "index_ansj";
-                    }
+			final String name = type.name() + SUFFIX;
 
-                    @Override
-                    public Tokenizer create() {
-                        logger.debug("create index_ansj tokenizer");
-                        return new AnsjTokenizer(new IndexAnalysis());
-                    }
-                }));
+			AnsjElasticConfigurator.logger.info("regedit analyzer named : " + name);
 
-        indicesAnalysisService.tokenizerFactories().put("query_ansj",
-                new PreBuiltTokenizerFactoryFactory(new TokenizerFactory() {
-                    @Override
-                    public String name() {
-                        return "query_ansj";
-                    }
+			indicesAnalysisService.analyzerProviderFactories().put(name, new PreBuiltAnalyzerProviderFactory(name, AnalyzerScope.GLOBAL, new AnsjAnalyzer(type)));
 
-                    @Override
-                    public Tokenizer create() {
-                        logger.debug("create query_ansj tokenizer");
-                        return new AnsjTokenizer(new ToAnalysis());
-                    }
-                }));
-        
-        
-        indicesAnalysisService.tokenizerFactories().put("user_ansj",
-                new PreBuiltTokenizerFactoryFactory(new TokenizerFactory() {
-                    @Override
-                    public String name() {
-                        return "user_ansj";
-                    }
+			indicesAnalysisService.tokenizerFactories().put(name, new PreBuiltTokenizerFactoryFactory(new TokenizerFactory() {
+				@Override
+				public String name() {
+					return name;
+				}
 
-                    @Override
-                    public Tokenizer create() {
-                        logger.debug("create user_ansj tokenizer");
-                        return new AnsjTokenizer(new DicAnalysis());
-                    }
-                }));
+				@Override
+				public Tokenizer create() {
+					LOG.debug("create " + name + " tokenizer");
+					return AnsjAnalyzer.getTokenizer(null, type, null);
+				}
+			}));
 
-    }
+		}
+
+	}
 
 }
