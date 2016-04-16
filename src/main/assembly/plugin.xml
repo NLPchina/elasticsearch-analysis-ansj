@@ -12,6 +12,11 @@
             <directory>${project.basedir}/src/main/dic</directory>  
             <outputDirectory>/</outputDirectory>  
         </fileSet>  
+        
+        <fileSet>
+			<directory>${project.basedir}/_site/</directory>
+			<outputDirectory>_site/</outputDirectory>
+		</fileSet>
     </fileSets>
     <files>
         <file>
