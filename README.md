@@ -62,6 +62,69 @@
 
 先来点配置好的示例 ^ ^ 别吐槽我的格式化 (顺便求一个判断字符串中含有几个中文的方法)
 
+
+## 关于分词器不得不说的那点小事
+````
+目前默认内置三个分词器
+
+当然如果你有心仔细观察日志看到了实例化了n多分词器如下
+
+[2016-04-16 20:58:46,457][INFO ][ansj-initializer         ] regedit analyzer named : index_ansj
+[2016-04-16 20:58:46,460][INFO ][ansj-initializer         ] regedit analyzer named : query_ansj
+[2016-04-16 20:58:46,460][INFO ][ansj-initializer         ] regedit analyzer named : to_ansj
+[2016-04-16 20:58:46,461][INFO ][ansj-initializer         ] regedit analyzer named : dic_ansj
+[2016-04-16 20:58:46,461][INFO ][ansj-initializer         ] regedit analyzer named : user_ansj
+[2016-04-16 20:58:46,461][INFO ][ansj-initializer         ] regedit analyzer named : search_ansj
+
+why????
+额 只有三个其他都是别名
+
+````
+
+
+### 索引分词
+
+```shell
+
+index_ansj 是索引分词 example
+
+http://127.0.0.1:9200/_cat/test/analyze?text=%E4%B8%8A%E6%B5%B7%E8%99%B9%E6%A1%A5%E6%9C%BA%E5%9C%BA&analyzer=index_ansj
+
+上海虹桥机场		0		6		0		word		
+上海    		0		2		1		word		
+海虹    		1		3		2		word		
+虹桥    		2		4		3		word		
+虹桥机场  		2		6		4		word		
+机场    		4		6		5		word		
+
+
+````
+
+
+### 搜索分词 search_ansj to_ansj query_ansj
+
+```shell
+
+index_ansj 是索引分词 example
+
+http://127.0.0.1:9200/_cat/test/analyze?text=%E4%B8%8A%E6%B5%B7%E8%99%B9%E6%A1%A5%E6%9C%BA%E5%9C%BA&analyzer=query_ansj
+
+上海虹桥机场		0		6		0		word	
+
+````
+
+### 用户自定义词典优先的分词方式 user_ansj dic_ansj
+
+```shell
+
+index_ansj 是索引分词 example
+
+http://127.0.0.1:9200/_cat/test/analyze?text=%E4%B8%8A%E6%B5%B7%E8%99%B9%E6%A1%A5%E6%9C%BA%E5%9C%BA&analyzer=dic_ansj
+
+上海虹桥机场		0		6		0		word	
+
+````
+
 ```shell
 ✘  ~  curl -XGET http://127.0.0.1:9200/_cat/test/analyze\?text\=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B86%E9%A2%97\&analyzer\=customer_ansj_query\&v
 term		start_offset		end_offset		position		type
@@ -150,20 +213,13 @@ ansj:
 现在让我们配置几个分词器看看:
 
 ```yaml
-index:
-  analysis:
-    analyzer:
-      customer_ansj_index:
-        tokenizer: index_ansj
-        filter: [sysfilter]
-      customer_ansj_query:
-        tokenizer: query_ansj
-        filter: [sysfilter]
-    filter:
-      sysfilter:
-        type: synonym
-        synonyms:
-          - 片,颗 =>粒
+
+#默认分词器,索引
+index.analysis.analyzer.default.type :index_ansj
+
+#默认分词器,查询
+
+index.analysis.analyzer.default_search.type :query_ansj
 ```
 
 ## 测试
