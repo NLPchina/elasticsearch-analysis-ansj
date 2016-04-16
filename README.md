@@ -86,71 +86,54 @@ why????
 
 ```shell
 
-index_ansj 是索引分词 example
+index_ansj 是索引分词,尽可能分词处所有结果 example
 
-http://127.0.0.1:9200/_cat/test/analyze?text=%E4%B8%8A%E6%B5%B7%E8%99%B9%E6%A1%A5%E6%9C%BA%E5%9C%BA&analyzer=index_ansj
+http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B8%E8%BD%AF%E8%83%B6%E5%9B%8A&analyzer=index_ansj
 
-上海虹桥机场		0		6		0		word		
-上海    		0		2		1		word		
-海虹    		1		3		2		word		
-虹桥    		2		4		3		word		
-虹桥机场  		2		6		4		word		
-机场    		4		6		5		word		
+六味  		0		2		0		word		
+地   		2		3		1		word		
+黄丸软 		3		6		2		word		
+胶囊  		6		8		3		word		
+六味地黄		0		4		4		word		
+地黄  		2		4		5		word		
+地黄丸 		2		5		6		word		
+软胶  		5		7		7		word		
+软胶囊 		5		8		8		word			
 
+
+````
+
+
+### 搜索分词 (search_ansj=to_ansj=query_ansj)
+
+```shell
+
+index_ansj 是搜索分词,是索引分词的子集,保证了准确率 example
+
+http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B8%E8%BD%AF%E8%83%B6%E5%9B%8A&analyzer=query_ansj
+
+六味 		0		2		0		word		
+地  			2		3		1		word		
+黄丸软		3		6		2		word		
+胶囊 		6		8		3		word		
+
+````
+
+### 用户自定义词典优先的分词方式 (user_ansj=dic_ansj)
+
+```shell
+
+dic_ansj 是用户自定义词典优先策略
+
+http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B8%E8%BD%AF%E8%83%B6%E5%9B%8A&analyzer=dic_ansj
+
+六味地黄		0		4		0		word		
+丸   		4		5		1		word		
+软胶囊 		5		8		2		word		
 
 ````
 
 
-### 搜索分词 search_ansj to_ansj query_ansj
-
-```shell
-
-index_ansj 是索引分词 example
-
-http://127.0.0.1:9200/_cat/test/analyze?text=%E4%B8%8A%E6%B5%B7%E8%99%B9%E6%A1%A5%E6%9C%BA%E5%9C%BA&analyzer=query_ansj
-
-上海虹桥机场		0		6		0		word	
-
-````
-
-### 用户自定义词典优先的分词方式 user_ansj dic_ansj
-
-```shell
-
-index_ansj 是索引分词 example
-
-http://127.0.0.1:9200/_cat/test/analyze?text=%E4%B8%8A%E6%B5%B7%E8%99%B9%E6%A1%A5%E6%9C%BA%E5%9C%BA&analyzer=dic_ansj
-
-上海虹桥机场		0		6		0		word	
-
-````
-
-```shell
-✘  ~  curl -XGET http://127.0.0.1:9200/_cat/test/analyze\?text\=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B86%E9%A2%97\&analyzer\=customer_ansj_query\&v
-term		start_offset		end_offset		position		type
-六味		0		2		0		word
-地黄		2		4		1		word
-丸		4		5		2		word
-6		5		6		3		word
-粒		6		7		4		SYNONYM
-```
-
-```shell
-~  curl -XGET http://127.0.0.1:9200/_cat/ansj\?text\=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B86%E9%A2%97\&analyzer\=customer_ansj_query\&v
-name		real_name		nature		offset
-六味		六味		nz		0
-地黄		地黄		n		2
-丸		丸		ng		4
-6		6		m		5
-颗		颗		q		6
-六味地黄		六味地黄		nhm		0
-地黄丸		地黄丸		nz		2
-```
-
-```shell
-~  curl -XGET http://127.0.0.1:9200/_ansj\?text\=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B86%E9%A2%97\&analyzer\=index_ansj\&v
-{"terms":[{"name":"六味","real_name":"六味","nature":"nz","offset":0},{"name":"地黄","real_name":"地黄","nature":"n","offset":2},{"name":"丸","real_name":"丸","nature":"ng","offset":4},{"name":"6","real_name":"6","nature":"m","offset":5},{"name":"颗","real_name":"颗","nature":"q","offset":6},{"name":"六味地黄","real_name":"六味地黄","nature":"nhm","offset":0},{"name":"地黄丸","real_name":"地黄丸","nature":"nz","offset":2}]}%
-```
 
 ## 编译安装
 
