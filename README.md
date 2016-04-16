@@ -63,6 +63,61 @@
 先来点配置好的示例 ^ ^ 别吐槽我的格式化 (顺便求一个判断字符串中含有几个中文的方法)
 
 
+## 测试
+
+
+* 创建测试索引
+
+```linux
+curl -XPUT 127.0.0.1:9200/test -d '{
+    "settings" : {
+        "number_of_shards" : 1,
+        "number_of_replicas" : 0
+
+    },
+    "mappings" : {
+        "type1" : {
+            "_all" : { "enabled" : false },
+            "properties" : {
+                "name" : { "type" : "string", "analyzer" : "index_ansj", "search_analyzer" : "query_ansj" }
+            }
+        }
+    }
+}'
+````
+
+* 添加索引内容
+
+````
+curl -XPUT 'http://127.0.0.1:9200/test/test/1' -d '{
+    "name" : "中国人民万岁",
+    "post_date" : "2009-11-15T14:12:12",
+    "message" : "trying out Elasticsearch"
+}'
+````
+
+
+
+* 如果你想把ansj作为你的默认分词需要在elasticsearch.xml加入如下配置:
+
+```yaml
+
+#默认分词器,索引
+index.analysis.analyzer.default.type :index_ansj
+
+#默认分词器,查询
+
+index.analysis.analyzer.default_search.type :query_ansj
+```
+
+* 查询索引
+
+````
+浏览器访问:
+http://127.0.0.1:9200/test/test/_search?q=name:%E4%B8%AD%E5%9B%BD
+````
+
+
 ## 关于分词器不得不说的那点小事
 ````
 目前默认内置三个分词器
@@ -193,57 +248,8 @@ ansj:
     dic: "ext.dic" ##如果有使用redis的pubsub方式更新词典，默认使用 这个目录是相对于dic_path
 ```
 
-现在让我们配置几个分词器看看:
-
-```yaml
-
-#默认分词器,索引
-index.analysis.analyzer.default.type :index_ansj
-
-#默认分词器,查询
-
-index.analysis.analyzer.default_search.type :query_ansj
-```
-
-## 测试
 
 
-* 创建测试索引
-
-```linux
-curl -XPUT 127.0.0.1:9200/test -d '{
-    "settings" : {
-        "number_of_shards" : 1,
-        "number_of_replicas" : 0
-
-    },
-    "mappings" : {
-        "type1" : {
-            "_all" : { "enabled" : false },
-            "properties" : {
-                "name" : { "type" : "string", "analyzer" : "index_ansj", "search_analyzer" : "query_ansj" }
-            }
-        }
-    }
-}'
-````
-
-* 添加索引内容
-
-````
-curl -XPUT 'http://127.0.0.1:9200/test/test/1' -d '{
-    "name" : "中国人民万岁",
-    "post_date" : "2009-11-15T14:12:12",
-    "message" : "trying out Elasticsearch"
-}'
-````
-
-* 查询索引
-
-````
-浏览器访问:
-http://127.0.0.1:9200/test/test/_search?q=name:%E4%B8%AD%E5%9B%BD
-````
 
 * 查询分词
 
