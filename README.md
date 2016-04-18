@@ -104,7 +104,7 @@ http://127.0.0.1:9200/test/test/_search?q=name:%E4%B8%AD%E5%9B%BD
 ````
 
 
-* 如果你想把ansj作为你的默认分词需要在elasticsearch.xml加入如下配置:
+* 如果你想把ansj作为你的默认分词需要在elasticsearch.yml加入如下配置:
 
 ```yaml
 
