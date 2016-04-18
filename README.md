@@ -109,11 +109,11 @@ http://127.0.0.1:9200/test/test/_search?q=name:%E4%B8%AD%E5%9B%BD
 ```yaml
 
 #默认分词器,索引
-index.analysis.analyzer.default.type :index_ansj
+index.analysis.analyzer.default.type: index_ansj
 
 #默认分词器,查询
 
-index.analysis.analyzer.default_search.type :query_ansj
+index.analysis.analyzer.default_search.type: query_ansj
 ```
 
 
