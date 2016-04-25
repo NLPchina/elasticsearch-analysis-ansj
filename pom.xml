@@ -46,7 +46,7 @@
 		<dependency>
 			<groupId>org.ansj</groupId>
 			<artifactId>ansj_lucene5_plug</artifactId>
-			<version>3.7.3</version>
+			<version>3.7.3.1</version>
 			<scope>compile</scope>
 		</dependency>
 
