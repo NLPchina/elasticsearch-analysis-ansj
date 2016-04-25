@@ -15,7 +15,7 @@ public class RedisPoolBuilder {
 	private int maxWait=1000;
 	private boolean testOnBorrow=true;
 	
-	private String ipAddress="master.redis.yao.com:6379";
+	private String ipAddress="127.0.0.1:6379";
 	private int port=6379;
 	
 	

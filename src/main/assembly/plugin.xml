@@ -9,20 +9,30 @@
     </formats>
     <fileSets>  
         <fileSet>  
-            <directory>${project.basedir}/src/main/ansj</directory>  
-            <outputDirectory>/ansj</outputDirectory>  
+            <directory>${project.basedir}/src/main/dic</directory>  
+            <outputDirectory>/</outputDirectory>  
         </fileSet>  
+        
+        <fileSet>
+			<directory>${project.basedir}/_site/</directory>
+			<outputDirectory>_site/</outputDirectory>
+		</fileSet>
     </fileSets>
+    <files>
+        <file>
+            <source>${project.basedir}/src/main/resources/plugin-descriptor.properties</source>
+            <filtered>true</filtered>
+        </file>
+    </files>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>/analysis-ansj</outputDirectory>
+            <outputDirectory>/</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <excludes>
                 <exclude>org.elasticsearch:elasticsearch</exclude>
                 <exclude>org.apache.lucene:lucene*</exclude>
                 <exclude>com.spatial4j:spatial4j</exclude>
             </excludes>
-            <scope>compile</scope>
-        </dependencySet>        
+        </dependencySet>
     </dependencySets>
 </assembly>
