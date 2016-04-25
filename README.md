@@ -163,7 +163,7 @@ http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%8
 
 ```shell
 
-index_ansj 是搜索分词,是索引分词的子集,保证了准确率 example
+query_ansj 是搜索分词,是索引分词的子集,保证了准确率 example
 
 http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%84%E4%B8%B8%E8%BD%AF%E8%83%B6%E5%9B%8A&analyzer=query_ansj
 
