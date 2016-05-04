@@ -7,12 +7,21 @@
 
 | plugin        |     elasticsearch|
 | --------      |       -----:  |
-| 1.0.0  |     0.90.2    |
-| 1.x        |     1.x     |
-| 2.1.1        |     2.1.1     |
-| master        |     2.3.1     |
+| 1.0.0         |     0.90.2    |
+| 1.x           |     1.x       |
+| 2.1.1         |     2.1.1     |
+| 2.3.1         |     2.3.1     |
+| master        |     2.3.2     |
 
 
+##2.3.2 插件安装
+
+进入Elasticsearch目录运行如下命令 
+
+````
+进入es目录执行如下命令
+
+./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.2/elasticsearch-analysis-ansj-2.3.2-release.zip
 
 ##2.3.1 插件安装
 
