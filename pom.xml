@@ -4,7 +4,7 @@
 
 	<groupId>org.ansj</groupId>
 	<artifactId>elasticsearch-analysis-ansj</artifactId>
-	<version>2.3.2</version>
+	<version>2.3.2.1</version>
 	<description>elasticsearch analysis by ansj</description>
 	<name>elasticsearch-analysis-ansj</name>
 	<url>http://maven.nlpcn.org</url>
@@ -40,13 +40,13 @@
 		<dependency>
 			<groupId>org.ansj</groupId>
 			<artifactId>ansj_seg</artifactId>
-			<version>3.7.3</version>
+			<version>3.7.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.ansj</groupId>
 			<artifactId>ansj_lucene5_plug</artifactId>
-			<version>3.7.3.1</version>
+			<version>3.7.5.0</version>
 			<scope>compile</scope>
 		</dependency>
 
