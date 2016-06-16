@@ -45,7 +45,7 @@ public class AnsjAnalysis extends AbstractComponent {
 			AnsjElasticConfigurator.logger.info("regedit analyzer named : " + name);
 			
 			
-			indicesAnalysisService.analyzerProviderFactories().put(name, new PreBuiltAnalyzerProviderFactory(name, AnalyzerScope.INDICES, new AnsjAnalyzer(type)));
+			indicesAnalysisService.analyzerProviderFactories().put(name, new PreBuiltAnalyzerProviderFactory(name, AnalyzerScope.INDICES, new AnsjAnalyzer(type, AnsjElasticConfigurator.filter)));
 			
 			indicesAnalysisService.tokenizerFactories().put(name, new PreBuiltTokenizerFactoryFactory(new TokenizerFactory() {
 				@Override
@@ -56,7 +56,7 @@ public class AnsjAnalysis extends AbstractComponent {
 				@Override
 				public Tokenizer create() {
 					LOG.debug("create " + name + " tokenizer");
-					return AnsjAnalyzer.getTokenizer(null, type, null);
+					return AnsjAnalyzer.getTokenizer(null, type, AnsjElasticConfigurator.filter);
 				}
 			}));
 			

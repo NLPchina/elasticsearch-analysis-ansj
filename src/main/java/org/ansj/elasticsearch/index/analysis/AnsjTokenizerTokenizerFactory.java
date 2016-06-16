@@ -38,15 +38,15 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 	public AnsjTokenizerTokenizerFactory(Index index, IndexSettingsService indexSettingsService, @Assisted String name, @Assisted Settings settings) {
 		super(index, indexSettingsService.getSettings(), name, settings);
 
-		String typeName = indexSettingsService.getSettings().get("index.analysis.analyzer." + name + ".type");
+		String typeName = indexSettingsService.getSettings().get("index.analysis.tokenizer." + name + ".type");
 
 		if (typeName == null) {
-			typeName = settings.get("index.analysis.analyzer." + name + ".type");
+			typeName = settings.get("index.analysis.tokenizer." + name + ".type");
 		}
 
 		if (typeName == null) {
 			AnsjElasticConfigurator.logger
-					.error("index.analysis.analyzer." + name + ".type not setting! settings: " + settings.getAsMap() + "  index_settings:" + indexSettingsService.getSettings().getAsMap());
+					.error("index.analysis.tokenizer." + name + ".type not setting! settings: " + settings.getAsMap() + "  index_settings:" + indexSettingsService.getSettings().getAsMap());
 		} else {
 			type = TYPE.valueOf(typeName.replace(AnsjAnalysis.SUFFIX, ""));
 		}

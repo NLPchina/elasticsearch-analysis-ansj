@@ -36,7 +36,7 @@ public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnal
 
 	@Override
 	public AnsjAnalyzer get() {
-		return new AnsjAnalyzer(type);
+		return new AnsjAnalyzer(type, AnsjElasticConfigurator.filter);
 	}
 
 }
