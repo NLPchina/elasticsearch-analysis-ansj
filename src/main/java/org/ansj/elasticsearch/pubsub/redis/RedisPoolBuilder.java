@@ -1,10 +1,14 @@
 package org.ansj.elasticsearch.pubsub.redis;
 
+import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.Loggers;
 
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 public class RedisPoolBuilder {
 	
@@ -63,7 +67,7 @@ public class RedisPoolBuilder {
 	}
 	
 	public JedisPool jedisPool(){
-		JedisPoolConfig config = new JedisPoolConfig();
+		final JedisPoolConfig config = new JedisPoolConfig();
 		config.setMaxActive(getMaxActive());
 		config.setMaxIdle(getMaxIdle());
 		config.setMaxWait(getMaxWait());
@@ -79,6 +83,17 @@ public class RedisPoolBuilder {
 			port = Integer.valueOf(ipAndPort[1]);
 		}
 		logger.info(ip+":"+port);
-		return new JedisPool(config, ip, port);
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new SpecialPermission());
+        }
+        final String fIp = ip;
+        final int fPort = port;
+        return AccessController.doPrivileged(new PrivilegedAction<JedisPool>() {
+            @Override
+            public JedisPool run() {
+                return new JedisPool(config, fIp, fPort);
+            }
+        });
 	}
 }
