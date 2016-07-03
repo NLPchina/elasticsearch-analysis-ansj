@@ -21,7 +21,8 @@ public class RedisPoolBuilder {
 	
 	private String ipAddress="127.0.0.1:6379";
 	private int port=6379;
-	
+	private int timeout = 2000;
+	private String password;
 	
 	public int getMaxActive() {
 		return maxActive;
@@ -65,7 +66,21 @@ public class RedisPoolBuilder {
 		this.port = port;
 		return this;
 	}
-	
+	public int getTimeout() {
+		return timeout;
+	}
+	public RedisPoolBuilder setTimeout(int timeout) {
+		this.timeout = timeout;
+		return this;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public RedisPoolBuilder setPassword(String password) {
+		this.password = password;
+		return this;
+	}
+
 	public JedisPool jedisPool(){
 		final JedisPoolConfig config = new JedisPoolConfig();
 		config.setMaxActive(getMaxActive());
@@ -92,7 +107,7 @@ public class RedisPoolBuilder {
         return AccessController.doPrivileged(new PrivilegedAction<JedisPool>() {
             @Override
             public JedisPool run() {
-                return new JedisPool(config, fIp, fPort);
+                return new JedisPool(config, fIp, fPort, getTimeout(), getPassword());
             }
         });
 	}

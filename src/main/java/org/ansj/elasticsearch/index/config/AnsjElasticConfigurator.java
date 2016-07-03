@@ -2,6 +2,7 @@ package org.ansj.elasticsearch.index.config;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -63,7 +64,7 @@ public class AnsjElasticConfigurator {
 			logger.info("没有找到redis相关配置!");
 			return;
 		}
-        REDIS_LIB_FILE = environment.configFile().resolve(settings.get("redis.write.dic",DEFAULT_REDIS_LIB_PATH)).toFile();
+        loadRedisLib(settings);
         new Thread(new  Runnable() {
 			@Override
 			public void run() {
@@ -76,16 +77,18 @@ public class AnsjElasticConfigurator {
 				
 				String ipAndport = settings.get("redis.ip",redisPoolBuilder.getIpAddress());
 				int port = settings.getAsInt("redis.port", redisPoolBuilder.getPort());
+                int timeout = settings.getAsInt("redis.timeout", redisPoolBuilder.getTimeout());
+                String password = settings.get("redis.password");
 				String channel = settings.get("redis.channel","ansj_term");
-				logger.debug("ip:"+ipAndport+",port:"+port+",channel:"+channel);
+				logger.debug("ip:"+ipAndport+",port:"+port+",timeout:"+timeout+",auth:"+(password != null)+",channel:"+channel);
 				
 				JedisPool pool = redisPoolBuilder.setMaxActive(maxActive).setMaxIdle(maxIdle).setMaxWait(maxWait).setTestOnBorrow(testOnBorrow)
-				.setIpAddress(ipAndport).setPort(port).jedisPool();
+				.setIpAddress(ipAndport).setPort(port).setTimeout(timeout).setPassword(password).jedisPool();
 				RedisUtils.setJedisPool(pool);
 				final Jedis jedis = RedisUtils.getConnection();
 				
 				logger.debug("pool:"+(pool==null)+",jedis:"+(jedis==null));
-				logger.info("redis守护线程准备完毕,ip:{},port:{},channel:{}",ipAndport,port,channel );
+				logger.info("redis守护线程准备完毕,ip:{},port:{},timeout:{},auth:{},channel:{}",ipAndport,port,timeout,password != null,channel );
                 Objects.requireNonNull(jedis);
                 jedis.subscribe(new AddTermRedisPubSub(), channel);
 				RedisUtils.closeConnection(jedis);
@@ -171,6 +174,26 @@ public class AnsjElasticConfigurator {
         }
         filter = filters;
         logger.info("ansj停止词典加载完毕!");
+    }
+
+    private static void loadRedisLib(Settings settings) {
+        REDIS_LIB_FILE = environment.configFile().resolve(settings.get("redis.write.dic", DEFAULT_REDIS_LIB_PATH)).toFile();
+        logger.debug("redis词典路径:{}", REDIS_LIB_FILE.getAbsolutePath());
+        if (!REDIS_LIB_FILE.isFile()) {
+            logger.info("Can't find the file:{}, no such file exists!", REDIS_LIB_FILE.getAbsolutePath());
+            return;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(REDIS_LIB_FILE))) {
+            String temp;
+            while ((temp = br.readLine()) != null) {
+                UserDefineLibrary.insertWord(temp, "userDefine", 1000);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error("加载redis词典:{} 失败!", REDIS_LIB_FILE.getAbsolutePath());
+        }
+        logger.info("加载redis词典:{} 成功!", REDIS_LIB_FILE.getAbsolutePath());
     }
 
     private static void emptyFilter() {
