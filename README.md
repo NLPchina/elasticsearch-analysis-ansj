@@ -22,7 +22,7 @@
 ````
 进入es目录执行如下命令
 
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.3.2/elasticsearch-analysis-ansj-2.3.3.2-release.zip
+./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.3.3/elasticsearch-analysis-ansj-2.3.3.3-release.zip
 ````
 
 ##2.3.2 插件安装
@@ -243,8 +243,8 @@ http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%8
 在这里我说一下，在插件里我写了一些默认配置，如果你也可以接受我的默认配置，关于ansj就完全不用配置了，或者只修改你需要的配置。下面的代码目录都是相对es的config目录，有几点需要注意一下:
 
 + ansj的核心词典是和插件一起安装的在插件目录下面
-+ redis使用的jar用默认脚本启动会有权限问题，此问题目前只能加./elasticsearch -Des.security.manager.enabled=false参数来解决 如果谁有更好的方法请q我
-+ 因为要使用redis的pubsub功能，需要关闭es的权限控制，请慎重使用。
++ redis使用的jar用默认脚本启动会有权限问题，安装的时候需要获得允许，2.3.3.2以前的版本需要加./elasticsearch -Des.security.manager.enabled=false参数
++ 因为要使用redis的pubsub功能，需要相关权限控制，请慎重使用。
 
 ```yaml
 ## ansj配置
@@ -264,9 +264,11 @@ ansj:
    maxwait: 100
    testonborrow: true
   ip: 10.0.85.51:6379
+  timeout: 2000
+  password: "******" ## 不要添加这个配置，除非redis需要权限认证
   channel: ansj_term ## publish时的channel名称
   write:
-    dic: "ext.dic" ##如果有使用redis的pubsub方式更新词典，默认使用 这个目录是相对于dic_path
+    dic: "ext.dic" ## 如果有使用redis的pubsub方式更新词典。这个目录是相对于$ES_HOME/config，如果没有配置，默认使用的是$ES_HOME/config/ansj/dic/user/ext.dic
 ```
 
 
