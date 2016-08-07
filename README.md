@@ -13,8 +13,19 @@
 | 2.3.1         |     2.3.1     |
 | 2.3.2         |     2.3.2     |
 | 2.3.3         |     2.3.3     |
-| master        |     2.3.4     |
+| 2.3.4         |     2.3.4     |
+| master        |     2.3.5     |
 
+
+##2.3.5 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.5/elasticsearch-analysis-ansj-2.3.5-release.zip
+````
 
 ##2.3.4 插件安装
 
@@ -108,7 +119,7 @@ curl -XPUT 127.0.0.1:9200/test -d '{
 
     },
     "mappings" : {
-        "type1" : {
+        "test" : {
             "_all" : { "enabled" : false },
             "properties" : {
                 "name" : { "type" : "string", "analyzer" : "index_ansj", "search_analyzer" : "query_ansj" }
