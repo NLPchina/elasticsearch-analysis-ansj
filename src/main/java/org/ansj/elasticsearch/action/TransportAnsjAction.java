@@ -1,8 +1,6 @@
 package org.ansj.elasticsearch.action;
 
-import java.util.List;
-
-import org.ansj.domain.Term;
+import org.ansj.domain.Result;
 import org.ansj.splitWord.analysis.DicAnalysis;
 import org.ansj.splitWord.analysis.IndexAnalysis;
 import org.ansj.splitWord.analysis.ToAnalysis;
@@ -38,15 +36,15 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
     protected AnsjResponse shardOperation(AnsjRequest request, ShardId shardId) {
         String type = request.type();
         String text = request.text();
-        List<Term> terms;
+        Result ret;
         if(type.equals("index")){
-            terms = IndexAnalysis.parse(text);
+            ret = IndexAnalysis.parse(text);
         }else if(type.equals("user")){
-            terms = DicAnalysis.parse(text);
+            ret = DicAnalysis.parse(text);
         }else{
-            terms = ToAnalysis.parse(text);
+            ret = ToAnalysis.parse(text);
         }
-        return new AnsjResponse(terms);
+        return new AnsjResponse(ret.getTerms());
     }
 
     @Override

@@ -105,8 +105,8 @@ public class AnsjElasticConfigurator {
     private static void initConfig(Settings settings, Environment environment) {
 
     	Path path = environment.configFile().resolve(settings.get("dic_path",DEFAULT_USER_LIB_PATH));
-        MyStaticValue.userLibrary = path.toAbsolutePath().toString();
-        logger.debug("用户词典路径:{}",MyStaticValue.userLibrary );
+        MyStaticValue.DIC.put(MyStaticValue.DIC_DEFAULT, path.toAbsolutePath().toString());
+        logger.debug("用户词典路径:{}", path.toAbsolutePath().toString());
 
         path = environment.configFile().resolve(settings.get("ambiguity_path",DEFAULT_AMB_FILE_LIB_PATH));
         MyStaticValue.ambiguityLibrary = path.toAbsolutePath().toString();
