@@ -75,7 +75,7 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
         return this;
     }
 
-    public AnsjRequest source(Map querySource) {
+    public AnsjRequest source(Map<String, ?> querySource) {
         try {
             XContentBuilder builder = XContentFactory.contentBuilder(Requests.CONTENT_TYPE);
             builder.map(querySource);

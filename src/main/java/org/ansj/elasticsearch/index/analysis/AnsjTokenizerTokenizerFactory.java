@@ -35,7 +35,8 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 	private TYPE type;
 
 	@Inject
-	public AnsjTokenizerTokenizerFactory(Index index, IndexSettingsService indexSettingsService, @Assisted String name, @Assisted Settings settings) {
+	public AnsjTokenizerTokenizerFactory(Index index, IndexSettingsService indexSettingsService, @Assisted String name,
+			@Assisted Settings settings) {
 		super(index, indexSettingsService.getSettings(), name, settings);
 
 		String typeName = indexSettingsService.getSettings().get("index.analysis.tokenizer." + name + ".type");
@@ -45,8 +46,9 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 		}
 
 		if (typeName == null) {
-			AnsjElasticConfigurator.logger
-					.error("index.analysis.tokenizer." + name + ".type not setting! settings: " + settings.getAsMap() + "  index_settings:" + indexSettingsService.getSettings().getAsMap());
+			AnsjElasticConfigurator.logger.error(
+					"index.analysis.tokenizer.{}.type not setting! settings: {}  index_settings:{}", name,
+					settings.getAsMap(), indexSettingsService.getSettings().getAsMap());
 		} else {
 			type = TYPE.valueOf(typeName.replace(AnsjAnalysis.SUFFIX, ""));
 		}

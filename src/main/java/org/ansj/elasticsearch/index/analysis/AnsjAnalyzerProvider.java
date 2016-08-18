@@ -16,7 +16,8 @@ public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnal
 	private TYPE type;
 
 	@Inject
-	public AnsjAnalyzerProvider(Index index, IndexSettingsService indexSettingsService, Environment env, @Assisted String name, @Assisted Settings settings) {
+	public AnsjAnalyzerProvider(Index index, IndexSettingsService indexSettingsService, Environment env,
+			@Assisted String name, @Assisted Settings settings) {
 		super(index, indexSettingsService.getSettings(), name, settings);
 
 		String typeName = indexSettingsService.getSettings().get("index.analysis.analyzer." + name + ".type");
@@ -26,8 +27,9 @@ public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnal
 		}
 
 		if (typeName == null) {
-			AnsjElasticConfigurator.logger
-					.error("index.analysis.analyzer." + name + ".type not setting! settings: " + settings.getAsMap() + "  index_settings:" + indexSettingsService.getSettings().getAsMap());
+			AnsjElasticConfigurator.logger.error(
+					"index.analysis.analyzer.{}.type not setting! settings: {}  index_settings:{}" + name,
+					settings.getAsMap(), indexSettingsService.getSettings().getAsMap());
 		} else {
 			type = TYPE.valueOf(typeName.replace(AnsjAnalysis.SUFFIX, ""));
 		}

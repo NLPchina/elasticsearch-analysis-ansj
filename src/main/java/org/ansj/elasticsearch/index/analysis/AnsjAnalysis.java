@@ -9,8 +9,6 @@ import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.ESLoggerFactory;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
-import org.elasticsearch.index.analysis.AbstractIndexAnalyzerProvider;
-import org.elasticsearch.index.analysis.AnalyzerProvider;
 import org.elasticsearch.index.analysis.AnalyzerScope;
 import org.elasticsearch.index.analysis.PreBuiltAnalyzerProviderFactory;
 import org.elasticsearch.index.analysis.PreBuiltTokenizerFactoryFactory;
@@ -42,24 +40,25 @@ public class AnsjAnalysis extends AbstractComponent {
 
 			final String name = type.name() + SUFFIX;
 
-			AnsjElasticConfigurator.logger.info("regedit analyzer named : " + name);
-			
-			
-			indicesAnalysisService.analyzerProviderFactories().put(name, new PreBuiltAnalyzerProviderFactory(name, AnalyzerScope.INDICES, new AnsjAnalyzer(type, AnsjElasticConfigurator.filter)));
-			
-			indicesAnalysisService.tokenizerFactories().put(name, new PreBuiltTokenizerFactoryFactory(new TokenizerFactory() {
-				@Override
-				public String name() {
-					return name;
-				}
+			AnsjElasticConfigurator.logger.info("regedit analyzer named : {}", name);
 
-				@Override
-				public Tokenizer create() {
-					LOG.debug("create " + name + " tokenizer");
-					return AnsjAnalyzer.getTokenizer(null, type, AnsjElasticConfigurator.filter);
-				}
-			}));
-			
+			indicesAnalysisService.analyzerProviderFactories().put(name, new PreBuiltAnalyzerProviderFactory(name,
+					AnalyzerScope.INDICES, new AnsjAnalyzer(type, AnsjElasticConfigurator.filter)));
+
+			indicesAnalysisService.tokenizerFactories().put(name,
+					new PreBuiltTokenizerFactoryFactory(new TokenizerFactory() {
+						@Override
+						public String name() {
+							return name;
+						}
+
+						@Override
+						public Tokenizer create() {
+							LOG.debug("create {} tokenizer", name);
+							return AnsjAnalyzer.getTokenizer(null, type, AnsjElasticConfigurator.filter);
+						}
+					}));
+
 		}
 
 	}

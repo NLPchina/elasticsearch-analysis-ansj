@@ -40,7 +40,7 @@ public class AnsjAnalysisBinderProcessor extends AnalysisModule.AnalysisBinderPr
 
 			analyzersBindings.processAnalyzer(name, AnsjAnalyzerProvider.class);
 
-			AnsjElasticConfigurator.logger.info("regedit analyzer provider named : " + name);
+			AnsjElasticConfigurator.logger.info("regedit analyzer provider named : {}", name);
 		}
 
 	}
@@ -58,7 +58,7 @@ public class AnsjAnalysisBinderProcessor extends AnalysisModule.AnalysisBinderPr
 
 			tokenizersBindings.processTokenizer(name, AnsjTokenizerTokenizerFactory.class);
 
-			AnsjElasticConfigurator.logger.info("regedit analyzer tokenizer named : " + name);
+			AnsjElasticConfigurator.logger.info("regedit analyzer tokenizer named : {}", name);
 		}
 	}
 
