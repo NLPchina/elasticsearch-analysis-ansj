@@ -116,14 +116,21 @@ public class AnsjElasticConfigurator {
 		// MyStaticValue.crfModel = path.toAbsolutePath().toString();
 		// logger.debug("crfModel:{}",MyStaticValue.crfModel );
 
+        // 是否显示真实词语
 		MyStaticValue.isRealName = true;
 
+        // 是否开启人名识别
 		MyStaticValue.isNameRecognition = settings.getAsBoolean("enable_name_recognition", DEFAULT_IS_NAME_RECOGNITION);
 
+        // 是否开启数字识别
 		MyStaticValue.isNumRecognition = settings.getAsBoolean("enable_num_recognition", DEFAULT_IS_NUM_RECOGNITION);
 
+        // 是否数字和量词合并
 		MyStaticValue.isQuantifierRecognition = settings.getAsBoolean("enable_quantifier_recognition",
 				DEFAUT_IS_QUANTIFIE_RRECOGNITION);
+
+        // 是否用户词典不加载相同的词
+		MyStaticValue.isSkipUserDefine = settings.getAsBoolean("enable_skip_user_define", MyStaticValue.isSkipUserDefine);
 
 		// init default用户自定义词典
 		File defaultPath = null;

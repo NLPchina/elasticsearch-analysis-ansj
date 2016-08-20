@@ -24,7 +24,7 @@
 ````
 进入es目录执行如下命令
 
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.5.2/elasticsearch-analysis-ansj-2.3.5.2-release.zip
+./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.5.3/elasticsearch-analysis-ansj-2.3.5.3-release.zip
 ````
 
 ##2.3.4 插件安装
@@ -277,6 +277,7 @@ ansj:
  enable_num_recognition: true ##数字识别
  enable_quantifier_recognition: false ##量词识别
  enabled_stop_filter: true ##是否基于词典过滤
+ enable_skip_user_define: false ## 是否用户词典不加载相同的词
  stop_path: "ansj/dic/stopLibrary.dic" ##停止过滤词典
 ## redis 不是必需的
  redis:
