@@ -78,8 +78,7 @@ public class ChineseRestTable {
 		int[] width = buildWidths(table, request, verbose, headers);
 
 		BytesStreamOutput bytesOut = channel.bytesOutput();
-		try (UTF8StreamWriter out = new UTF8StreamWriter()) {
-			out.setOutput(bytesOut);
+		try (UTF8StreamWriter out = new UTF8StreamWriter().setOutput(bytesOut)) {
 			if (verbose) {
 				for (int col = 0; col < headers.size(); col++) {
 					DisplayHeader header = headers.get(col);

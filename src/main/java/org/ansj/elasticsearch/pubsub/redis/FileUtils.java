@@ -61,8 +61,7 @@ public class FileUtils {
 		AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
 			@Override
 			public Object run() {
-				try (FileWriter fw = new FileWriter(file, true)) {
-					BufferedWriter writer = new BufferedWriter(fw);
+				try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
 					writer.write(content);
 					writer.newLine();
 				} catch (IOException e) {
@@ -81,9 +80,8 @@ public class FileUtils {
 		AccessController.doPrivileged(new PrivilegedExceptionAction<Object>() {
 			@Override
 			public Object run(){
-				try (FileReader fr = new FileReader(file); FileWriter fw = new FileWriter(file)) {
-					BufferedReader reader = new BufferedReader(fr);
-					BufferedWriter writer = new BufferedWriter(fw);
+				try (BufferedReader reader = new BufferedReader(new FileReader(file));
+					 BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 					String text;
 					while ((text = reader.readLine()) != null) {
 						if (match(content, text, head)) {

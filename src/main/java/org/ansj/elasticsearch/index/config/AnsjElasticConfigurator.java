@@ -78,7 +78,7 @@ public class AnsjElasticConfigurator {
 				int timeout = settings.getAsInt("redis.timeout", redisPoolBuilder.getTimeout());
 				String password = settings.get("redis.password");
 				String channel = settings.get("redis.channel", "ansj_term");
-				logger.debug("ip:{},port:{},timeout:{},auth:{},channel:{}" + ipAndport, port, timeout, password != null,
+				logger.debug("ip:{},port:{},timeout:{},auth:{},channel:{}", ipAndport, port, timeout, password != null,
 						channel);
 				JedisPool pool = redisPoolBuilder.setMaxActive(maxActive).setMaxIdle(maxIdle).setMaxWait(maxWait)
 						.setTestOnBorrow(testOnBorrow).setIpAddress(ipAndport).setPort(port).setTimeout(timeout)
@@ -155,9 +155,7 @@ public class AnsjElasticConfigurator {
 			return;
 		}
 
-		BufferedReader br;
-		try {
-			br = IOUtil.getReader(stopLibrary.getAbsolutePath(), "UTF-8");
+		try(BufferedReader br = IOUtil.getReader(stopLibrary.getAbsolutePath(), "UTF-8")) {
 			String temp;
 			while ((temp = br.readLine()) != null) {
 				filters.add(temp);
