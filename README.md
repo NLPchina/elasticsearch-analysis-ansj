@@ -24,7 +24,7 @@
 ````
 进入es目录执行如下命令
 
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.5.1/elasticsearch-analysis-ansj-2.3.5.1-release.zip
+./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.5.2/elasticsearch-analysis-ansj-2.3.5.2-release.zip
 ````
 
 ##2.3.4 插件安装
