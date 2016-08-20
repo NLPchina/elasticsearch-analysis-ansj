@@ -65,12 +65,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
-			<scope>provided</scope>
-		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -82,6 +76,24 @@
 	</dependencies>
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>net.orfjackal.retrolambda</groupId>
+				<artifactId>retrolambda-maven-plugin</artifactId>
+				<version>2.3.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>process-main</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<target>1.6</target>
+					<defaultMethods>false</defaultMethods>
+					<fork>false</fork>
+				</configuration>
+			</plugin>
+		
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

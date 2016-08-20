@@ -3,8 +3,6 @@ package org.ansj.elasticsearch.cat;
 import org.ansj.elasticsearch.action.AnsjAction;
 import org.ansj.elasticsearch.action.AnsjRequest;
 import org.ansj.elasticsearch.action.AnsjResponse;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequest;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.Table;
 import org.elasticsearch.common.inject.Inject;
@@ -15,7 +13,6 @@ import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.RestResponse;
 import org.elasticsearch.rest.action.cat.AbstractCatAction;
 import org.elasticsearch.rest.action.support.RestResponseListener;
-import org.elasticsearch.rest.action.support.RestTable;
 
 /**
  * Created by zhangqinghua on 16/2/2.
