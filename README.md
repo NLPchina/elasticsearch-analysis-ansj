@@ -14,8 +14,19 @@
 | 2.3.2         |     2.3.2     |
 | 2.3.3         |     2.3.3     |
 | 2.3.4         |     2.3.4     |
-| master        |     2.3.5     |
+| 2.3.5         |     2.3.5     |
+| master        |     2.4.0     |
 
+
+##2.4.0 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.4.0/elasticsearch-analysis-ansj-2.4.0-release.zip
+````
 
 ##2.3.5 插件安装
 
