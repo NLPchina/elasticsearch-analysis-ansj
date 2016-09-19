@@ -26,18 +26,19 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 public class AnsjElasticConfigurator {
-	public static ESLogger logger = Loggers.getLogger("ansj-initializer");
+	public static final ESLogger logger = Loggers.getLogger("ansj-initializer");
 	private static volatile boolean loaded = false;
 	public static Set<String> filter;
-	public static Environment environment;
-	public static String DEFAULT_USER_LIB_PATH = "ansj/dic/user/";
-	public static String DEFAULT_REDIS_LIB_PATH = DEFAULT_USER_LIB_PATH + "ext.dic";
+	private static Environment environment;
+	private static final String DEFAULT_USER_LIB_PATH = "ansj/dic/user/";
+	private static final String DEFAULT_REDIS_LIB_PATH = DEFAULT_USER_LIB_PATH + "ext.dic";
 	public static File REDIS_LIB_FILE = null;
-	public static String DEFAULT_AMB_FILE_LIB_PATH = "ansj/dic/ambiguity.dic";
-	public static String DEFAULT_STOP_FILE_LIB_PATH = "ansj/dic/stopLibrary.dic";
-	public static boolean DEFAULT_IS_NAME_RECOGNITION = true;
-	public static boolean DEFAULT_IS_NUM_RECOGNITION = true;
-	public static boolean DEFAUT_IS_QUANTIFIE_RRECOGNITION = false;
+	private static final String DEFAULT_AMB_FILE_LIB_PATH = "ansj/dic/ambiguity.dic";
+	public static File AMB_LIB_FILE = null;
+	private static final String DEFAULT_STOP_FILE_LIB_PATH = "ansj/dic/stopLibrary.dic";
+	private static final boolean DEFAULT_IS_NAME_RECOGNITION = true;
+	private static final boolean DEFAULT_IS_NUM_RECOGNITION = true;
+	private static final boolean DEFAULT_IS_QUANTIFIER_RECOGNITION = false;
 
 	public static void init(Settings settings, Environment env) {
 		if (isLoaded()) {
@@ -107,8 +108,8 @@ public class AnsjElasticConfigurator {
 		MyStaticValue.DIC.put(MyStaticValue.DIC_DEFAULT, path.toAbsolutePath().toString());
 		logger.debug("用户词典路径:{}", path.toAbsolutePath().toString());
 
-		path = environment.configFile().resolve(settings.get("ambiguity_path", DEFAULT_AMB_FILE_LIB_PATH));
-		MyStaticValue.ambiguityLibrary = path.toAbsolutePath().toString();
+        AMB_LIB_FILE = environment.configFile().resolve(settings.get("ambiguity_path", DEFAULT_AMB_FILE_LIB_PATH)).toFile();
+		MyStaticValue.ambiguityLibrary = AMB_LIB_FILE.getAbsolutePath();
 		logger.debug("歧义词典路径:{}", MyStaticValue.ambiguityLibrary);
 		// todo 目前没有使用
 		// path =
@@ -127,7 +128,7 @@ public class AnsjElasticConfigurator {
 
         // 是否数字和量词合并
 		MyStaticValue.isQuantifierRecognition = settings.getAsBoolean("enable_quantifier_recognition",
-				DEFAUT_IS_QUANTIFIE_RRECOGNITION);
+				DEFAULT_IS_QUANTIFIER_RECOGNITION);
 
         // 是否用户词典不加载相同的词
 		MyStaticValue.isSkipUserDefine = settings.getAsBoolean("enable_skip_user_define", MyStaticValue.isSkipUserDefine);

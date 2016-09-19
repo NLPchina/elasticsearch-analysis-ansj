@@ -37,8 +37,7 @@ public class FileUtils {
 
 	public static void removeAMB(String content) {
 		try {
-			File file = new File(AnsjElasticConfigurator.DEFAULT_AMB_FILE_LIB_PATH);
-			removeFile(content, file, true);
+			removeFile(content, AnsjElasticConfigurator.AMB_LIB_FILE, true);
 		} catch (Exception e) {
 			logger.error("removaAMB exception", e);
 		}
@@ -46,8 +45,7 @@ public class FileUtils {
 
 	public static void appendAMB(String content) {
 		try {
-			File file = new File(AnsjElasticConfigurator.DEFAULT_AMB_FILE_LIB_PATH);
-			appendFile(content, file);
+			appendFile(content, AnsjElasticConfigurator.AMB_LIB_FILE);
 		} catch (Exception e) {
 			logger.error("appendAMB exception", e);
 		}
