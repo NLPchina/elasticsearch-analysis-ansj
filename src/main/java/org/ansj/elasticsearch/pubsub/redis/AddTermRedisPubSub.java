@@ -32,7 +32,7 @@ public class AddTermRedisPubSub extends JedisPubSub {
 				String[] cmd = msg[2].split("-");
 				Value value = new Value(cmd[0], cmd[1].split(","));
 				Library.insertWord(UserDefineLibrary.ambiguityForest, value);
-				FileUtils.appendAMB(msg[2].replace(",", "\t").replaceAll("-", "\t"));
+				FileUtils.appendAMB(cmd[1].replaceAll(",", "\t"));
 			} else if ("d".equals(msg[1])) {
 				Library.removeWord(UserDefineLibrary.ambiguityForest, msg[2]);
 				FileUtils.removeAMB(msg[2]);
