@@ -39,6 +39,8 @@ public class AnsjElasticConfigurator {
 	private static final boolean DEFAULT_IS_NAME_RECOGNITION = true;
 	private static final boolean DEFAULT_IS_NUM_RECOGNITION = true;
 	private static final boolean DEFAULT_IS_QUANTIFIER_RECOGNITION = false;
+	private static final String DEFAULT_SYN_FILE_LIB_PATH = "ansj/dic/synonyms.dic";
+	public static File SYN_LIB_FILE = null;
 
 	public static void init(Settings settings, Environment env) {
 		if (isLoaded()) {
@@ -111,6 +113,10 @@ public class AnsjElasticConfigurator {
         AMB_LIB_FILE = environment.configFile().resolve(settings.get("ambiguity_path", DEFAULT_AMB_FILE_LIB_PATH)).toFile();
 		MyStaticValue.ambiguityLibrary = AMB_LIB_FILE.getAbsolutePath();
 		logger.debug("歧义词典路径:{}", MyStaticValue.ambiguityLibrary);
+		
+		SYN_LIB_FILE = environment.configFile().resolve(settings.get("synonyms_path", DEFAULT_SYN_FILE_LIB_PATH)).toFile();
+		MyStaticValue.synonymsLibrary = SYN_LIB_FILE.getAbsolutePath();
+		logger.debug("同义词典路径:{}", MyStaticValue.synonymsLibrary);
 		// todo 目前没有使用
 		// path =
 		// environment.configFile().resolve(settings.get("crf_model_path","ansj/dic/crf.model"));
@@ -140,7 +146,8 @@ public class AnsjElasticConfigurator {
 					AnsjElasticConfigurator.class.getProtectionDomain().getCodeSource().getLocation().getFile(),
 					"UTF-8");
 			defaultPath = new File(new File(jarPath).getParent(), "default.dic");
-			UserDefineLibrary.loadFile(UserDefineLibrary.FOREST, defaultPath);
+			//UserDefineLibrary.loadFile(UserDefineLibrary.FOREST, defaultPath); //ansj_seg_5.0.1版本
+			UserDefineLibrary.loadLibrary(UserDefineLibrary.FOREST, defaultPath.getAbsolutePath());//ansj_seg_5.0.2版本
 			logger.debug("加载系统内置词典:{} 成功!", defaultPath.getAbsolutePath());
 		} catch (UnsupportedEncodingException e) {
 			logger.error("加载系统内置词典:{} 失败!", defaultPath);

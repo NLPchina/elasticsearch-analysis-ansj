@@ -290,6 +290,7 @@ ansj:
  enabled_stop_filter: true ##是否基于词典过滤
  enable_skip_user_define: false ## 是否用户词典不加载相同的词
  stop_path: "ansj/dic/stopLibrary.dic" ##停止过滤词典
+ synonyms_path: "ansj/dic/synonyms.dic" ##同义词词典
 ## redis 不是必需的
  redis:
   pool:
