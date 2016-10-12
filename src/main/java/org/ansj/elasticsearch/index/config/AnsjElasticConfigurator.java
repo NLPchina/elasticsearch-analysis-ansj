@@ -5,11 +5,19 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import org.ansj.elasticsearch.entities.RedisStatusEntity;
 import org.ansj.elasticsearch.pubsub.redis.AddTermRedisPubSub;
 import org.ansj.elasticsearch.pubsub.redis.RedisPoolBuilder;
 import org.ansj.elasticsearch.pubsub.redis.RedisUtils;
@@ -26,6 +34,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 public class AnsjElasticConfigurator {
+	private static final ExecutorService startRedisPool = Executors.newFixedThreadPool(1);
+	private static final ScheduledExecutorService RedisCheckPool = Executors.newScheduledThreadPool(1);
 	public static final ESLogger logger = Loggers.getLogger("ansj-initializer");
 	private static volatile boolean loaded = false;
 	public static Set<String> filter;
@@ -62,10 +72,15 @@ public class AnsjElasticConfigurator {
 			logger.info("没有找到redis相关配置!");
 			return;
 		}
+
 		loadRedisLib(settings);
-		new Thread(new Runnable() {
+
+		// 启动redis订阅服务
+		startRedisPool.execute(new Runnable() {
 			@Override
 			public void run() {
+				RedisStatusEntity.setEssettings(settings);
+				RedisStatusEntity.setRedisthreadid(Thread.currentThread().getId());
 				RedisPoolBuilder redisPoolBuilder = new RedisPoolBuilder();
 				int maxActive = settings.getAsInt("redis.pool.maxactive", redisPoolBuilder.getMaxActive());
 				int maxIdle = settings.getAsInt("redis.pool.maxidle", redisPoolBuilder.getMaxIdle());
@@ -92,9 +107,80 @@ public class AnsjElasticConfigurator {
 				Objects.requireNonNull(jedis);
 				jedis.subscribe(new AddTermRedisPubSub(), channel);
 				RedisUtils.closeConnection(jedis);
-
 			}
-		}).start();
+		});
+
+		// 如果redis检查线程未启动启动检查线程
+		if (!RedisStatusEntity.isRedischeckdeamonalived()) {
+			RedisCheckPool.scheduleAtFixedRate(new Runnable() {
+				@Override
+				public void run() {
+					if (RedisStatusEntity.isRedischeckdeamonalived()) {
+						// 通过 JMX 可以通过线程 ID 获得线程信息
+						ThreadMXBean tmx = ManagementFactory.getThreadMXBean();
+						ThreadInfo info = tmx.getThreadInfo(RedisStatusEntity.getRedisthreadid());
+						// 如果redis线程终止，重启redis
+						if (null == info) {
+							logger.debug("null" + ":" + String.valueOf(System.currentTimeMillis()) + ":"
+									+ startRedisPool.isTerminated());
+							initRedis(RedisStatusEntity.getEssettings());
+							return;
+						}
+						logger.debug(info.getThreadId() + ":" + String.valueOf(System.currentTimeMillis()) + ":"
+								+ startRedisPool.isTerminated());
+						return;
+					}
+					RedisStatusEntity.setRedischeckdeamonalived(true);
+					logger.info("redis健康检查守护进程启动！ThreadId:{}", Thread.currentThread().getId());
+				}
+			}, 0, 5, TimeUnit.SECONDS);
+		}
+
+		// new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// redisstatus.setEssettings(settings);
+		// redisstatus.setRedisthreadid(Thread.currentThread().getId());
+		// RedisPoolBuilder redisPoolBuilder = new RedisPoolBuilder();
+		// int maxActive = settings.getAsInt("redis.pool.maxactive",
+		// redisPoolBuilder.getMaxActive());
+		// int maxIdle = settings.getAsInt("redis.pool.maxidle",
+		// redisPoolBuilder.getMaxIdle());
+		// int maxWait = settings.getAsInt("redis.pool.maxwait",
+		// redisPoolBuilder.getMaxWait());
+		// boolean testOnBorrow =
+		// settings.getAsBoolean("redis.pool.testonborrow",
+		// redisPoolBuilder.isTestOnBorrow());
+		// logger.debug("maxActive:{},maxIdle:{},maxWait:{},testOnBorrow:{}",
+		// maxActive, maxIdle, maxWait,
+		// testOnBorrow);
+		// String ipAndport = settings.get("redis.ip",
+		// redisPoolBuilder.getIpAddress());
+		// int port = settings.getAsInt("redis.port",
+		// redisPoolBuilder.getPort());
+		// int timeout = settings.getAsInt("redis.timeout",
+		// redisPoolBuilder.getTimeout());
+		// String password = settings.get("redis.password");
+		// String channel = settings.get("redis.channel", "ansj_term");
+		// logger.debug("ip:{},port:{},timeout:{},auth:{},channel:{}",
+		// ipAndport, port, timeout, password != null,
+		// channel);
+		// JedisPool pool =
+		// redisPoolBuilder.setMaxActive(maxActive).setMaxIdle(maxIdle).setMaxWait(maxWait)
+		// .setTestOnBorrow(testOnBorrow).setIpAddress(ipAndport).setPort(port).setTimeout(timeout)
+		// .setPassword(password).jedisPool();
+		// RedisUtils.setJedisPool(pool);
+		// final Jedis jedis = RedisUtils.getConnection();
+		// logger.debug("pool:{},jedis:{}", pool == null, jedis == null);
+		// logger.info("redis守护线程准备完毕,ip:{},port:{},timeout:{},auth:{},channel:{}",
+		// ipAndport, port, timeout,
+		// password != null, channel);
+		// Objects.requireNonNull(jedis);
+		// jedis.subscribe(new AddTermRedisPubSub(), channel);
+		// RedisUtils.closeConnection(jedis);
+		//
+		// }
+		// }).start();
 
 	}
 
@@ -108,7 +194,8 @@ public class AnsjElasticConfigurator {
 		MyStaticValue.DIC.put(MyStaticValue.DIC_DEFAULT, path.toAbsolutePath().toString());
 		logger.debug("用户词典路径:{}", path.toAbsolutePath().toString());
 
-        AMB_LIB_FILE = environment.configFile().resolve(settings.get("ambiguity_path", DEFAULT_AMB_FILE_LIB_PATH)).toFile();
+		AMB_LIB_FILE = environment.configFile().resolve(settings.get("ambiguity_path", DEFAULT_AMB_FILE_LIB_PATH))
+				.toFile();
 		MyStaticValue.ambiguityLibrary = AMB_LIB_FILE.getAbsolutePath();
 		logger.debug("歧义词典路径:{}", MyStaticValue.ambiguityLibrary);
 		// todo 目前没有使用
@@ -117,21 +204,22 @@ public class AnsjElasticConfigurator {
 		// MyStaticValue.crfModel = path.toAbsolutePath().toString();
 		// logger.debug("crfModel:{}",MyStaticValue.crfModel );
 
-        // 是否显示真实词语
+		// 是否显示真实词语
 		MyStaticValue.isRealName = true;
 
-        // 是否开启人名识别
+		// 是否开启人名识别
 		MyStaticValue.isNameRecognition = settings.getAsBoolean("enable_name_recognition", DEFAULT_IS_NAME_RECOGNITION);
 
-        // 是否开启数字识别
+		// 是否开启数字识别
 		MyStaticValue.isNumRecognition = settings.getAsBoolean("enable_num_recognition", DEFAULT_IS_NUM_RECOGNITION);
 
-        // 是否数字和量词合并
+		// 是否数字和量词合并
 		MyStaticValue.isQuantifierRecognition = settings.getAsBoolean("enable_quantifier_recognition",
 				DEFAULT_IS_QUANTIFIER_RECOGNITION);
 
-        // 是否用户词典不加载相同的词
-		MyStaticValue.isSkipUserDefine = settings.getAsBoolean("enable_skip_user_define", MyStaticValue.isSkipUserDefine);
+		// 是否用户词典不加载相同的词
+		MyStaticValue.isSkipUserDefine = settings.getAsBoolean("enable_skip_user_define",
+				MyStaticValue.isSkipUserDefine);
 
 		// init default用户自定义词典
 		File defaultPath = null;
@@ -163,7 +251,7 @@ public class AnsjElasticConfigurator {
 			return;
 		}
 
-		try(BufferedReader br = IOUtil.getReader(stopLibrary.getAbsolutePath(), "UTF-8")) {
+		try (BufferedReader br = IOUtil.getReader(stopLibrary.getAbsolutePath(), "UTF-8")) {
 			String temp;
 			while ((temp = br.readLine()) != null) {
 				filters.add(temp);
