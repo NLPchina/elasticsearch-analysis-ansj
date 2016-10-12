@@ -7,15 +7,15 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.ansj.elasticsearch.pubsub.redis.AddTermRedisPubSub;
 import org.ansj.elasticsearch.pubsub.redis.RedisPoolBuilder;
-import org.ansj.elasticsearch.pubsub.redis.RedisUtils;
 import org.ansj.library.UserDefineLibrary;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
+import org.elasticsearch.ExceptionsHelper;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
@@ -24,6 +24,8 @@ import org.nlpcn.commons.lang.util.IOUtil;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPubSub;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 public class AnsjElasticConfigurator {
 	public static final ESLogger logger = Loggers.getLogger("ansj-initializer");
@@ -79,24 +81,37 @@ public class AnsjElasticConfigurator {
 				int timeout = settings.getAsInt("redis.timeout", redisPoolBuilder.getTimeout());
 				String password = settings.get("redis.password");
 				String channel = settings.get("redis.channel", "ansj_term");
-				logger.debug("ip:{},port:{},timeout:{},auth:{},channel:{}", ipAndport, port, timeout, password != null,
-						channel);
-				JedisPool pool = redisPoolBuilder.setMaxActive(maxActive).setMaxIdle(maxIdle).setMaxWait(maxWait)
-						.setTestOnBorrow(testOnBorrow).setIpAddress(ipAndport).setPort(port).setTimeout(timeout)
-						.setPassword(password).jedisPool();
-				RedisUtils.setJedisPool(pool);
-				final Jedis jedis = RedisUtils.getConnection();
-				logger.debug("pool:{},jedis:{}", pool == null, jedis == null);
-				logger.info("redis守护线程准备完毕,ip:{},port:{},timeout:{},auth:{},channel:{}", ipAndport, port, timeout,
-						password != null, channel);
-				Objects.requireNonNull(jedis);
-				jedis.subscribe(new AddTermRedisPubSub(), channel);
-				RedisUtils.closeConnection(jedis);
+                logger.debug("ip:{},port:{},timeout:{},auth:{},channel:{}", ipAndport, port, timeout, password != null, channel);
 
-			}
-		}).start();
+                JedisPool pool = redisPoolBuilder.setMaxActive(maxActive).setMaxIdle(maxIdle).setMaxWait(maxWait)
+                        .setTestOnBorrow(testOnBorrow).setIpAddress(ipAndport).setPort(port).setTimeout(timeout)
+                        .setPassword(password).jedisPool();
 
-	}
+                logger.info("redis守护线程准备完毕,ip:{},port:{},timeout:{},auth:{},channel:{}", ipAndport, port, timeout, password != null, channel);
+
+                Jedis jedis = null;
+                JedisPubSub jedisPubSub = new AddTermRedisPubSub();
+                while (true) {
+                    try {
+                        jedis = pool.getResource();
+                        jedis.subscribe(jedisPubSub, channel);
+                    } catch (JedisConnectionException ex) {
+                        logger.warn("subscribe to channel[{}] error: {}", channel, ExceptionsHelper.stackTrace(ex));
+
+                        if (null != jedis) {
+                            pool.returnBrokenResource(jedis);
+                        }
+
+                        try {
+                            TimeUnit.SECONDS.sleep(15);
+                        } catch (InterruptedException e) {
+                            logger.error(ExceptionsHelper.stackTrace(e));
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
 
 	private static void preheat() {
 		ToAnalysis.parse("这是一个基于ansj的分词插件");
