@@ -27,7 +27,7 @@ public class AddTermRedisPubSub extends JedisPubSub {
 				UserDefineLibrary.removeWord(msg[2]);
 				FileUtils.remove(msg[2]);
 			}
-		} else if ("a".equals(msg[0]))
+		} else if ("a".equals(msg[0])){
 			if ("c".equals(msg[1])) {
 				String[] cmd = msg[2].split("-");
 				Value value = new Value(cmd[0], cmd[1].split(","));
@@ -37,6 +37,18 @@ public class AddTermRedisPubSub extends JedisPubSub {
 				Library.removeWord(UserDefineLibrary.ambiguityForest, msg[2]);
 				FileUtils.removeAMB(msg[2]);
 			}
+		}else if ("syn".equals(msg[0])) {//syn:c:中国,中华,华夏
+			if ("c".equals(msg[1])) {
+				logger.info("Add synonyms message:{} ", msg[2]);
+				Value value = new Value(msg[2]);
+				Library.insertWord(UserDefineLibrary.synonymsForest, value);
+				FileUtils.appendSYN(msg[2].replace(",", "\t"));
+			} else if ("d".equals(msg[1])) {
+				logger.info("Delete synonyms message:{} ", msg[2]);
+				Library.removeWord(UserDefineLibrary.synonymsForest, msg[2]);
+				FileUtils.removeSYN(msg[2]);
+			}
+		}
 	}
 
 	@Override

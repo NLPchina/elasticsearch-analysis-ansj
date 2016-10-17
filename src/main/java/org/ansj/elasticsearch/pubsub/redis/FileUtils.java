@@ -48,6 +48,38 @@ public class FileUtils {
 			logger.error("appendAMB exception", e);
 		}
 	}
+	
+	/**
+	 * 
+	 * @Description: 同义词文件中写入内容
+	 * @author yeyuelong
+	 * @version 2016年9月20日 上午11:14:23 
+	 * @param content
+	 *
+	 */
+	public static void appendSYN(String content) {
+		try {
+			appendFile(content, AnsjElasticConfigurator.SYN_LIB_FILE);
+		} catch (Exception e) {
+			logger.error("appendSYN exception", e);
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description: 同义词文件中删除内容
+	 * @author yeyuelong
+	 * @version 2016年9月20日 上午11:19:12 
+	 * @param content
+	 *
+	 */
+	public static void removeSYN(String content) {
+		try {
+			removeFile(content, AnsjElasticConfigurator.SYN_LIB_FILE, true);
+		} catch (Exception e) {
+			logger.error("removaSYN exception", e);
+		}
+	}
 
 	private static void appendFile(final String content, final File file) throws Exception {
 		final SecurityManager sm = System.getSecurityManager();
