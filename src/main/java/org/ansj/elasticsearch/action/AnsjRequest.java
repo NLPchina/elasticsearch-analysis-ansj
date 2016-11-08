@@ -2,7 +2,6 @@ package org.ansj.elasticsearch.action;
 
 import org.elasticsearch.ElasticsearchGenerationException;
 import org.elasticsearch.action.ActionRequestValidationException;
-import org.elasticsearch.action.support.QuerySourceBuilder;
 import org.elasticsearch.action.support.single.shard.SingleShardRequest;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.common.bytes.BytesArray;
@@ -24,7 +23,8 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
     private String text;
     private BytesReference source;
 
-    public AnsjRequest(){}
+    public AnsjRequest() {
+    }
 
     public String text() {
         return text;
@@ -70,11 +70,6 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
         return source;
     }
 
-    public AnsjRequest source(QuerySourceBuilder sourceBuilder) {
-        this.source = sourceBuilder.buildAsBytes(Requests.CONTENT_TYPE);
-        return this;
-    }
-
     public AnsjRequest source(Map<String, ?> querySource) {
         try {
             XContentBuilder builder = XContentFactory.contentBuilder(Requests.CONTENT_TYPE);
@@ -85,7 +80,7 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
         }
     }
 
-    public AnsjRequest source(XContentBuilder builder) {
+    private AnsjRequest source(XContentBuilder builder) {
         this.source = builder.bytes();
         return this;
     }
@@ -99,11 +94,11 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
         return source(querySource, 0, querySource.length);
     }
 
-    public AnsjRequest source(byte[] querySource, int offset, int length) {
+    private AnsjRequest source(byte[] querySource, int offset, int length) {
         return source(new BytesArray(querySource, offset, length));
     }
 
-    public AnsjRequest source(BytesReference querySource) {
+    private AnsjRequest source(BytesReference querySource) {
         this.source = querySource;
         return this;
     }

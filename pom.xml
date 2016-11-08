@@ -4,11 +4,10 @@
 
 	<groupId>org.ansj</groupId>
 	<artifactId>elasticsearch-analysis-ansj</artifactId>
-	<version>2.4.1.0</version>
+	<version>5.0.0.0</version>
 	<description>elasticsearch analysis by ansj</description>
 	<name>elasticsearch-analysis-ansj</name>
 	<url>http://maven.nlpcn.org</url>
-
 
 	<repositories>
 		<repository>
@@ -24,14 +23,13 @@
 		</repository>
 	</distributionManagement>
 
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<runSuite>**/MainTestSuite.class</runSuite>
 		<elasticsearch.plugin.name>elasticsearch-analysis-ansj</elasticsearch.plugin.name>
 		<elasticsearch.plugin.site>true</elasticsearch.plugin.site>
 		<elasticsearch.plugin.jvm>true</elasticsearch.plugin.jvm>
-		<elasticsearch.version>2.4.1</elasticsearch.version>
+		<elasticsearch.version>5.0.0</elasticsearch.version>
 		<elasticsearch.plugin.classname>org.ansj.elasticsearch.plugin.AnalysisAnsjPlugin</elasticsearch.plugin.classname>
 	</properties>
 
@@ -40,14 +38,13 @@
 		<dependency>
 			<groupId>org.ansj</groupId>
 			<artifactId>ansj_seg</artifactId>
-			<version>5.0.1</version>
+			<version>5.0.4</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.ansj</groupId>
-			<artifactId>ansj_lucene5_plug</artifactId>
-			<version>5.0.1.0</version>
-			<scope>compile</scope>
+			<artifactId>ansj_lucene6_plug</artifactId>
+			<version>5.0.2</version>
 		</dependency>
 
 		<dependency>
@@ -65,6 +62,18 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.7</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -77,30 +86,12 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>net.orfjackal.retrolambda</groupId>
-				<artifactId>retrolambda-maven-plugin</artifactId>
-				<version>2.3.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>process-main</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<target>1.6</target>
-					<defaultMethods>false</defaultMethods>
-					<fork>false</fork>
-				</configuration>
-			</plugin>
-		
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 

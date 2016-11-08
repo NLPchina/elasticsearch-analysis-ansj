@@ -1,8 +1,8 @@
 package org.ansj.elasticsearch.pubsub.redis;
 
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
+import org.apache.logging.log4j.Logger;
 import org.elasticsearch.SpecialPermission;
-import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.Loggers;
 import org.nlpcn.commons.lang.util.StringUtil;
 
@@ -15,58 +15,58 @@ import java.util.regex.Pattern;
 
 public class FileUtils {
 
-	public static ESLogger logger = Loggers.getLogger("ansj-redis-msg-file");
+    private static final Logger logger = Loggers.getLogger("ansj-redis-msg-file");
 
-	public static void remove(String content) {
-		try {
-			removeFile(content, AnsjElasticConfigurator.REDIS_LIB_FILE, false);
-		} catch (Exception e) {
-			logger.error("remove exception", e);
-		}
-	}
+    public static void remove(String content) {
+        try {
+            removeFile(content, AnsjElasticConfigurator.REDIS_LIB_FILE, false);
+        } catch (Exception e) {
+            logger.error("remove exception", e);
+        }
+    }
 
-	public static void append(String content) {
-		try {
-			appendFile(content, AnsjElasticConfigurator.REDIS_LIB_FILE);
-		} catch (Exception e) {
-			logger.error("append exception", e);
-		}
-	}
+    public static void append(String content) {
+        try {
+            appendFile(content, AnsjElasticConfigurator.REDIS_LIB_FILE);
+        } catch (Exception e) {
+            logger.error("append exception", e);
+        }
+    }
 
-	public static void removeAMB(String content) {
-		try {
-			removeFile(content, AnsjElasticConfigurator.AMB_LIB_FILE, true);
-		} catch (Exception e) {
-			logger.error("removaAMB exception", e);
-		}
-	}
+    public static void removeAMB(String content) {
+        try {
+            removeFile(content, AnsjElasticConfigurator.AMB_LIB_FILE, true);
+        } catch (Exception e) {
+            logger.error("removaAMB exception", e);
+        }
+    }
 
-	public static void appendAMB(String content) {
-		try {
-			appendFile(content, AnsjElasticConfigurator.AMB_LIB_FILE);
-		} catch (Exception e) {
-			logger.error("appendAMB exception", e);
-		}
-	}
+    public static void appendAMB(String content) {
+        try {
+            appendFile(content, AnsjElasticConfigurator.AMB_LIB_FILE);
+        } catch (Exception e) {
+            logger.error("appendAMB exception", e);
+        }
+    }
 
-	private static void appendFile(final String content, final File file) throws Exception {
-		final SecurityManager sm = System.getSecurityManager();
-		if (sm != null) {
-			sm.checkPermission(new SpecialPermission());
-		}
-		AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
-			@Override
-			public Void run() {
-				try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-					writer.write(content);
-					writer.newLine();
-				} catch (IOException e) {
-					logger.error("appendFile exception", e);
-				}
-				return null;
-			}
-		});
-	}
+    private static void appendFile(final String content, final File file) throws Exception {
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new SpecialPermission());
+        }
+        AccessController.doPrivileged(new PrivilegedExceptionAction<Void>() {
+            @Override
+            public Void run() {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+                    writer.write(content);
+                    writer.newLine();
+                } catch (IOException e) {
+                    logger.error("appendFile exception", e);
+                }
+                return null;
+            }
+        });
+    }
 
     private static void removeFile(final String content, final File file, final boolean head) throws Exception {
         final SecurityManager sm = System.getSecurityManager();
@@ -115,11 +115,11 @@ public class FileUtils {
         return head ? !text.trim().matches("^" + content + "\\D*$") : !text.trim().equals(content);
     }
 
-	public static void main(String[] args) {
-		Pattern p = Pattern.compile("^满意\\D*$");
-		System.out.println(p.matcher("满意  满      a       意      a").matches());
-		System.out.println(p.matcher("满哈-满,意").matches());
-		System.out.println("满哈-满,意".replace(",", "\t"));
-	}
+    public static void main(String[] args) {
+        Pattern p = Pattern.compile("^满意\\D*$");
+        System.out.println(p.matcher("满意  满      a       意      a").matches());
+        System.out.println(p.matcher("满哈-满,意").matches());
+        System.out.println("满哈-满,意".replace(",", "\t"));
+    }
 
 }

@@ -7,32 +7,27 @@ import org.elasticsearch.common.io.stream.StreamOutput;
 import org.elasticsearch.common.io.stream.Streamable;
 import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentBuilderString;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by zhangqinghua on 16/2/2.
  */
 public class AnsjResponse extends ActionResponse implements Iterable<AnsjResponse.AnsjTerm>, ToXContent {
 
-
     private List<AnsjTerm> terms = Collections.emptyList();
 
-    public AnsjResponse(){}
-
-    public AnsjResponse(List<Term> ts){
-        this.terms = new ArrayList<>(ts.size());
-        for(Term t: ts){
-            this.terms.add(new AnsjTerm(t));
-        }
+    public AnsjResponse() {
     }
 
-
+    public AnsjResponse(List<Term> ts) {
+        this.terms = ts.stream().map(AnsjTerm::new).collect(Collectors.toList());
+    }
 
     public static class AnsjTerm implements Streamable {
         private String name;
@@ -100,13 +95,13 @@ public class AnsjResponse extends ActionResponse implements Iterable<AnsjRespons
 
     @Override
     public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
-        builder.startArray(Fields.TERMS);
+        builder.startArray("terms");
         for (AnsjTerm term : terms) {
             builder.startObject();
-            builder.field(Fields.NAME, term.getName());
-            builder.field(Fields.REAL_NAME, term.getRealName());
-            builder.field(Fields.NATURE, term.getNature());
-            builder.field(Fields.OFFSET, term.getOffset());
+            builder.field("name", term.getName());
+            builder.field("real_name", term.getRealName());
+            builder.field("nature", term.getNature());
+            builder.field("offset", term.getOffset());
             builder.endObject();
         }
         builder.endArray();
@@ -130,13 +125,5 @@ public class AnsjResponse extends ActionResponse implements Iterable<AnsjRespons
         for (AnsjTerm t : terms) {
             t.writeTo(out);
         }
-    }
-
-    static final class Fields {
-        static final XContentBuilderString TERMS = new XContentBuilderString("terms");
-        static final XContentBuilderString NAME = new XContentBuilderString("name");
-        static final XContentBuilderString REAL_NAME = new XContentBuilderString("real_name");
-        static final XContentBuilderString NATURE = new XContentBuilderString("nature");
-        static final XContentBuilderString OFFSET = new XContentBuilderString("offset");
     }
 }

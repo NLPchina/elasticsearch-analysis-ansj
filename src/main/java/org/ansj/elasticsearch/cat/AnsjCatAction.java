@@ -3,16 +3,15 @@ package org.ansj.elasticsearch.cat;
 import org.ansj.elasticsearch.action.AnsjAction;
 import org.ansj.elasticsearch.action.AnsjRequest;
 import org.ansj.elasticsearch.action.AnsjResponse;
-import org.elasticsearch.client.Client;
+import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.common.Table;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.rest.RestChannel;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.RestResponse;
+import org.elasticsearch.rest.action.RestResponseListener;
 import org.elasticsearch.rest.action.cat.AbstractCatAction;
-import org.elasticsearch.rest.action.support.RestResponseListener;
 
 /**
  * Created by zhangqinghua on 16/2/2.
@@ -20,13 +19,13 @@ import org.elasticsearch.rest.action.support.RestResponseListener;
 public class AnsjCatAction extends AbstractCatAction {
 
     @Inject
-    public AnsjCatAction(Settings settings, RestController controller, Client client) {
-        super(settings, controller, client);
+    public AnsjCatAction(Settings settings, RestController controller) {
+        super(settings);
         controller.registerHandler(RestRequest.Method.GET, "/_cat/ansj", this);
     }
 
     @Override
-    protected void doRequest(final RestRequest request, RestChannel channel, Client client) {
+    protected RestChannelConsumer doCatRequest(RestRequest request, NodeClient client) {
         AnsjRequest ansjRequest = new AnsjRequest();
         ansjRequest.text(request.param("text"));
         if (request.hasParam("type")) {
@@ -34,7 +33,8 @@ public class AnsjCatAction extends AbstractCatAction {
         } else {
             ansjRequest.type("index");
         }
-        client.execute(AnsjAction.INSTANCE, ansjRequest, new RestResponseListener<AnsjResponse>(channel) {
+
+        return channel -> client.execute(AnsjAction.INSTANCE, ansjRequest, new RestResponseListener<AnsjResponse>(channel) {
             @Override
             public RestResponse buildResponse(final AnsjResponse ansjResponse) throws Exception {
                 return ChineseRestTable.buildResponse(buildTable(ansjResponse, request), channel);

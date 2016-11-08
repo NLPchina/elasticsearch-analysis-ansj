@@ -1,44 +1,50 @@
 package org.ansj.elasticsearch.index.analysis;
 
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
-import org.ansj.lucene5.AnsjAnalyzer;
-import org.ansj.lucene5.AnsjAnalyzer.TYPE;
+import org.ansj.lucene6.AnsjAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.inject.assistedinject.Assisted;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
-import org.elasticsearch.index.Index;
+import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractIndexAnalyzerProvider;
-import org.elasticsearch.index.settings.IndexSettingsService;
+import org.elasticsearch.index.analysis.AnalyzerProvider;
+import org.elasticsearch.indices.analysis.AnalysisModule;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnalyzer> {
 
-	private TYPE type;
+    private final AnsjAnalyzer analyzer;
 
-	@Inject
-	public AnsjAnalyzerProvider(Index index, IndexSettingsService indexSettingsService, Environment env,
-			@Assisted String name, @Assisted Settings settings) {
-		super(index, indexSettingsService.getSettings(), name, settings);
+    @Inject
+    public AnsjAnalyzerProvider(IndexSettings indexSettings, Environment env, @Assisted String name, @Assisted Settings settings, AnsjAnalyzer.TYPE type) {
+        super(indexSettings, name, settings);
 
-		String typeName = indexSettingsService.getSettings().get("index.analysis.analyzer." + name + ".type");
+        analyzer = new AnsjAnalyzer(type, AnsjElasticConfigurator.filter);
+    }
 
-		if (typeName == null) {
-			typeName = settings.get("index.analysis.analyzer." + name + ".type");
-		}
+    @Override
+    public AnsjAnalyzer get() {
+        return analyzer;
+    }
 
-		if (typeName == null) {
-			AnsjElasticConfigurator.logger.error(
-					"index.analysis.analyzer.{}.type not setting! settings: {}  index_settings:{}", name,
-					settings.getAsMap(), indexSettingsService.getSettings().getAsMap());
-		} else {
-			type = TYPE.valueOf(typeName.replace(AnsjAnalysis.SUFFIX, ""));
-		}
+    public static Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> getAnalyzers() {
+        Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> extra = new HashMap<>();
 
-	}
+        AnsjAnalyzer.TYPE[] values = AnsjAnalyzer.TYPE.values();
 
-	@Override
-	public AnsjAnalyzer get() {
-		return new AnsjAnalyzer(type, AnsjElasticConfigurator.filter);
-	}
+        String str;
+        for (final AnsjAnalyzer.TYPE type : values) {
 
+            str = type.name() + AnsjElasticConfigurator.SUFFIX;
+            extra.put(str, (indexSettings, env, name, settings) -> new AnsjAnalyzerProvider(indexSettings, env, name, settings, type));
+
+            AnsjElasticConfigurator.logger.info("regedit analyzer provider named : {}", str);
+        }
+
+        return extra;
+    }
 }

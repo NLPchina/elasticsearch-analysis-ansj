@@ -6,11 +6,11 @@ import org.ansj.splitWord.analysis.IndexAnalysis;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.elasticsearch.action.support.ActionFilters;
 import org.elasticsearch.action.support.single.shard.TransportSingleShardAction;
-import org.elasticsearch.cluster.ClusterService;
 import org.elasticsearch.cluster.ClusterState;
 import org.elasticsearch.cluster.block.ClusterBlockException;
 import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
 import org.elasticsearch.cluster.routing.ShardsIterator;
+import org.elasticsearch.cluster.service.ClusterService;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.shard.ShardId;
@@ -18,18 +18,17 @@ import org.elasticsearch.threadpool.ThreadPool;
 import org.elasticsearch.transport.TransportService;
 
 /**
- *
  * Created by zhangqinghua on 16/2/2.
  */
-public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,AnsjResponse> {
+public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest, AnsjResponse> {
 
+    @Inject
+    public TransportAnsjAction(Settings settings,
+                               ThreadPool threadPool, ClusterService clusterService,
+                               TransportService transportService, ActionFilters actionFilters,
+                               IndexNameExpressionResolver indexNameExpressionResolver) {
 
-    @Inject public TransportAnsjAction(Settings settings,
-                                  ThreadPool threadPool, ClusterService clusterService,
-                                  TransportService transportService, ActionFilters actionFilters,
-                                  IndexNameExpressionResolver indexNameExpressionResolver) {
-
-        super(settings, AnsjAction.NAME, threadPool, clusterService,transportService, actionFilters, indexNameExpressionResolver, AnsjRequest.class,ThreadPool.Names.INDEX);
+        super(settings, AnsjAction.NAME, threadPool, clusterService, transportService, actionFilters, indexNameExpressionResolver, AnsjRequest::new, ThreadPool.Names.INDEX);
     }
 
     @Override
@@ -37,11 +36,11 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
         String type = request.type();
         String text = request.text();
         Result ret;
-        if(type.equals("index")){
+        if (type.equals("index")) {
             ret = IndexAnalysis.parse(text);
-        }else if(type.equals("user")){
+        } else if (type.equals("user")) {
             ret = DicAnalysis.parse(text);
-        }else{
+        } else {
             ret = ToAnalysis.parse(text);
         }
         return new AnsjResponse(ret.getTerms());
