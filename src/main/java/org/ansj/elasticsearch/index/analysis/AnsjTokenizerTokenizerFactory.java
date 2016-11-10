@@ -28,11 +28,6 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractTokenizerFactory;
-import org.elasticsearch.index.analysis.TokenizerFactory;
-import org.elasticsearch.indices.analysis.AnalysisModule;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
@@ -48,22 +43,5 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
     @Override
     public Tokenizer create() {
         return AnsjAnalyzer.getTokenizer(null, type, AnsjElasticConfigurator.filter);
-    }
-
-    public static Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> getTokenizers() {
-        Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> extra = new HashMap<>();
-
-        AnsjAnalyzer.TYPE[] values = AnsjAnalyzer.TYPE.values();
-        String str;
-
-        for (final AnsjAnalyzer.TYPE item : values) {
-
-            str = item.name() + AnsjElasticConfigurator.SUFFIX;
-            extra.put(str, (indexSettings, env, name, settings) -> new AnsjTokenizerTokenizerFactory(indexSettings, env, name, settings, item));
-
-            AnsjElasticConfigurator.logger.info("regedit analyzer tokenizer named : {}", str);
-        }
-
-        return extra;
     }
 }

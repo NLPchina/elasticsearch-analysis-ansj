@@ -8,6 +8,7 @@ import org.ansj.elasticsearch.index.analysis.AnsjAnalyzerProvider;
 import org.ansj.elasticsearch.index.analysis.AnsjTokenizerTokenizerFactory;
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.elasticsearch.rest.RestAnsjAction;
+import org.ansj.lucene6.AnsjAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.action.ActionRequest;
 import org.elasticsearch.action.ActionResponse;
@@ -23,31 +24,61 @@ import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestHandler;
 import org.elasticsearch.rest.action.cat.AbstractCatAction;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, ActionPlugin {
 
     public static final String PLUGIN_NAME = "analysis-ansj";
 
+    @Override
     public Collection<Module> createGuiceModules() {
         return Collections.singletonList(new AnsjModule());
     }
 
+    @Override
     public Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> getTokenizers() {
-        return AnsjTokenizerTokenizerFactory.getTokenizers();
+
+        Map<String, AnalysisModule.AnalysisProvider<TokenizerFactory>> extra = new HashMap<>();
+
+        AnsjAnalyzer.TYPE[] values = AnsjAnalyzer.TYPE.values();
+        String str;
+
+        for (final AnsjAnalyzer.TYPE type : values) {
+
+            str = type.name() + AnsjElasticConfigurator.SUFFIX;
+            extra.put(str, (indexSettings, env, name, settings) -> new AnsjTokenizerTokenizerFactory(indexSettings, env, name, settings, type));
+
+            AnsjElasticConfigurator.logger.info("regedit analyzer tokenizer named : {}", str);
+        }
+
+        return extra;
     }
 
+    @Override
     public Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> getAnalyzers() {
-        return AnsjAnalyzerProvider.getAnalyzers();
+
+        Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> extra = new HashMap<>();
+
+        AnsjAnalyzer.TYPE[] values = AnsjAnalyzer.TYPE.values();
+        String str;
+
+        for (final AnsjAnalyzer.TYPE type : values) {
+
+            str = type.name() + AnsjElasticConfigurator.SUFFIX;
+            extra.put(str, (indexSettings, env, name, settings) -> new AnsjAnalyzerProvider(indexSettings, env, name, settings, type));
+
+            AnsjElasticConfigurator.logger.info("regedit analyzer provider named : {}", str);
+        }
+
+        return extra;
     }
 
+    @Override
     public List<ActionHandler<? extends ActionRequest<?>, ? extends ActionResponse>> getActions() {
         return Collections.singletonList(new ActionHandler<>(AnsjAction.INSTANCE, TransportAnsjAction.class));
     }
 
+    @Override
     public List<Class<? extends RestHandler>> getRestHandlers() {
         return Collections.singletonList(RestAnsjAction.class);
     }
