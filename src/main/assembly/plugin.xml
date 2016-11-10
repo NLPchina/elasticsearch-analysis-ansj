@@ -8,9 +8,16 @@
         <format>zip</format>
     </formats>
     <fileSets>  
-        <fileSet>  
-            <directory>${project.basedir}/src/main/dic</directory>  
-            <outputDirectory>/</outputDirectory>  
+        <fileSet>
+            <directory>${project.basedir}/config/dic</directory>
+            <outputDirectory>/</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/config</directory>
+            <outputDirectory>/config</outputDirectory>
+            <excludes>
+                <exclude>**/dic/**</exclude>
+            </excludes>
         </fileSet>
 
         <fileSet>

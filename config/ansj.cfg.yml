@@ -1,0 +1,23 @@
+## ansj配置
+ansj:
+ dic_path: "ansj/dic/user/" ##用户词典位置
+ ambiguity_path: "ansj/dic/ambiguity.dic" ##歧义词典
+ enable_name_recognition: true ##人名识别
+ enable_num_recognition: true ##数字识别
+ enable_quantifier_recognition: false ##量词识别
+ enabled_stop_filter: true ##是否基于词典过滤
+ enable_skip_user_define: false ## 是否用户词典不加载相同的词
+ stop_path: "ansj/dic/stopLibrary.dic" ##停止过滤词典
+## redis 不是必需的
+ redis:
+  pool:
+   maxactive: 20
+   maxidle: 10
+   maxwait: 100
+   testonborrow: true
+  ip: 10.0.85.51:6379
+  timeout: 2000
+  #password: "******" ## 不要添加这个配置，除非redis需要权限认证
+  channel: ansj_term ## publish时的channel名称
+  write:
+    dic: "ext.dic" ## 如果有使用redis的pubsub方式更新词典。如果没有配置，默认使用的是$ES_HOME/config/ansj/dic/user/ext.dic
