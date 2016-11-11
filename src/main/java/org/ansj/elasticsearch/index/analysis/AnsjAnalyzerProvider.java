@@ -17,8 +17,6 @@ public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnal
     public AnsjAnalyzerProvider(IndexSettings indexSettings, Environment env, @Assisted String name, @Assisted Settings settings, AnsjAnalyzer.TYPE type) {
         super(indexSettings, name, settings);
 
-        AnsjElasticConfigurator.init(env);
-
         analyzer = new AnsjAnalyzer(type, AnsjElasticConfigurator.filter);
     }
 

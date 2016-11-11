@@ -9,6 +9,7 @@ import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.ExceptionsHelper;
 import org.elasticsearch.SpecialPermission;
+import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
@@ -32,8 +33,6 @@ public class AnsjElasticConfigurator {
 
     public static final Logger logger = Loggers.getLogger("ansj-initializer");
 
-    private static volatile boolean loaded = false;
-
     private static final String DEFAULT_USER_LIB_PATH = "ansj/dic/user/";
     private static final String DEFAULT_REDIS_LIB_PATH = DEFAULT_USER_LIB_PATH + "ext.dic";
     public static File REDIS_LIB_FILE = null;
@@ -47,11 +46,8 @@ public class AnsjElasticConfigurator {
     public static final String SUFFIX = "_ansj";
     private static final String CONFIG_FILE_NAME = "ansj.cfg.yml";
 
-    public static void init(Environment env) {
-        if (isLoaded()) {
-            return;
-        }
-
+    @Inject
+    public AnsjElasticConfigurator(Environment env) {
         Path configFilePath = env.configFile().resolve(AnalysisAnsjPlugin.PLUGIN_NAME).resolve(CONFIG_FILE_NAME);
         logger.info("try to load ansj config file: {}", configFilePath);
         if (!Files.exists(configFilePath)) {
@@ -79,11 +75,9 @@ public class AnsjElasticConfigurator {
         preheat();
         logger.info("ansj分词器预热完毕，可以使用!");
         initRedis(ansjSettings, env);
-
-        setLoaded(true);
     }
 
-    private static void initRedis(final Settings settings, Environment environment) {
+    private void initRedis(final Settings settings, Environment environment) {
         if (null == settings.get("redis.ip")) {
             logger.info("没有找到redis相关配置!");
             return;
@@ -135,11 +129,11 @@ public class AnsjElasticConfigurator {
         }).start();
     }
 
-    private static void preheat() {
+    private void preheat() {
         ToAnalysis.parse("这是一个基于ansj的分词插件");
     }
 
-    private static void initConfig(Settings settings, Environment environment) {
+    private void initConfig(Settings settings, Environment environment) {
 
         Path path = environment.configFile().resolve(settings.get("dic_path", DEFAULT_USER_LIB_PATH));
         final SecurityManager sm = System.getSecurityManager();
@@ -194,7 +188,7 @@ public class AnsjElasticConfigurator {
         }
     }
 
-    private static void loadFilter(Settings settings, Environment environment) {
+    private void loadFilter(Settings settings, Environment environment) {
         Set<String> filters = new HashSet<>();
         String stopLibraryPath = settings.get("stop_path", DEFAULT_STOP_FILE_LIB_PATH);
         if (stopLibraryPath == null) {
@@ -221,7 +215,7 @@ public class AnsjElasticConfigurator {
         logger.info("ansj停止词典加载完毕!");
     }
 
-    private static void loadRedisLib(Settings settings, Environment environment) {
+    private void loadRedisLib(Settings settings, Environment environment) {
         REDIS_LIB_FILE = environment.configFile().resolve(settings.get("redis.write.dic", DEFAULT_REDIS_LIB_PATH)).toFile();
         logger.debug("redis词典路径:{}", REDIS_LIB_FILE.getAbsolutePath());
         if (!REDIS_LIB_FILE.isFile()) {
@@ -240,16 +234,7 @@ public class AnsjElasticConfigurator {
         logger.info("加载redis词典:{} 成功!", REDIS_LIB_FILE.getAbsolutePath());
     }
 
-    private static void emptyFilter() {
+    private void emptyFilter() {
         filter = new HashSet<>();
     }
-
-    private static boolean isLoaded() {
-        return loaded;
-    }
-
-    private static void setLoaded(boolean loaded) {
-        AnsjElasticConfigurator.loaded = loaded;
-    }
-
 }
