@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>org.ansj</groupId>
 			<artifactId>ansj_lucene6_plug</artifactId>
-			<version>5.0.2</version>
+			<version>5.0.4</version>
 		</dependency>
 
 		<dependency>
@@ -61,12 +61,6 @@
 			<artifactId>elasticsearch</artifactId>
 			<version>${elasticsearch.version}</version>
 			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.21</version>
 		</dependency>
 
 		<dependency>
