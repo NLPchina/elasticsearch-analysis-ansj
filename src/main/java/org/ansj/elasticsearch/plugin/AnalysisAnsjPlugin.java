@@ -86,7 +86,6 @@ public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, Action
     private class AnsjModule extends AbstractModule {
         @Override
         protected void configure() {
-            bind(AnsjElasticConfigurator.class).asEagerSingleton();
             Multibinder<AbstractCatAction> catActionMultibinder = Multibinder.newSetBinder(binder(), AbstractCatAction.class);
             catActionMultibinder.addBinding().to(AnalyzerCatAction.class).asEagerSingleton();
             catActionMultibinder.addBinding().to(AnsjCatAction.class).asEagerSingleton();

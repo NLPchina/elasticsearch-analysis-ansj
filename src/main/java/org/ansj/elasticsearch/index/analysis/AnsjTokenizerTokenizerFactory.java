@@ -37,6 +37,8 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
     public AnsjTokenizerTokenizerFactory(IndexSettings indexSettings, Environment env, @Assisted String name, @Assisted Settings settings, AnsjAnalyzer.TYPE type) {
         super(indexSettings, name, settings);
 
+        AnsjElasticConfigurator.init(env);
+
         this.type = type;
     }
 
