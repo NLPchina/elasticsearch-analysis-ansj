@@ -16,8 +16,14 @@
 | 2.3.4         |     2.3.4     |
 | 2.3.5         |     2.3.5     |
 | 2.4.0         |     2.4.0     |
-| master        |     2.4.1     |
+| 2.4.1         |     2.4.1     |
+| master        |     5.0.0     |
 
+
+##5.0.0 插件安装
+
+下载压缩包：http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/5.0.0.0/elasticsearch-analysis-ansj-5.0.0.0-release.zip
+解压到$ES_HOME/plugins目录下
 
 ##2.4.1 插件安装
 
@@ -110,6 +116,11 @@
 
 
 ==========
+
+## 2016年11月11日
++ elasticsearch更新至5.0.0
++ ansj_seg升级至5.0.4
++ 新增配置文件config/ansj.cfg.yml
 
 
 ## 2016年04月16日
@@ -289,6 +300,7 @@ http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%8
 + ansj的核心词典是和插件一起安装的在插件目录下面
 + 由于使用redis的pubsub功能，需要相关权限控制，安装的时候必须获得允许，而2.3.3.2以前的版本需要加./elasticsearch -Des.security.manager.enabled=false参数才能解决
 + 请慎重使用redis的pubsub功能
++ 5.0.0版本新增配置文件config/ansj.cfg.yml，需要放入$ES_HOME/config/analysis-ansj/ansj.cfg.yml或者$ES_HOME/plugins/elasticsearch-analysis-ansj-*/config/ansj.cfg.yml
 
 ```yaml
 ## ansj配置
