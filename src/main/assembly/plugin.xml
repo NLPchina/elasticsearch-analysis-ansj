@@ -7,14 +7,15 @@
     <formats>
         <format>zip</format>
     </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>  
         <fileSet>
             <directory>${project.basedir}/config/dic</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/elasticsearch</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/config</directory>
-            <outputDirectory>/config</outputDirectory>
+            <outputDirectory>/elasticsearch/config</outputDirectory>
             <excludes>
                 <exclude>**/dic/**</exclude>
             </excludes>
@@ -22,23 +23,19 @@
 
         <fileSet>
             <directory>${project.basedir}/src/main/plugin-metadata</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/elasticsearch</outputDirectory>
         </fileSet>
-        
-        <fileSet>
-			<directory>${project.basedir}/_site/</directory>
-			<outputDirectory>_site/</outputDirectory>
-		</fileSet>
     </fileSets>
     <files>
         <file>
             <source>${project.basedir}/src/main/resources/plugin-descriptor.properties</source>
             <filtered>true</filtered>
+            <outputDirectory>/elasticsearch</outputDirectory>
         </file>
     </files>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/elasticsearch</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <excludes>
                 <exclude>org.elasticsearch:elasticsearch</exclude>
