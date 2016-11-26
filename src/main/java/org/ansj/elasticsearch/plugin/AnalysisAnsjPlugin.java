@@ -28,7 +28,7 @@ import java.util.*;
 
 public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, ActionPlugin {
 
-    public static final String PLUGIN_NAME = "analysis-ansj";
+    public static final String PLUGIN_NAME = "elasticsearch-analysis-ansj";
 
     @Override
     public Collection<Module> createGuiceModules() {
