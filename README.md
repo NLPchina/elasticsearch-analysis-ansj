@@ -17,8 +17,19 @@
 | 2.3.5         |     2.3.5     |
 | 2.4.0         |     2.4.0     |
 | 2.4.1         |     2.4.1     |
-| master        |     5.0.0     |
+| 5.0.0         |     5.0.0     |
+| master        |     5.0.1     |
 
+
+##5.0.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/5.0.1.0/elasticsearch-analysis-ansj-5.0.1.0-release.zip
+````
 
 ##5.0.0 插件安装
 
