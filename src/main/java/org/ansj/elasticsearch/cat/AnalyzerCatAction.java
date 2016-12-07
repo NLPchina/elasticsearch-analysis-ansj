@@ -11,6 +11,7 @@ import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.RestResponse;
 import org.elasticsearch.rest.action.RestResponseListener;
 import org.elasticsearch.rest.action.cat.AbstractCatAction;
+import org.nlpcn.commons.lang.util.StringUtil;
 
 /**
  * 分词的cat
@@ -32,7 +33,11 @@ public class AnalyzerCatAction extends AbstractCatAction {
         analyzeRequest.text(texts);
         analyzeRequest.analyzer(request.param("analyzer"));
         analyzeRequest.field(request.param("field"));
-        analyzeRequest.tokenizer(request.param("tokenizer"));
+
+        String tokenizer = request.param("tokenizer");
+        if (StringUtil.isNotBlank(tokenizer)) {
+            analyzeRequest.tokenizer(tokenizer);
+        }
 
         String[] filters = request.paramAsStringArray("token_filters", request.paramAsStringArray("filters", new String[0]));
         for (String filter : filters) {
