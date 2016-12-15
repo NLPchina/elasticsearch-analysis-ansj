@@ -14,13 +14,4 @@ public class AnsjRequestBuilder extends ActionRequestBuilder<AnsjRequest,AnsjRes
         super(client, action, new AnsjRequest());
     }
 
-    public AnsjRequestBuilder setText(String text){
-        request.text(text);
-        return this;
-    }
-
-    public AnsjRequestBuilder setType(String text){
-        request.type(text);
-        return this;
-    }
 }

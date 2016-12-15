@@ -57,4 +57,5 @@ public class AnalysisAnsjPlugin extends Plugin {
 			catActionMultibinder.addBinding().to(AnsjCatAction.class).asEagerSingleton();
 		}
 	}
+
 }

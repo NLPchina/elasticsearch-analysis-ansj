@@ -1,0 +1,155 @@
+# ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please see the documentation for further information on configuration options:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/setup-configuration.html>
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+# cluster.name: my-application
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+# node.name: node-1
+#
+# Add custom attributes to the node:
+#
+# node.rack: r1
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+# path.data: /path/to/data
+#
+# Path to log files:
+#
+# path.logs: /path/to/logs
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+# bootstrap.mlockall: true
+#
+# Make sure that the `ES_HEAP_SIZE` environment variable is set to about half the memory
+# available on the system and that the owner of the process is allowed to use this limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# Set the bind address to a specific IP (IPv4 or IPv6):
+#
+# network.host: 192.168.0.1
+#
+# Set a custom port for HTTP:
+#
+# http.port: 9200
+#
+# For more information, see the documentation at:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html>
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when new node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#
+# discovery.zen.ping.unicast.hosts: ["host1", "host2"]
+#
+# Prevent the "split brain" by configuring the majority of nodes (total number of nodes / 2 + 1):
+#
+# discovery.zen.minimum_master_nodes: 3
+#
+# For more information, see the documentation at:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery.html>
+#
+# ---------------------------------- Gateway -----------------------------------
+#
+# Block initial recovery after a full cluster restart until N nodes are started:
+#
+# gateway.recover_after_nodes: 3
+#
+# For more information, see the documentation at:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-gateway.html>
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Disable starting multiple nodes on a single system:
+#
+# node.max_local_storage_nodes: 1
+#
+# Require explicit names when deleting indices:
+#
+# action.destructive_requires_name: true
+
+# 全局变量配置方式一
+ansj:
+  #默认参数配置
+  isNameRecognition: true #开启姓名识别
+  isNumRecognition: true #开启数字识别
+  isQuantifierRecognition: true #是否数字和量词合并
+  isRealName: false; #是否保留真实词语,建议保留false
+
+  #用户自定词典配置  
+  dic: default.dic #也可以写成 file//default.dic , 如果未配置dic,则此词典默认加载
+  # http方式加载
+  #dic_d1: http://xxx/xx.dic
+  # jar中文件加载 
+  #dic_d2: jar://org.ansj.dic.DicReader|/dic2.dic
+  # 从数据库中加载
+  #dic_d3: jdbc:mysql://xxxx:3306/ttt?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull|username|password|select name as name,nature,freq from dic where type=1
+  # 从自定义类中加载,YourClas  extends PathToStream 
+  #dic_d3: class://xxx.xxx.YourClas|ohterparam 
+
+  #过滤词典配置  
+  #stop: http,file,jar,class,jdbc 都支持
+  #stop_key1: ...
+  
+  #歧义词典配置
+  #ambiguity: http,file,jar,class,jdbc 都支持
+  #ambiguity_key1: ...
+  
+  #同义词词典配置
+  #synonyms: http,file,jar,class,jdbc 都支持
+  #synonyms_key1: ...
+  
+
+
+# 全局变量配置方式二 通过配置文件的方式配置,优先级高于es本身的配置
+ansj_config: ansj_library.properties #http,file,jar,class,jdbc 都支持,格式参见ansj_library.properties
+  
+# 配置自定义分词器
+
+
+
+index:
+  analysis:
+    tokenizer :
+      my_dic :
+        type : dic_ansj
+        dic: dic
+        stop: stop
+        ambiguity: ambiguity
+        synonyms: synonyms
+        isNameRecognition: true 
+        isNumRecognition: true 
+        isQuantifierRecognition: true 
+        isRealName: false; 
+      
+    analyzer:
+      my_dic:
+        type: custom
+        tokenizer: my_dic
+        
+      

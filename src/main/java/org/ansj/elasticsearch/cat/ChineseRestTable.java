@@ -1,5 +1,12 @@
 package org.ansj.elasticsearch.cat;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /*
  * Licensed to Elasticsearch under one or more contributor
  * license agreements. See the NOTICE file distributed with
@@ -30,26 +37,62 @@ import org.elasticsearch.common.unit.SizeValue;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.rest.*;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import org.elasticsearch.rest.BytesRestResponse;
+import org.elasticsearch.rest.RestChannel;
+import org.elasticsearch.rest.RestRequest;
+import org.elasticsearch.rest.RestResponse;
+import org.elasticsearch.rest.RestStatus;
 
 /**
  */
 public class ChineseRestTable {
 
+	/**
+	 * 返回一个table
+	 * 
+	 * @param table
+	 * @param channel
+	 * @return
+	 * @throws Exception
+	 */
 	public static RestResponse buildResponse(Table table, RestChannel channel) throws Exception {
 		RestRequest request = channel.request();
-		XContentType xContentType = XContentType
-				.fromRestContentType(request.param("format", request.header("Content-Type")));
+		XContentType xContentType = XContentType.fromRestContentType(request.param("format", request.header("Content-Type")));
 		if (xContentType != null) {
 			return buildXContentBuilder(table, channel);
 		}
 		return buildTextPlainResponse(table, channel);
+	}
+
+	/**
+	 * 换回一个字符串
+	 * 
+	 * @param channel
+	 * @param text
+	 * @return
+	 * @throws IOException
+	 */
+	public static RestResponse reponse(RestChannel channel, String text) throws IOException {
+		BytesStreamOutput bytesOut = channel.bytesOutput();
+		try (UTF8StreamWriter out = new UTF8StreamWriter()) {
+			out.setOutput(bytesOut);
+			out.append(text);
+		}
+		return new BytesRestResponse(RestStatus.OK, BytesRestResponse.TEXT_CONTENT_TYPE, bytesOut.bytes());
+	}
+
+	/**
+	 * 返回一个json
+	 * 
+	 * @param channel
+	 * @param map
+	 * @return
+	 * @throws IOException
+	 */
+	public static RestResponse reponse(RestChannel channel, Map<String, Object> map) throws IOException {
+		XContentBuilder builder = channel.newBuilder() ;
+		builder.map(map) ;
+		return new BytesRestResponse(RestStatus.OK,builder);
 	}
 
 	public static RestResponse buildXContentBuilder(Table table, RestChannel channel) throws Exception {
@@ -78,7 +121,8 @@ public class ChineseRestTable {
 		int[] width = buildWidths(table, request, verbose, headers);
 
 		BytesStreamOutput bytesOut = channel.bytesOutput();
-		try (UTF8StreamWriter out = new UTF8StreamWriter().setOutput(bytesOut)) {
+		try (UTF8StreamWriter out = new UTF8StreamWriter()) {
+			out.setOutput(bytesOut);
 			if (verbose) {
 				for (int col = 0; col < headers.size(); col++) {
 					DisplayHeader header = headers.get(col);
@@ -152,12 +196,7 @@ public class ChineseRestTable {
 	}
 
 	/**
-	 * Extracts all the required fields from the RestRequest 'h' parameter. In
-	 * order to support wildcards like 'bulk.*' this needs potentially parse all
-	 * the configured headers and its aliases and needs to ensure that
-	 * everything is only added once to the returned headers, even if
-	 * 'h=bulk.*.bulk.*' is specified or some headers are contained twice due to
-	 * matching aliases
+	 * Extracts all the required fields from the RestRequest 'h' parameter. In order to support wildcards like 'bulk.*' this needs potentially parse all the configured headers and its aliases and needs to ensure that everything is only added once to the returned headers, even if 'h=bulk.*.bulk.*' is specified or some headers are contained twice due to matching aliases
 	 */
 	private static Set<String> expandHeadersFromRequest(Table table, RestRequest request) {
 		Set<String> headers = new LinkedHashSet<>(table.getHeaders().size());

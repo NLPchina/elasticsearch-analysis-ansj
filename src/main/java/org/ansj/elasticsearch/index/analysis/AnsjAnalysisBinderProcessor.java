@@ -19,13 +19,16 @@
 
 package org.ansj.elasticsearch.index.analysis;
 
-import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.lucene5.AnsjAnalyzer;
+import org.elasticsearch.common.logging.ESLogger;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.index.analysis.AnalysisModule;
 
 /**
  */
 public class AnsjAnalysisBinderProcessor extends AnalysisModule.AnalysisBinderProcessor {
+
+	public static final ESLogger LOG = Loggers.getLogger(AnsjAnalysisBinderProcessor.class);
 
 	@Override
 	public void processAnalyzers(AnalyzersBindings analyzersBindings) {
@@ -36,11 +39,11 @@ public class AnsjAnalysisBinderProcessor extends AnalysisModule.AnalysisBinderPr
 
 			final AnsjAnalyzer.TYPE type = values[i];
 
-			final String name = type.name() + AnsjAnalysis.SUFFIX;
+			final String name = type.name() ;
 
 			analyzersBindings.processAnalyzer(name, AnsjAnalyzerProvider.class);
 
-			AnsjElasticConfigurator.logger.info("regedit analyzer provider named : {}", name);
+			LOG.debug("regedit analyzer provider named : {}", name);
 		}
 
 	}
@@ -54,11 +57,11 @@ public class AnsjAnalysisBinderProcessor extends AnalysisModule.AnalysisBinderPr
 
 			final AnsjAnalyzer.TYPE type = values[i];
 
-			final String name = type.name() + AnsjAnalysis.SUFFIX;
+			final String name = type.name() ;
 
 			tokenizersBindings.processTokenizer(name, AnsjTokenizerTokenizerFactory.class);
 
-			AnsjElasticConfigurator.logger.info("regedit analyzer tokenizer named : {}", name);
+			LOG.debug("regedit analyzer tokenizer named : {}", name);
 		}
 	}
 
