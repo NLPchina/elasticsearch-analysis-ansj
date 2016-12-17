@@ -1,7 +1,5 @@
 package org.ansj.elasticsearch.action;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -42,10 +40,9 @@ import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.shard.ShardId;
 import org.elasticsearch.threadpool.ThreadPool;
-import org.elasticsearch.transport.TransportService;
+import org.elasticsearch.transport.*;
 import org.nlpcn.commons.lang.tire.domain.Forest;
 import org.nlpcn.commons.lang.tire.domain.SmartForest;
-import org.nlpcn.commons.lang.util.IOUtil;
 import org.nlpcn.commons.lang.util.StringUtil;
 
 /**
@@ -56,13 +53,10 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
 	public static final ESLogger LOG = Loggers.getLogger(TransportAnsjAction.class);
 
-	private ClusterService clusterService;
-
 	@Inject
 	public TransportAnsjAction(Settings settings, ThreadPool threadPool, ClusterService clusterService, TransportService transportService, ActionFilters actionFilters,
 			IndexNameExpressionResolver indexNameExpressionResolver) {
 		super(settings, AnsjAction.NAME, threadPool, clusterService, transportService, actionFilters, indexNameExpressionResolver, AnsjRequest.class, ThreadPool.Names.INDEX);
-		this.clusterService = clusterService;
 	}
 
 	@Override
@@ -134,31 +128,35 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
 		DiscoveryNodes nodes = clusterState.nodes();
 
-		Map<String, Boolean> result = new HashMap<>();
+        final AnsjRequest req = new AnsjRequest("/_cat/ansj/flush/single");
+        req.put("key", request.get("key"));
 
-		for (DiscoveryNode node : nodes) {
+        for (final DiscoveryNode node : nodes) {
 
-			try {
-				//TODO: 这里有问题9200写死了.应该有更好的方法访问全部节点
-				URL url = new URL("http://" + node.getHostAddress() + ":9200/_cat/ansj/flush/single?key=" + request.get("key"));
+            transportService.sendRequest(node, AnsjAction.NAME, req, new BaseTransportResponseHandler<AnsjResponse>() {
+                @Override
+                public AnsjResponse newInstance() {
+                    return newResponse();
+                }
 
-				try (InputStream openStream = url.openStream()) {
-					String content = IOUtil.getContent(openStream, "utf-8");
-					if (content.contains(MESSAGE)) {
-						result.put(node.address().toString(), true);
-					} else {
-						result.put(node.address().toString(), false);
-					}
+                @Override
+                public void handleResponse(AnsjResponse response) {
+                    LOG.info("[{}] response: {}", node, response.asMap());
+                }
 
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				result.put(node.address().toString(), false);
-			}
+                @Override
+                public void handleException(TransportException exp) {
+                    LOG.warn("failed to send request[path:{},args:{}] to [{}]: {}", req.getPath(), req.asMap(), node, exp);
+                }
 
+                @Override
+                public String executor() {
+                    return ThreadPool.Names.SAME;
+                }
+            });
 		}
 
-		return new AnsjResponse(result);
+		return new AnsjResponse();
 	}
 
 	private AnsjResponse executeAnalyzer(AnsjRequest request) {
