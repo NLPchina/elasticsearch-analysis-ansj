@@ -55,6 +55,7 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
 	@Override
 	public void readFrom(StreamInput in) throws IOException {
 		super.readFrom(in);
+		path = in.readString();
 		args = in.readMap();
 		source = in.readBytesReference();
 	}
@@ -62,6 +63,7 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
 	@Override
 	public void writeTo(StreamOutput out) throws IOException {
 		super.writeTo(out);
+		out.writeString(path);
 		out.writeMap(args);
 		out.writeBytesReference(source);
 
