@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.ansj.domain.Result;
 import org.ansj.domain.Term;
@@ -40,7 +41,9 @@ import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.shard.ShardId;
 import org.elasticsearch.threadpool.ThreadPool;
-import org.elasticsearch.transport.*;
+import org.elasticsearch.transport.BaseTransportResponseHandler;
+import org.elasticsearch.transport.TransportException;
+import org.elasticsearch.transport.TransportService;
 import org.nlpcn.commons.lang.tire.domain.Forest;
 import org.nlpcn.commons.lang.tire.domain.SmartForest;
 import org.nlpcn.commons.lang.util.StringUtil;
@@ -64,31 +67,97 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
 		if ("/_cat/ansj".equals(request.getPath())) { //执行分词
 			return executeAnalyzer(request);
-		} else if ("/_cat/ansj/config".equals(request.getPath())) { //执行分词
-			return config();
-		} else if ("/_cat/ansj/flush".equals(request.getPath())) { //更行词典
-			return updateAllDic(request);
-		} else if ("/_cat/ansj/flush/single".equals(request.getPath())) { //更新全部词典
-			return updateDic(request);
+		} else if ("/_cat/ansj/config".equals(request.getPath())) { //刷新全部配置
+			return showConfig();
+		} else if ("/_ansj/flush/config".equals(request.getPath())) { //刷新全部配置
+			return flushConfigAll();
+		} else if ("/_ansj/flush/config/single".equals(request.getPath())) { // 执行刷新配置
+			return flushConfig();
+		} else if ("/_ansj/flush/dic".equals(request.getPath())) { //更新全部词典
+			return flushDicAll(request);
+		} else if ("/_ansj/flush/dic/single".equals(request.getPath())) { //执行更新词典
+			return flushDic(request);
 		}
 
 		return new AnsjResponse().put("message", "not find any by path " + request.getPath());
 	}
 
-	private AnsjResponse config() {
+	private AnsjResponse flushConfigAll() {
+		ClusterState clusterState = clusterService.state();
+		clusterState.blocks().globalBlockedRaiseException(ClusterBlockLevel.READ);
+
+		DiscoveryNodes nodes = clusterState.nodes();
+
+		final AnsjRequest req = new AnsjRequest("/_ansj/flush/config/single");
+
+		final AtomicInteger ai = new AtomicInteger(nodes.getSize());
+
+		final Map<String, String> result = new HashMap<>();
+
+		for (final DiscoveryNode node : nodes) {
+
+			result.put(node.getAddress().toString(), "time out");
+
+			BaseTransportResponseHandler<AnsjResponse> rep = new BaseTransportResponseHandler<AnsjResponse>() {
+				@Override
+				public AnsjResponse newInstance() {
+					return newResponse();
+				}
+
+				@Override
+				public void handleResponse(AnsjResponse response) {
+					LOG.info("[{}] response: {}", node, response.asMap());
+					ai.decrementAndGet();
+					result.put(node.getAddress().toString(), "success");
+				}
+
+				@Override
+				public void handleException(TransportException exp) {
+					LOG.warn("failed to send request[path:{},args:{}] to [{}]: {}", req.getPath(), req.asMap(), node, exp);
+					ai.decrementAndGet();
+					result.put(node.getAddress().toString(), "err :" + exp.getMessage());
+				}
+
+				@Override
+				public String executor() {
+					return ThreadPool.Names.SAME;
+				}
+
+			};
+
+			transportService.sendRequest(node, AnsjAction.NAME, req, rep);
+		}
+
+		for (int i = 0; i < 20 && ai.get() > 0; i++) {
+			try {
+				Thread.sleep(1000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return new AnsjResponse(result);
+	}
+
+	private AnsjResponse showConfig() {
 		Map<String, Object> map = new HashMap<>();
 		map.putAll(MyStaticValue.ENV);
 		map.put("dic", DicLibrary.keys());
-		map.put("stop", DicLibrary.keys());
-		map.put("synonyms", DicLibrary.keys());
-		map.put("ambiguity", DicLibrary.keys());
-		map.put("crf", DicLibrary.keys());
+		map.put("stop", StopLibrary.keys());
+		map.put("synonyms", SynonymsLibrary.keys());
+		map.put("ambiguity", AmbiguityLibrary.keys());
+		map.put("crf", CrfLibrary.keys());
 		return new AnsjResponse(map);
+	}
+
+	private AnsjResponse flushConfig() {
+		AnsjElasticConfigurator.reloadConfig();
+		return showConfig();
 	}
 
 	private static final String MESSAGE = "flush ok";
 
-	private AnsjResponse updateDic(AnsjRequest request) {
+	private AnsjResponse flushDic(AnsjRequest request) {
 
 		Map<String, Object> params = request.asMap();
 
@@ -121,42 +190,61 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 		}
 	}
 
-	private AnsjResponse updateAllDic(AnsjRequest request) {
+	private AnsjResponse flushDicAll(AnsjRequest request) {
 
 		ClusterState clusterState = clusterService.state();
 		clusterState.blocks().globalBlockedRaiseException(ClusterBlockLevel.READ);
 
 		DiscoveryNodes nodes = clusterState.nodes();
 
-        final AnsjRequest req = new AnsjRequest("/_cat/ansj/flush/single");
-        req.put("key", request.get("key"));
+		final AnsjRequest req = new AnsjRequest("/_ansj/flush/dic/single");
 
-        for (final DiscoveryNode node : nodes) {
+		req.put("key", request.get("key"));
 
-            transportService.sendRequest(node, AnsjAction.NAME, req, new BaseTransportResponseHandler<AnsjResponse>() {
-                @Override
-                public AnsjResponse newInstance() {
-                    return newResponse();
-                }
+		final AtomicInteger ai = new AtomicInteger(nodes.getSize());
 
-                @Override
-                public void handleResponse(AnsjResponse response) {
-                    LOG.info("[{}] response: {}", node, response.asMap());
-                }
+		final Map<String, String> result = new HashMap<>();
 
-                @Override
-                public void handleException(TransportException exp) {
-                    LOG.warn("failed to send request[path:{},args:{}] to [{}]: {}", req.getPath(), req.asMap(), node, exp);
-                }
+		for (final DiscoveryNode node : nodes) {
 
-                @Override
-                public String executor() {
-                    return ThreadPool.Names.SAME;
-                }
-            });
+			result.put(node.getAddress().toString(), "time out");
+
+			transportService.sendRequest(node, AnsjAction.NAME, req, new BaseTransportResponseHandler<AnsjResponse>() {
+				@Override
+				public AnsjResponse newInstance() {
+					return newResponse();
+				}
+
+				@Override
+				public void handleResponse(AnsjResponse response) {
+					LOG.info("[{}] response: {}", node, response.asMap());
+					ai.decrementAndGet();
+					result.put(node.getAddress().toString(), "success");
+				}
+
+				@Override
+				public void handleException(TransportException exp) {
+					LOG.warn("failed to send request[path:{},args:{}] to [{}]: {}", req.getPath(), req.asMap(), node, exp);
+					ai.decrementAndGet();
+					result.put(node.getAddress().toString(), "err :" + exp.getMessage());
+				}
+
+				@Override
+				public String executor() {
+					return ThreadPool.Names.SAME;
+				}
+			});
 		}
 
-		return new AnsjResponse();
+		for (int i = 0; i < 20 && ai.get() > 0; i++) {
+			try {
+				Thread.sleep(1000L);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return new AnsjResponse(result);
 	}
 
 	private AnsjResponse executeAnalyzer(AnsjRequest request) {

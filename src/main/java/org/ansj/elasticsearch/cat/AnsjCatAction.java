@@ -27,8 +27,10 @@ public class AnsjCatAction extends AbstractCatAction {
 		super(settings, controller, client);
 		controller.registerHandler(RestRequest.Method.GET, "/_cat/ansj", this);
 		controller.registerHandler(RestRequest.Method.GET, "/_cat/ansj/config", this);
-		controller.registerHandler(RestRequest.Method.GET, "/_cat/ansj/flush", this);
-		controller.registerHandler(RestRequest.Method.GET, "/_cat/ansj/flush/single", this);
+		controller.registerHandler(RestRequest.Method.GET, "/_ansj/flush/config", this);
+		controller.registerHandler(RestRequest.Method.GET, "/_ansj/flush/config/single", this);
+		controller.registerHandler(RestRequest.Method.GET, "/_ansj/flush/dic", this);
+		controller.registerHandler(RestRequest.Method.GET, "/_ansj/flush/dic/single", this);
 	}
 
 	@Override
