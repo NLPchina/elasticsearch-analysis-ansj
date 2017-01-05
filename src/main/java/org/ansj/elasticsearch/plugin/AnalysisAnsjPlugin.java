@@ -74,7 +74,7 @@ public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, Action
     }
 
     @Override
-    public List<ActionHandler<? extends ActionRequest<?>, ? extends ActionResponse>> getActions() {
+    public List<ActionHandler<? extends ActionRequest, ? extends ActionResponse>> getActions() {
         return Collections.singletonList(new ActionHandler<>(AnsjAction.INSTANCE, TransportAnsjAction.class));
     }
 
