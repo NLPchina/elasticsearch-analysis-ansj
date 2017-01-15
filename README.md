@@ -30,7 +30,7 @@
 ````
 进入es目录执行如下命令
 
-./bin/elasticsearch-plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/5.1.1.0/elasticsearch-analysis-ansj-5.1.1.0-release.zip
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/5.1.1.0/elasticsearch-analysis-ansj-5.1.1.0-release.zip
 ````
 
 ##5.0.2 插件安装
@@ -40,7 +40,7 @@
 ````
 进入es目录执行如下命令
 
-./bin/elasticsearch-plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/5.0.2.0/elasticsearch-analysis-ansj-5.0.2.0-release.zip
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/5.0.2.0/elasticsearch-analysis-ansj-5.0.2.0-release.zip
 ````
 
 ##5.0.1 插件安装
