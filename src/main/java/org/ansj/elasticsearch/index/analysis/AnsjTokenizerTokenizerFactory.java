@@ -19,8 +19,13 @@
 
 package org.ansj.elasticsearch.index.analysis;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.lucene6.AnsjAnalyzer;
+import org.ansj.lucene6.AnsjAnalyzer.TYPE;
+import org.ansj.util.MyStaticValue;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.inject.assistedinject.Assisted;
@@ -28,6 +33,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractTokenizerFactory;
+import org.nlpcn.commons.lang.util.StringUtil;
 
 public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
@@ -42,6 +48,28 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
     @Override
     public Tokenizer create() {
-        return AnsjAnalyzer.getTokenizer(null, type, AnsjElasticConfigurator.filter);
+        //return AnsjAnalyzer.getTokenizer(null, type, AnsjElasticConfigurator.filter);
+    	
+        return AnsjAnalyzer.getTokenizer(null, createArgs(type));
+    }
+    
+    public static Map<String, String> createArgs(TYPE type) {
+    	Map<String, String> args = new HashMap<>(MyStaticValue.ENV);
+    	args.put("type", type.name());
+    	setArg(args, "dic");
+    	setArg(args, "stop");
+    	setArg(args, "ambiguity");
+    	setArg(args, "synonyms");
+    	
+    	return args;
+    }
+    
+    private static void setArg(Map<String, String> args, String key) {
+    	String val = args.get(key);
+    	if(StringUtil.isNotBlank(val)){
+    		args.put(key, key);
+    	}else{
+    		args.remove(key);
+    	}
     }
 }
