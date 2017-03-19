@@ -1,23 +1,58 @@
-## ansj配置
+# 全局变量配置方式一
 ansj:
- dic_path: "ansj/dic/user/" ##用户词典位置
- ambiguity_path: "ansj/dic/ambiguity.dic" ##歧义词典
- enable_name_recognition: true ##人名识别
- enable_num_recognition: true ##数字识别
- enable_quantifier_recognition: false ##量词识别
- enabled_stop_filter: true ##是否基于词典过滤
- enable_skip_user_define: false ## 是否用户词典不加载相同的词
- stop_path: "ansj/dic/stopLibrary.dic" ##停止过滤词典
-## redis 不是必需的
-# redis:
-#  pool:
-#   maxactive: 20
-#   maxidle: 10
-#   maxwait: 100
-#   testonborrow: true
-#  ip: 10.0.85.51:6379
-#  timeout: 2000
-#  #password: "******" ## 不要添加这个配置，除非redis需要权限认证
-#  channel: ansj_term ## publish时的channel名称
-#  write:
-#    dic: "ext.dic" ## 如果有使用redis的pubsub方式更新词典。如果没有配置，默认使用的是$ES_HOME/config/ansj/dic/user/ext.dic
+  #默认参数配置
+  isNameRecognition: true #开启姓名识别
+  isNumRecognition: true #开启数字识别
+  isQuantifierRecognition: true #是否数字和量词合并
+  isRealName: false; #是否保留真实词语,建议保留false
+
+  #用户自定词典配置
+  dic: default.dic #也可以写成 file//default.dic , 如果未配置dic,则此词典默认加载
+  # http方式加载
+  #dic_d1: http://xxx/xx.dic
+  # jar中文件加载
+  #dic_d2: jar://org.ansj.dic.DicReader|/dic2.dic
+  # 从数据库中加载
+  #dic_d3: jdbc:mysql://xxxx:3306/ttt?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull|username|password|select name as name,nature,freq from dic where type=1
+  # 从自定义类中加载,YourClas  extends PathToStream
+  #dic_d3: class://xxx.xxx.YourClas|ohterparam
+
+  #过滤词典配置
+  #stop: http,file,jar,class,jdbc 都支持
+  #stop_key1: ...
+
+  #歧义词典配置
+  #ambiguity: http,file,jar,class,jdbc 都支持
+  #ambiguity_key1: ...
+
+  #同义词词典配置
+  #synonyms: http,file,jar,class,jdbc 都支持
+  #synonyms_key1: ...
+
+
+
+# 全局变量配置方式二 通过配置文件的方式配置,优先级高于es本身的配置
+ansj_config: ansj_library.properties #http,file,jar,class,jdbc 都支持,格式参见ansj_library.properties
+
+# 配置自定义分词器
+
+
+
+index:
+  analysis:
+    tokenizer :
+      my_dic :
+        type : dic_ansj
+        dic: dic
+        stop: stop
+        ambiguity: ambiguity
+        synonyms: synonyms
+        isNameRecognition: true
+        isNumRecognition: true
+        isQuantifierRecognition: true
+        isRealName: false;
+
+    analyzer:
+      my_dic:
+        type: custom
+        tokenizer: my_dic

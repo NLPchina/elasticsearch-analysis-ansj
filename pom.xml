@@ -4,7 +4,7 @@
 
 	<groupId>org.ansj</groupId>
 	<artifactId>elasticsearch-analysis-ansj</artifactId>
-	<version>5.1.2.0</version>
+	<version>5.2.0.0</version>
 	<description>elasticsearch analysis by ansj</description>
 	<name>elasticsearch-analysis-ansj</name>
 	<url>http://maven.nlpcn.org</url>
@@ -16,13 +16,6 @@
 		</repository>
 	</repositories>
 
-	<distributionManagement>
-		<repository>
-			<id>mvn-repo</id>
-			<url>scpexe://ansj/home/mvn-repo/ROOT</url>
-		</repository>
-	</distributionManagement>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<runSuite>**/MainTestSuite.class</runSuite>
@@ -30,30 +23,21 @@
 		<elasticsearch.plugin.site>true</elasticsearch.plugin.site>
 		<elasticsearch.plugin.jvm>true</elasticsearch.plugin.jvm>
         <elasticsearch.plugin.java.version>1.8</elasticsearch.plugin.java.version>
-		<elasticsearch.version>5.1.2</elasticsearch.version>
+		<elasticsearch.version>5.2.0</elasticsearch.version>
 		<elasticsearch.plugin.classname>org.ansj.elasticsearch.plugin.AnalysisAnsjPlugin</elasticsearch.plugin.classname>
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.ansj</groupId>
 			<artifactId>ansj_seg</artifactId>
-			<version>5.0.4</version>
+            <version>5.1.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.ansj</groupId>
 			<artifactId>ansj_lucene6_plug</artifactId>
-			<version>5.0.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>2.0.0</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<version>5.1.1.0</version>
 		</dependency>
 
 		<dependency>
@@ -76,8 +60,8 @@
 			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -108,13 +92,5 @@
 				</executions>
 			</plugin>
 		</plugins>
-
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>1.0-beta-6</version>
-			</extension>
-		</extensions>
 	</build>
 </project>

@@ -19,29 +19,31 @@
 
 package org.ansj.elasticsearch.index.analysis;
 
-import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.lucene6.AnsjAnalyzer;
+import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.inject.assistedinject.Assisted;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.env.Environment;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractTokenizerFactory;
 
 public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
-    private final AnsjAnalyzer.TYPE type;
+    private static final Logger LOG = Loggers.getLogger(AnsjTokenizerTokenizerFactory.class);
 
     @Inject
-    public AnsjTokenizerTokenizerFactory(IndexSettings indexSettings, Environment env, @Assisted String name, @Assisted Settings settings, AnsjAnalyzer.TYPE type) {
+    public AnsjTokenizerTokenizerFactory(IndexSettings indexSettings, @Assisted String name, @Assisted Settings settings) {
         super(indexSettings, name, settings);
-
-        this.type = type;
     }
 
     @Override
     public Tokenizer create() {
-        return AnsjAnalyzer.getTokenizer(null, type, AnsjElasticConfigurator.filter);
+        Settings settings = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + name());
+
+        LOG.debug("instance tokenizer settings : {}", settings.getAsMap());
+
+        return AnsjAnalyzer.getTokenizer(null, settings.getAsMap());
     }
 }

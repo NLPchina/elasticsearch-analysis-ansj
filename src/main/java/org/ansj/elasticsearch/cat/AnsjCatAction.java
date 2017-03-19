@@ -22,53 +22,34 @@ public class AnsjCatAction extends AbstractCatAction {
     public AnsjCatAction(Settings settings, RestController controller) {
         super(settings);
         controller.registerHandler(RestRequest.Method.GET, "/_cat/ansj", this);
+        controller.registerHandler(RestRequest.Method.GET, "/_cat/ansj/config", this);
+        controller.registerHandler(RestRequest.Method.GET, "/_ansj/flush/config", this);
+        controller.registerHandler(RestRequest.Method.GET, "/_ansj/flush/config/single", this);
+        controller.registerHandler(RestRequest.Method.GET, "/_ansj/flush/dic", this);
+        controller.registerHandler(RestRequest.Method.GET, "/_ansj/flush/dic/single", this);
     }
 
     @Override
     protected RestChannelConsumer doCatRequest(RestRequest request, NodeClient client) {
-        AnsjRequest ansjRequest = new AnsjRequest();
-        ansjRequest.text(request.param("text"));
-        if (request.hasParam("type")) {
-            ansjRequest.type(request.param("type"));
-        } else {
-            ansjRequest.type("index");
-        }
+        AnsjRequest ansjRequest = new AnsjRequest(request.path());
+
+        ansjRequest.asMap().putAll(request.params());
 
         return channel -> client.execute(AnsjAction.INSTANCE, ansjRequest, new RestResponseListener<AnsjResponse>(channel) {
             @Override
             public RestResponse buildResponse(final AnsjResponse ansjResponse) throws Exception {
-                return ChineseRestTable.buildResponse(buildTable(ansjResponse, request), channel);
+                return ChineseRestTable.response(channel, ansjResponse.asMap());
             }
         });
     }
 
     @Override
     protected void documentation(StringBuilder stringBuilder) {
-        stringBuilder.append("/_cat/ansj\n");
+
     }
 
     @Override
     protected Table getTableWithHeader(RestRequest restRequest) {
-        final Table table = new Table();
-        table.startHeaders();
-        table.addCell("name", "alias:n;desc:name;text-align:left");
-        table.addCell("real_name", "alias:rn;desc:real_name;text-align:left");
-        table.addCell("nature", "alias:na;desc:nature;text-align:left");
-        table.addCell("offset", "alias:o;desc:offset;text-align:left");
-        table.endHeaders();
-        return table;
-    }
-
-    private Table buildTable(final AnsjResponse ansjResponse, final RestRequest request) {
-        Table t = getTableWithHeader(request);
-        for (AnsjResponse.AnsjTerm term : ansjResponse.getTerms()) {
-            t.startRow();
-            t.addCell(term.getName());
-            t.addCell(term.getRealName());
-            t.addCell(term.getNature());
-            t.addCell(term.getOffset());
-            t.endRow();
-        }
-        return t;
+        return null;
     }
 }

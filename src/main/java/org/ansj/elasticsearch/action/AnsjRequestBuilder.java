@@ -9,17 +9,7 @@ import org.elasticsearch.client.ElasticsearchClient;
  */
 public class AnsjRequestBuilder extends ActionRequestBuilder<AnsjRequest, AnsjResponse, AnsjRequestBuilder> {
 
-    public AnsjRequestBuilder(ElasticsearchClient client, Action<AnsjRequest, AnsjResponse, AnsjRequestBuilder> action) {
+    protected AnsjRequestBuilder(ElasticsearchClient client, Action<AnsjRequest, AnsjResponse, AnsjRequestBuilder> action) {
         super(client, action, new AnsjRequest());
-    }
-
-    public AnsjRequestBuilder setText(String text) {
-        request.text(text);
-        return this;
-    }
-
-    public AnsjRequestBuilder setType(String text) {
-        request.type(text);
-        return this;
     }
 }

@@ -28,12 +28,8 @@ public class RestAnsjAction extends BaseRestHandler {
     @Override
     protected RestChannelConsumer prepareRequest(RestRequest request, NodeClient client) throws IOException {
         AnsjRequest ansjRequest = new AnsjRequest();
-        ansjRequest.text(request.param("text"));
-        if (request.hasParam("type")) {
-            ansjRequest.type(request.param("type"));
-        } else {
-            ansjRequest.type("index");
-        }
+
+        ansjRequest.asMap().putAll(request.params());
 
         return channel -> client.execute(AnsjAction.INSTANCE, ansjRequest, new RestToXContentListener<>(channel));
     }

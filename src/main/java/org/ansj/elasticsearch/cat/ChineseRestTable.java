@@ -33,10 +33,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  */
@@ -52,22 +49,37 @@ public class ChineseRestTable {
         return buildTextPlainResponse(table, channel);
     }
 
-    public static RestResponse buildXContentBuilder(Table table, RestChannel channel) throws Exception {
-        RestRequest request = channel.request();
-        XContentBuilder builder = channel.newBuilder();
-        List<DisplayHeader> displayHeaders = buildDisplayHeaders(table, request);
-
-        builder.startArray();
-        for (int row = 0; row < table.getRows().size(); row++) {
-            builder.startObject();
-            for (DisplayHeader header : displayHeaders) {
-                builder.field(header.display, renderValue(request, table.getAsMap().get(header.name).get(row).value));
-            }
-            builder.endObject();
-
+    public static RestResponse response(RestChannel channel, String text) throws IOException {
+        try (UTF8StreamWriter out = new UTF8StreamWriter(); BytesStreamOutput bytesOut = channel.bytesOutput()) {
+            out.setOutput(bytesOut);
+            out.append(text);
+            return new BytesRestResponse(RestStatus.OK, BytesRestResponse.TEXT_CONTENT_TYPE, bytesOut.bytes());
         }
-        builder.endArray();
-        return new BytesRestResponse(RestStatus.OK, builder);
+    }
+
+    public static RestResponse response(RestChannel channel, Map<String, Object> map) throws IOException {
+        try (XContentBuilder builder = channel.newBuilder()) {
+            builder.map(map);
+            return new BytesRestResponse(RestStatus.OK, builder);
+        }
+    }
+
+    public static RestResponse buildXContentBuilder(Table table, RestChannel channel) throws Exception {
+        try (XContentBuilder builder = channel.newBuilder()) {
+            RestRequest request = channel.request();
+            List<DisplayHeader> displayHeaders = buildDisplayHeaders(table, request);
+
+            builder.startArray();
+            for (int row = 0; row < table.getRows().size(); row++) {
+                builder.startObject();
+                for (DisplayHeader header : displayHeaders) {
+                    builder.field(header.display, renderValue(request, table.getAsMap().get(header.name).get(row).value));
+                }
+                builder.endObject();
+            }
+            builder.endArray();
+            return new BytesRestResponse(RestStatus.OK, builder);
+        }
     }
 
     public static RestResponse buildTextPlainResponse(Table table, RestChannel channel) throws IOException {
@@ -77,8 +89,7 @@ public class ChineseRestTable {
         List<DisplayHeader> headers = buildDisplayHeaders(table, request);
         int[] width = buildWidths(table, request, verbose, headers);
 
-        BytesStreamOutput bytesOut = channel.bytesOutput();
-        try (UTF8StreamWriter out = new UTF8StreamWriter().setOutput(bytesOut)) {
+        try (BytesStreamOutput bytesOut = channel.bytesOutput(); UTF8StreamWriter out = new UTF8StreamWriter().setOutput(bytesOut)) {
             if (verbose) {
                 for (int col = 0; col < headers.size(); col++) {
                     DisplayHeader header = headers.get(col);
@@ -95,11 +106,11 @@ public class ChineseRestTable {
                 }
                 out.append("\n");
             }
+            return new BytesRestResponse(RestStatus.OK, BytesRestResponse.TEXT_CONTENT_TYPE, bytesOut.bytes());
         }
-        return new BytesRestResponse(RestStatus.OK, BytesRestResponse.TEXT_CONTENT_TYPE, bytesOut.bytes());
     }
 
-    static List<DisplayHeader> buildDisplayHeaders(Table table, RestRequest request) {
+    private static List<DisplayHeader> buildDisplayHeaders(Table table, RestRequest request) {
         List<DisplayHeader> display = new ArrayList<>();
         if (request.hasParam("h")) {
             Set<String> headers = expandHeadersFromRequest(table, request);
