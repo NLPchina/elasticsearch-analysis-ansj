@@ -15,7 +15,6 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
-import org.nlpcn.commons.lang.util.StringUtil;
 
 public final class AnsjTokenizer extends Tokenizer {
 	// 当前词
@@ -57,19 +56,16 @@ public final class AnsjTokenizer extends Tokenizer {
 		}
 
 		position = 0;
-		int stopType;
 		if (obj instanceof Term) {
 			clearAttributes();
 			Term term = (Term) obj;
-			while ((stopType=filterTerm(term)) > 0) { //停用词
+			while (filterTerm(term)) { //停用词
 				term = (Term) result.pollFirst();
 				if (term == null) {
 					result = null;
 					return false;
 				}
-				if(stopType == 1){
-					position++;
-				}
+				position++;
 			}
 
 			position++;
@@ -101,18 +97,15 @@ public final class AnsjTokenizer extends Tokenizer {
 		return true;
 	}
 
-	private int filterTerm(Term term) {
-		if(StringUtil.isBlank(term.getName())){
-			return 2;
-		}
+	private boolean filterTerm(Term term) {
 		if (stops != null && stops.size() > 0) {
 			for (StopRecognition filterRecognition : stops) {
 				if (filterRecognition.filter(term)) {
-					return 1;
+					return true;
 				}
 			}
 		}
-		return 0;
+		return false;
 	}
 
 	/**
