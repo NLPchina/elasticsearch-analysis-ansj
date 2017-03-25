@@ -1,6 +1,6 @@
 package org.ansj.elasticsearch.pubsub.redis;
 
-//import org.ansj.library.UserDefineLibrary;
+import org.ansj.library.UserDefineLibrary;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.common.logging.Loggers;
 import org.nlpcn.commons.lang.tire.domain.Value;
@@ -13,7 +13,7 @@ public class AddTermRedisPubSub extends JedisPubSub {
 
     @Override
     public void onMessage(String channel, String message) {
-        /*logger.debug("channel:{} and message:{}", channel, message);
+        logger.debug("channel:{} and message:{}", channel, message);
         String[] msg = message.split(":");
         if (msg.length != 3) {
             return;
@@ -35,7 +35,7 @@ public class AddTermRedisPubSub extends JedisPubSub {
             } else if ("d".equals(msg[1])) {
                 Library.removeWord(UserDefineLibrary.ambiguityForest, msg[2]);
                 FileUtils.removeAMB(msg[2]);
-            }*/
+            }
     }
 
     @Override

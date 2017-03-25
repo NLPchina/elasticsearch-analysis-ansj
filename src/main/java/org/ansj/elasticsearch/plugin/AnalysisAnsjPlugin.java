@@ -45,7 +45,7 @@ public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, Action
 
         for (final AnsjAnalyzer.TYPE type : values) {
 
-            str = type.name() /*+ AnsjElasticConfigurator.SUFFIX*/;
+            str = type.name() + AnsjElasticConfigurator.SUFFIX;
             extra.put(str, (indexSettings, env, name, settings) -> new AnsjTokenizerTokenizerFactory(indexSettings, env, name, settings, type));
 
             AnsjElasticConfigurator.logger.info("regedit analyzer tokenizer named : {}", str);
@@ -64,7 +64,7 @@ public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, Action
 
         for (final AnsjAnalyzer.TYPE type : values) {
 
-            str = type.name() /*+ AnsjElasticConfigurator.SUFFIX*/;
+            str = type.name() + AnsjElasticConfigurator.SUFFIX;
             extra.put(str, (indexSettings, env, name, settings) -> new AnsjAnalyzerProvider(indexSettings, env, name, settings, type));
 
             AnsjElasticConfigurator.logger.info("regedit analyzer provider named : {}", str);

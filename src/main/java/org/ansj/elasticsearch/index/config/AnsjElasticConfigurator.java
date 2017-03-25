@@ -1,10 +1,9 @@
 package org.ansj.elasticsearch.index.config;
 
-import org.ansj.dic.impl.Jdbc2Stream;
 import org.ansj.elasticsearch.plugin.AnalysisAnsjPlugin;
 import org.ansj.elasticsearch.pubsub.redis.AddTermRedisPubSub;
 import org.ansj.elasticsearch.pubsub.redis.RedisPoolBuilder;
-//import org.ansj.library.UserDefineLibrary;
+import org.ansj.library.UserDefineLibrary;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.Logger;
@@ -15,15 +14,12 @@ import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 import org.nlpcn.commons.lang.util.IOUtil;
-import org.nlpcn.commons.lang.util.ObjConver;
-
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,7 +27,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 public class AnsjElasticConfigurator {
@@ -72,31 +67,11 @@ public class AnsjElasticConfigurator {
         }
 
         Settings ansjSettings = builder.build().getAsSettings("ansj");
-        String key, value;
-		for (Entry<String, String> ent : ansjSettings.getAsMap().entrySet()) {
-			key = ent.getKey();
-			value = ent.getValue();
-			
-			/*if(key.startsWith("ansj.")){
-				key = key.substring("ansj.".length());
-			}*/
-			MyStaticValue.ENV.put(key, value);
-			try {
-				if (value.startsWith("jdbc:")) { //给jdbc窜中密码做一个加密,不让密码明文在日志中
-					value = Jdbc2Stream.encryption(value);
-				}
-				logger.info("init " + key + " to env value is : " + value);
-				Field field = MyStaticValue.class.getField(key);
-				field.set(null, ObjConver.conversion(value, field.getType()));
-			} catch (Exception e) {
-			}
-		}
-		
-        /*initConfig(ansjSettings, env);
+        initConfig(ansjSettings, env);
         boolean enabledStopFilter = ansjSettings.getAsBoolean("enabled_stop_filter", true);
         if (enabledStopFilter) {
             loadFilter(ansjSettings, env);
-        }*/
+        }
         preheat();
         logger.info("ansj分词器预热完毕，可以使用!");
         initRedis(ansjSettings, env);
@@ -160,7 +135,7 @@ public class AnsjElasticConfigurator {
 
     private void initConfig(Settings settings, Environment environment) {
 
-        /*Path path = environment.configFile().resolve(settings.get("dic_path", DEFAULT_USER_LIB_PATH));
+        Path path = environment.configFile().resolve(settings.get("dic_path", DEFAULT_USER_LIB_PATH));
         final SecurityManager sm = System.getSecurityManager();
         if (sm != null) {
             sm.checkPermission(new SpecialPermission());
@@ -210,7 +185,7 @@ public class AnsjElasticConfigurator {
             logger.debug("加载系统内置词典:{} 成功!", defaultPath);
         } catch (UnsupportedEncodingException e) {
             logger.error("加载系统内置词典失败!");
-        }*/
+        }
     }
 
     private void loadFilter(Settings settings, Environment environment) {
@@ -251,7 +226,7 @@ public class AnsjElasticConfigurator {
         try (BufferedReader br = new BufferedReader(new FileReader(REDIS_LIB_FILE))) {
             String temp;
             while ((temp = br.readLine()) != null) {
-                //UserDefineLibrary.insertWord(temp, "userDefine", 1000);
+                UserDefineLibrary.insertWord(temp, "userDefine", 1000);
             }
         } catch (IOException e) {
             logger.error("加载redis词典:{} 失败!", REDIS_LIB_FILE.getAbsolutePath());
