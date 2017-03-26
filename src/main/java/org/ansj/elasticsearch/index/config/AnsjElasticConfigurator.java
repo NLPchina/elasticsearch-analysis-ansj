@@ -57,6 +57,9 @@ public class AnsjElasticConfigurator {
 
 		MyStaticValue.ENV.clear();
 
+		//设置全局变量
+		setGlobalVar(MyStaticValue.ENV);
+
 		if (ansjSettings != null) {
 			initConfig(ansjSettings);
 		}
@@ -66,9 +69,6 @@ public class AnsjElasticConfigurator {
 		} else {
 			initConfig(new File(configDir, "ansj_library.properties").getAbsolutePath(), false);
 		}
-
-		//设置全局变量
-		setGlobalVar(MyStaticValue.ENV);
 	}
 
 	private static void initConfig(String path, boolean printErr) {

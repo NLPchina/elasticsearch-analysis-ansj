@@ -145,7 +145,7 @@ index:
         isNameRecognition: true 
         isNumRecognition: true 
         isQuantifierRecognition: true 
-        isRealName: false; 
+        isRealName: false
       
     analyzer:
       my_dic:

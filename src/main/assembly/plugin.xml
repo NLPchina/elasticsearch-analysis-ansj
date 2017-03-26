@@ -12,11 +12,6 @@
             <directory>${project.basedir}/src/main/dic</directory>  
             <outputDirectory>/</outputDirectory>  
         </fileSet>
-
-        <fileSet>
-            <directory>${project.basedir}/src/main/plugin-metadata</directory>
-            <outputDirectory>/</outputDirectory>
-        </fileSet>
         
         <fileSet>
 			<directory>${project.basedir}/_site/</directory>
