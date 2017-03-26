@@ -1,4 +1,4 @@
-##前言
+## 前言
 
 这是一个elasticsearch的中文分词插件，基于ansj,感谢群内热心的朋友。
 并宣传一下我们的群QQ211682609
@@ -23,7 +23,7 @@
 | 5.1.1         |     5.1.1     |
 | master        |     5.1.2     |
 
-##5.1.2 插件安装
+## 5.1.2 插件安装
 
 进入Elasticsearch目录运行如下命令
 
@@ -33,7 +33,7 @@
 ./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/5.1.2.0/elasticsearch-analysis-ansj-5.1.2.0-release.zip
 ````
 
-##5.1.1 插件安装
+## 5.1.1 插件安装
 
 进入Elasticsearch目录运行如下命令
 
@@ -43,7 +43,7 @@
 ./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/5.1.1.0/elasticsearch-analysis-ansj-5.1.1.0-release.zip
 ````
 
-##5.0.2 插件安装
+## 5.0.2 插件安装
 
 进入Elasticsearch目录运行如下命令
 
@@ -53,7 +53,7 @@
 ./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/5.0.2.0/elasticsearch-analysis-ansj-5.0.2.0-release.zip
 ````
 
-##5.0.1 插件安装
+## 5.0.1 插件安装
 
 进入Elasticsearch目录运行如下命令
 
@@ -63,7 +63,7 @@
 ./bin/elasticsearch-plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/5.0.1.0/elasticsearch-analysis-ansj-5.0.1.0-release.zip
 ````
 
-##5.0.0 插件安装
+## 5.0.0 插件安装
 
 进入Elasticsearch目录运行如下命令
 
@@ -73,7 +73,7 @@
 ./bin/elasticsearch-plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/5.0.0.0/elasticsearch-analysis-ansj-5.0.0.0-release.zip
 ````
 
-##2.4.1 插件安装
+## 2.4.1 插件安装
 
 进入Elasticsearch目录运行如下命令
 
@@ -83,7 +83,7 @@
 ./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.4.1.0/elasticsearch-analysis-ansj-2.4.1.0-release.zip
 ````
 
-##2.4.0 插件安装
+## 2.4.0 插件安装
 
 进入Elasticsearch目录运行如下命令
 
@@ -93,7 +93,7 @@
 ./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.4.0.3/elasticsearch-analysis-ansj-2.4.0.3-release.zip
 ````
 
-##2.3.5 插件安装
+## 2.3.5 插件安装
 
 进入Elasticsearch目录运行如下命令
 
@@ -103,7 +103,7 @@
 ./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.5.3/elasticsearch-analysis-ansj-2.3.5.3-release.zip
 ````
 
-##2.3.4 插件安装
+## 2.3.4 插件安装
 
 进入Elasticsearch目录运行如下命令
 
@@ -113,7 +113,7 @@
 ./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.4/elasticsearch-analysis-ansj-2.3.4-release.zip
 ````
 
-##2.3.3 插件安装
+## 2.3.3 插件安装
 
 进入Elasticsearch目录运行如下命令
 
@@ -123,7 +123,7 @@
 ./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.3.3/elasticsearch-analysis-ansj-2.3.3.3-release.zip
 ````
 
-##2.3.2 插件安装
+## 2.3.2 插件安装
 
 进入Elasticsearch目录运行如下命令 
 
@@ -133,7 +133,7 @@
 ./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.3.2.1/elasticsearch-analysis-ansj-2.3.2.1-release.zip
 ````
 
-##2.3.1 插件安装
+## 2.3.1 插件安装
 
 进入Elasticsearch目录运行如下命令 
 
@@ -144,7 +144,7 @@
 ````
 
 
-##2.1.1 插件安装
+## 2.1.1 插件安装
 
 进入Elasticsearch目录运行如下命令 
 
@@ -154,7 +154,7 @@
 ./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.1.1/elasticsearch-analysis-ansj-2.1.1-release.zip
 ````
 
-##1.x 插件安装
+## 1.x 插件安装
 
 进入Elasticsearch目录运行如下命令 
 
@@ -343,6 +343,70 @@ http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%8
 
 
 ## 分词文件配置:
+### 2.4.2或5.2.0以上:
+- 配置文件config/ansj.cfg.yml，需要放入$ES_HOME/config/analysis-ansj/ansj.cfg.yml或者$ES_HOME/plugins/elasticsearch-analysis-ansj-*/config/ansj.cfg.yml
+```yaml
+# 全局变量配置方式一
+ansj:
+  #默认参数配置
+  isNameRecognition: true #开启姓名识别
+  isNumRecognition: true #开启数字识别
+  isQuantifierRecognition: true #是否数字和量词合并
+  isRealName: false; #是否保留真实词语,建议保留false
+
+  #用户自定词典配置
+  dic: default.dic #也可以写成 file//default.dic , 如果未配置dic,则此词典默认加载
+  # http方式加载
+  #dic_d1: http://xxx/xx.dic
+  # jar中文件加载
+  #dic_d2: jar://org.ansj.dic.DicReader|/dic2.dic
+  # 从数据库中加载
+  #dic_d3: jdbc:mysql://xxxx:3306/ttt?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull|username|password|select name as name,nature,freq from dic where type=1
+  # 从自定义类中加载,YourClas  extends PathToStream
+  #dic_d3: class://xxx.xxx.YourClas|ohterparam
+
+  #过滤词典配置
+  #stop: http,file,jar,class,jdbc 都支持
+  #stop_key1: ...
+
+  #歧义词典配置
+  #ambiguity: http,file,jar,class,jdbc 都支持
+  #ambiguity_key1: ...
+
+  #同义词词典配置
+  #synonyms: http,file,jar,class,jdbc 都支持
+  #synonyms_key1: ...
+
+# 全局变量配置方式二 通过配置文件的方式配置,优先级高于es本身的配置
+ansj_config: ansj_library.properties # http,file,jar,class,jdbc 都支持,格式参见ansj_library.properties
+
+# 配置自定义分词器
+index:
+  analysis:
+    tokenizer :
+      my_dic :
+        type : dic_ansj
+        dic: dic
+        stop: stop
+        ambiguity: ambiguity
+        synonyms: synonyms
+        isNameRecognition: true
+        isNumRecognition: true
+        isQuantifierRecognition: true
+        isRealName: false
+
+    analyzer:
+      my_dic:
+        type: custom
+        tokenizer: my_dic
+```
+- http接口
+  + /_cat/ansj: 执行分词
+  + /_cat/ansj/config: 显示全部配置
+  + /_ansj/flush/config: 刷新全部配置
+  + /_ansj/flush/dic: 更新全部词典。包括用户自定义词典,停用词典,同义词典,歧义词典,crf
+
+### 2.4.2或5.2.0以下:
 在这里我说一下，在插件里我写了一些默认配置，如果你也可以接受我的默认配置，关于ansj就完全不用配置了，或者只修改你需要的配置。下面的代码目录都是相对es的config目录，有几点需要注意一下:
 
 + ansj的核心词典是和插件一起安装的在插件目录下面
