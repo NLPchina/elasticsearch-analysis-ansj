@@ -20,11 +20,6 @@
                 <exclude>**/dic/**</exclude>
             </excludes>
         </fileSet>
-
-        <fileSet>
-            <directory>${project.basedir}/src/main/plugin-metadata</directory>
-            <outputDirectory>/elasticsearch</outputDirectory>
-        </fileSet>
     </fileSets>
     <files>
         <file>
