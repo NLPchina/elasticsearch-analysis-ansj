@@ -7,7 +7,7 @@ ansj:
   isRealName: false; #是否保留真实词语,建议保留false
 
   #用户自定词典配置
-  dic: default.dic #也可以写成 file//default.dic , 如果未配置dic,则此词典默认加载
+  dic: default.dic #也可以写成 file://default.dic , 如果未配置dic,则此词典默认加载
   # http方式加载
   #dic_d1: http://xxx/xx.dic
   # jar中文件加载
