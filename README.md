@@ -23,55 +23,20 @@
 | 5.1.1         |     5.1.1     |
 | master        |     5.1.2     |
 
-## 5.1.2 插件安装
+## 5.x 插件安装
 
 进入Elasticsearch目录运行如下命令
 
 ````
 进入es目录执行如下命令
 
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/5.1.2.0/elasticsearch-analysis-ansj-5.1.2.0-release.zip
+这是格式说明:
+./bin/elasticsearch-plugin install http://www.nlpcn.org:9999/api/EsPluginInstall/plugin5x?v={ES的版本号}
+
+如5.1.2
+./bin/elasticsearch-plugin install http://www.nlpcn.org:9999/api/EsPluginInstall/plugin5x?v=5.1.2
 ````
 
-## 5.1.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/5.1.1.0/elasticsearch-analysis-ansj-5.1.1.0-release.zip
-````
-
-## 5.0.2 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/5.0.2.0/elasticsearch-analysis-ansj-5.0.2.0-release.zip
-````
-
-## 5.0.1 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/5.0.1.0/elasticsearch-analysis-ansj-5.0.1.0-release.zip
-````
-
-## 5.0.0 插件安装
-
-进入Elasticsearch目录运行如下命令
-
-````
-进入es目录执行如下命令
-
-./bin/elasticsearch-plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/5.0.0.0/elasticsearch-analysis-ansj-5.0.0.0-release.zip
-````
 
 ## 2.4.1 插件安装
 
