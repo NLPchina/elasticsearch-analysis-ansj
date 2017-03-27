@@ -9,6 +9,7 @@ import org.ansj.library.SynonymsLibrary;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.Logger;
+import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
@@ -22,6 +23,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Map;
 
 public class AnsjElasticConfigurator {
@@ -90,25 +93,34 @@ public class AnsjElasticConfigurator {
     }
 
     private void initConfig(String path, boolean printErr) {
-        try (BufferedReader br = IOUtil.getReader(PathToStream.stream(path), "utf-8")) {
-            String temp;
-            int index;
-            while ((temp = br.readLine()) != null) {
-                if (StringUtil.isBlank(temp) || temp.trim().charAt(0) == '#' || !temp.contains("=")) {
-                    continue;
-                }
-
-                index = temp.indexOf('=');
-
-                MyStaticValue.ENV.put(temp.substring(0, index).trim(), temp.substring(index + 1, temp.length()).trim());
-            }
-        } catch (Exception e) {
-            if (printErr) {
-                LOG.error("{} load err: {}", path, e);
-            } else {
-                LOG.warn("{} load err", path);
-            }
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new SpecialPermission());
         }
+        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            try (BufferedReader br = IOUtil.getReader(PathToStream.stream(path), "utf-8")) {
+                String temp, key;
+                int index;
+                while ((temp = br.readLine()) != null) {
+                    if (StringUtil.isBlank(temp) || temp.trim().charAt(0) == '#' || !temp.contains("=")) {
+                        continue;
+                    }
+
+                    index = temp.indexOf('=');
+
+                    MyStaticValue.ENV.put(key = temp.substring(0, index).trim(), temp.substring(index + 1, temp.length()).trim());
+
+                    DicLibrary.get(key);
+                }
+            } catch (Exception e) {
+                if (printErr) {
+                    LOG.error("{} load err: {}", path, e);
+                } else {
+                    LOG.warn("{} load err", path);
+                }
+            }
+            return null;
+        });
     }
 
     private void preheat() {
