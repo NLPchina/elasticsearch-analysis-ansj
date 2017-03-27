@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>org.ansj</groupId>
 			<artifactId>ansj_lucene6_plug</artifactId>
-			<version>5.1.1.0</version>
+			<version>5.1.1.1</version>
 		</dependency>
 
 		<dependency>
