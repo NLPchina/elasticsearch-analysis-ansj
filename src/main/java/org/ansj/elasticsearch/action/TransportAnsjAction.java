@@ -91,7 +91,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
         AnsjResponse response = new AnsjResponse();
 
         if (!request.asMap().containsKey("text") || !request.asMap().containsKey("type")) {
-            return response.put("message", "err args example: /_cat/ansj?text=中国&tokenizer=index_ansj&dic=dic&stop=stop&ambiguity=ambiguity&synonyms=synonyms");
+            return response.put("message", "err args example: /_cat/ansj?text=中国&type=index_ansj&dic=dic&stop=stop&ambiguity=ambiguity&synonyms=synonyms");
         }
 
         Analysis analysis;

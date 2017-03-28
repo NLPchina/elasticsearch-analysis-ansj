@@ -1,5 +1,6 @@
 package org.ansj.elasticsearch.cat;
 
+import org.ansj.library.*;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequest;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
 import org.elasticsearch.client.node.NodeClient;
@@ -12,6 +13,10 @@ import org.elasticsearch.rest.RestResponse;
 import org.elasticsearch.rest.action.RestResponseListener;
 import org.elasticsearch.rest.action.cat.AbstractCatAction;
 import org.nlpcn.commons.lang.util.StringUtil;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 分词的cat
@@ -87,6 +92,15 @@ public class AnalyzerCatAction extends AbstractCatAction {
         table.addCell("type", "alias:t;desc:type;text-align:left");
         table.endHeaders();
         return table;
+    }
+
+    @Override
+    protected Set<String> responseParams() {
+        Set<String> responseParams = new HashSet<>(super.responseParams());
+        responseParams.addAll(Arrays.asList("text", "analyzer", "tokenizer", "type", "key",
+                "isNameRecognition", "isNumRecognition", "isQuantifierRecognition", "isRealName", "isSkipUserDefine",
+                CrfLibrary.DEFAULT, DicLibrary.DEFAULT, AmbiguityLibrary.DEFAULT, StopLibrary.DEFAULT, SynonymsLibrary.DEFAULT));
+        return responseParams;
     }
 
     private Table buildTable(final AnalyzeResponse analyzeResponse, final RestRequest request) {
