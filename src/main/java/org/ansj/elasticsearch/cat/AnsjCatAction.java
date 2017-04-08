@@ -6,7 +6,6 @@ import org.ansj.elasticsearch.action.AnsjResponse;
 import org.ansj.library.*;
 import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.common.Table;
-import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestRequest;
@@ -23,7 +22,6 @@ import java.util.Set;
  */
 public class AnsjCatAction extends AbstractCatAction {
 
-    @Inject
     public AnsjCatAction(Settings settings, RestController controller) {
         super(settings);
         controller.registerHandler(RestRequest.Method.GET, "/_cat/ansj", this);

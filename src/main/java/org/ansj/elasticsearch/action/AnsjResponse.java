@@ -3,7 +3,7 @@ package org.ansj.elasticsearch.action;
 import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
-import org.elasticsearch.common.xcontent.ToXContent;
+import org.elasticsearch.common.xcontent.ToXContentObject;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by zhangqinghua on 16/2/2.
  */
-public class AnsjResponse extends ActionResponse implements ToXContent {
+public class AnsjResponse extends ActionResponse implements ToXContentObject {
 
     private Map<String, Object> map;
 
