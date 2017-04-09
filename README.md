@@ -17,26 +17,138 @@
 | 2.3.5         |     2.3.5     |
 | 2.4.0         |     2.4.0     |
 | 2.4.1         |     2.4.1     |
+| 2.4.2         |     2.4.2     |
+| 2.4.3         |     2.4.3     |
+| 2.4.4         |     2.4.4     |
 | 5.0.0         |     5.0.0     |
 | 5.0.1         |     5.0.1     |
 | 5.0.2         |     5.0.2     |
 | 5.1.1         |     5.1.1     |
-| master        |     5.1.2     |
+| 5.1.2         |     5.1.2     |
+| 5.2.0         |     5.2.0     |
+| 5.2.1         |     5.2.1     |
+| 5.2.2         |     5.2.2     |
+| master        |     5.3.0     |
 
-## 5.x 插件安装
+## 5.3.0 插件安装
 
 进入Elasticsearch目录运行如下命令
 
 ````
 进入es目录执行如下命令
 
-这是格式说明:
-./bin/elasticsearch-plugin install http://www.nlpcn.org:9999/api/EsPluginInstall/plugin5x?v={ES的版本号}
-
-如5.1.2
-./bin/elasticsearch-plugin install http://www.nlpcn.org:9999/api/EsPluginInstall/plugin5x?v=5.1.2
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.3.0/elasticsearch-analysis-ansj-5.3.0.0-release.zip
 ````
 
+## 5.2.2 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.2.2/elasticsearch-analysis-ansj-5.2.2.0-release.zip
+````
+
+## 5.2.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.2.1/elasticsearch-analysis-ansj-5.2.1.0-release.zip
+````
+
+## 5.2.0 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.2.0/elasticsearch-analysis-ansj-5.2.0.0-release.zip
+````
+
+## 5.1.2 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.1.2/elasticsearch-analysis-ansj-5.1.2.0-release.zip
+````
+
+## 5.1.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.1.1/elasticsearch-analysis-ansj-5.1.1.0-release.zip
+````
+
+## 5.0.2 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.0.2/elasticsearch-analysis-ansj-5.0.2.0-release.zip
+````
+
+## 5.0.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.0.1/elasticsearch-analysis-ansj-5.0.1.1-release.zip
+````
+
+## 5.0.0 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.0.0/elasticsearch-analysis-ansj-5.0.0.0-release.zip
+````
+
+## 2.4.4 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.4.4/elasticsearch-analysis-ansj-2.4.4.0-release.zip
+````
+
+## 2.4.3 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.4.3/elasticsearch-analysis-ansj-2.4.3.0-release.zip
+````
+
+## 2.4.2 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.4.2/elasticsearch-analysis-ansj-2.4.2.0-release.zip
+````
 
 ## 2.4.1 插件安装
 
@@ -45,7 +157,7 @@
 ````
 进入es目录执行如下命令
 
-./bin/plugin install http://maven.nlpcn.org/org/ansj/elasticsearch-analysis-ansj/2.4.1.0/elasticsearch-analysis-ansj-2.4.1.0-release.zip
+./bin/plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v2.4.1/elasticsearch-analysis-ansj-2.4.1.0-release.zip
 ````
 
 ## 2.4.0 插件安装
@@ -129,6 +241,14 @@
 
 
 ==========
+
+## 2017年4月9日
++ ansj_seg升级至5.1.1
++ 支持配置同义词词典
++ 支持自定义分词器
++ 支持从http，文件，数据库，jar，class加载词典
++ 热词更新，用http接口取代redis
+
 
 ## 2016年11月11日
 + elasticsearch更新至5.0.0
@@ -344,13 +464,16 @@ ansj:
 
 # 全局变量配置方式二 通过配置文件的方式配置,优先级高于es本身的配置
 ansj_config: ansj_library.properties # http,file,jar,class,jdbc 都支持,格式参见ansj_library.properties
-
+```
+- 配置自定义分词器
+```yaml
 # 配置自定义分词器
 index:
   analysis:
     tokenizer :
       my_dic :
-        type : dic_ansj
+        # 类型支持base_ansj, index_ansj, query_ansj, dic_ansj, nlp_ansj
+        type : dic_ansj   
         dic: dic
         stop: stop
         ambiguity: ambiguity
