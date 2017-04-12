@@ -77,13 +77,13 @@ public class AnsjElasticConfigurator {
     private void flushConfig() {
         MyStaticValue.ENV.clear();
 
-        // 设置全局变量
-        setGlobalVar(MyStaticValue.ENV);
-
         // 插入到变量中
         if (ansjSettings != null) {
             MyStaticValue.ENV.putAll(ansjSettings.getAsMap());
         }
+
+        // 设置全局变量
+        setGlobalVar(MyStaticValue.ENV);
 
         if (path != null) {
             initConfig(path, true);
