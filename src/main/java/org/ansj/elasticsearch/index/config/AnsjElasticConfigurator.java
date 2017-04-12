@@ -57,12 +57,12 @@ public class AnsjElasticConfigurator {
 
 		MyStaticValue.ENV.clear();
 
-		//设置全局变量
-		setGlobalVar(MyStaticValue.ENV);
-
 		if (ansjSettings != null) {
-			initConfig(ansjSettings);
-		}
+            initConfig(ansjSettings);
+        }
+
+        //设置全局变量
+        setGlobalVar(MyStaticValue.ENV);
 
 		if (path != null) {
 			initConfig(path, true);
