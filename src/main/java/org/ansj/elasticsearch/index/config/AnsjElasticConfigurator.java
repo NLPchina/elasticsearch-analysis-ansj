@@ -2,14 +2,12 @@ package org.ansj.elasticsearch.index.config;
 
 import org.ansj.dic.PathToStream;
 import org.ansj.elasticsearch.plugin.AnalysisAnsjPlugin;
-import org.ansj.library.AmbiguityLibrary;
-import org.ansj.library.DicLibrary;
-import org.ansj.library.StopLibrary;
-import org.ansj.library.SynonymsLibrary;
+import org.ansj.library.*;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.SpecialPermission;
+import org.elasticsearch.common.collect.MapBuilder;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
@@ -132,7 +130,7 @@ public class AnsjElasticConfigurator {
      *
      * @param map
      */
-    private static void setGlobalVar(Map<String, String> map) {
+    private void setGlobalVar(Map<String, String> map) {
         // 是否开启人名识别
         if (map.containsKey("isNameRecognition")) {
             MyStaticValue.isNameRecognition = Boolean.valueOf(map.get("isNameRecognition"));
@@ -173,5 +171,28 @@ public class AnsjElasticConfigurator {
 
         LOG.info("to remove AmbiguityLibrary keys not in MyStaticValue.ENV");
         AmbiguityLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
+    }
+
+    /**
+     * 默认配置
+     */
+    public static Map<String, String> getDefaults() {
+        return MapBuilder.<String, String>newMapBuilder()
+                // 是否开启人名识别
+                .put("isNameRecognition", MyStaticValue.isNameRecognition.toString())
+                // 是否开启数字识别
+                .put("isNumRecognition", MyStaticValue.isNumRecognition.toString())
+                // 是否数字和量词合并
+                .put("isQuantifierRecognition", MyStaticValue.isQuantifierRecognition.toString())
+                // 是否显示真实词语
+                .put("isRealName", MyStaticValue.isRealName.toString())
+                // 是否用户辞典不加载相同的词
+                .put("isSkipUserDefine", String.valueOf(MyStaticValue.isSkipUserDefine))
+                .put(CrfLibrary.DEFAULT, CrfLibrary.DEFAULT)
+                .put(DicLibrary.DEFAULT, DicLibrary.DEFAULT)
+                .put(StopLibrary.DEFAULT, StopLibrary.DEFAULT)
+                .put(SynonymsLibrary.DEFAULT, SynonymsLibrary.DEFAULT)
+                .put(AmbiguityLibrary.DEFAULT, AmbiguityLibrary.DEFAULT)
+                .map();
     }
 }

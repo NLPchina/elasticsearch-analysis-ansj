@@ -1,5 +1,6 @@
 package org.ansj.elasticsearch.index.analysis;
 
+import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.lucene6.AnsjAnalyzer;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.common.inject.Inject;
@@ -8,6 +9,8 @@ import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractIndexAnalyzerProvider;
+
+import java.util.Map;
 
 public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnalyzer> {
 
@@ -21,9 +24,15 @@ public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnal
 
         Settings settings2 = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + name());
 
-        LOG.debug("instance analyzer settings : {}", settings2.getAsMap());
+        Map<String, String> args = settings2.getAsMap();
+        if (args.isEmpty()) {
+            args = AnsjElasticConfigurator.getDefaults();
+            args.put("type", name());
+        }
 
-        analyzer = new AnsjAnalyzer(settings2.getAsMap());
+        LOG.debug("instance analyzer settings : {}", args);
+
+        analyzer = new AnsjAnalyzer(args);
     }
 
     @Override

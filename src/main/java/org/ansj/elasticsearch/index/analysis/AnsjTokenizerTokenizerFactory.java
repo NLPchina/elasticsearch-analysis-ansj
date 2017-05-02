@@ -19,6 +19,7 @@
 
 package org.ansj.elasticsearch.index.analysis;
 
+import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.lucene6.AnsjAnalyzer;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Tokenizer;
@@ -28,6 +29,8 @@ import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractTokenizerFactory;
+
+import java.util.Map;
 
 public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
@@ -42,8 +45,14 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
     public Tokenizer create() {
         Settings settings = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + name());
 
-        LOG.debug("instance tokenizer settings : {}", settings.getAsMap());
+        Map<String, String> args = settings.getAsMap();
+        if (args.isEmpty()) {
+            args = AnsjElasticConfigurator.getDefaults();
+            args.put("type", name());
+        }
 
-        return AnsjAnalyzer.getTokenizer(null, settings.getAsMap());
+        LOG.debug("instance tokenizer settings : {}", args);
+
+        return AnsjAnalyzer.getTokenizer(null, args);
     }
 }
