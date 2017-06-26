@@ -34,7 +34,18 @@
 | 5.3.2         |     5.3.2     |
 | 5.3.3         |     5.3.3     |
 | 5.4.0         |     5.4.0     |
-| master        |     5.4.1     |
+| 5.4.1         |     5.4.1     |
+| master        |     5.4.2     |
+
+## 5.4.2 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.4.2/elasticsearch-analysis-ansj-5.4.2.0-release.zip
+````
 
 ## 5.4.1 插件安装
 
