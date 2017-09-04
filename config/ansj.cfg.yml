@@ -4,7 +4,7 @@ ansj:
   isNameRecognition: true #开启姓名识别
   isNumRecognition: true #开启数字识别
   isQuantifierRecognition: true #是否数字和量词合并
-  isRealName: false; #是否保留真实词语,建议保留false
+  isRealName: false #是否保留真实词语,建议保留false
 
   #用户自定词典配置
   dic: default.dic #也可以写成 file://default.dic , 如果未配置dic,则此词典默认加载
