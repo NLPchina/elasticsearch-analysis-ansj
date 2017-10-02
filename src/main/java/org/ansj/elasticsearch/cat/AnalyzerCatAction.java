@@ -95,7 +95,7 @@ public class AnalyzerCatAction extends AbstractCatAction {
     @Override
     protected Set<String> responseParams() {
         Set<String> responseParams = new HashSet<>(super.responseParams());
-        responseParams.addAll(Arrays.asList("text", "analyzer", "tokenizer", "type", "key",
+        responseParams.addAll(Arrays.asList("text", "index", "field", "analyzer", "tokenizer", "filters", "token_filters", "char_filters", "type", "key",
                 "isNameRecognition", "isNumRecognition", "isQuantifierRecognition", "isRealName", "isSkipUserDefine",
                 CrfLibrary.DEFAULT, DicLibrary.DEFAULT, AmbiguityLibrary.DEFAULT, StopLibrary.DEFAULT, SynonymsLibrary.DEFAULT));
         return responseParams;

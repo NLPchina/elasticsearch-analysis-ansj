@@ -88,6 +88,9 @@ public class AnsjElasticConfigurator {
         } else {
             initConfig(new File(configDir, "ansj_library.properties").getAbsolutePath(), false);
         }
+
+        // 加载词典
+        initDic();
     }
 
     private void initConfig(String path, boolean printErr) {
@@ -97,7 +100,7 @@ public class AnsjElasticConfigurator {
         }
         AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
             try (BufferedReader br = IOUtil.getReader(PathToStream.stream(path), "utf-8")) {
-                String temp, key;
+                String temp;
                 int index;
                 while ((temp = br.readLine()) != null) {
                     if (StringUtil.isBlank(temp) || temp.trim().charAt(0) == '#' || !temp.contains("=")) {
@@ -106,9 +109,7 @@ public class AnsjElasticConfigurator {
 
                     index = temp.indexOf('=');
 
-                    MyStaticValue.ENV.put(key = temp.substring(0, index).trim(), temp.substring(index + 1, temp.length()).trim());
-
-                    DicLibrary.get(key);
+                    MyStaticValue.ENV.put(temp.substring(0, index).trim(), temp.substring(index + 1, temp.length()).trim());
                 }
             } catch (Exception e) {
                 if (printErr) {
@@ -118,6 +119,42 @@ public class AnsjElasticConfigurator {
                 }
             }
             return null;
+        });
+    }
+
+    private void initDic() {
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new SpecialPermission());
+        }
+
+        MyStaticValue.ENV.forEach((k, v) -> {
+            if (k.startsWith(DicLibrary.DEFAULT)) {
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    DicLibrary.get(k);
+                    return null;
+                });
+            } else if (k.startsWith(StopLibrary.DEFAULT)) {
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    StopLibrary.get(k);
+                    return null;
+                });
+            } else if (k.startsWith(SynonymsLibrary.DEFAULT)) {
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    SynonymsLibrary.get(k);
+                    return null;
+                });
+            } else if (k.startsWith(AmbiguityLibrary.DEFAULT)) {
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    AmbiguityLibrary.get(k);
+                    return null;
+                });
+            } else if (k.startsWith(CrfLibrary.DEFAULT)) {
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    CrfLibrary.get(k);
+                    return null;
+                });
+            }
         });
     }
 

@@ -11,6 +11,7 @@ import org.ansj.splitWord.Analysis;
 import org.ansj.splitWord.analysis.*;
 import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.Logger;
+import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.action.support.ActionFilters;
 import org.elasticsearch.action.support.single.shard.TransportSingleShardAction;
 import org.elasticsearch.cluster.ClusterState;
@@ -33,6 +34,8 @@ import org.nlpcn.commons.lang.tire.domain.Forest;
 import org.nlpcn.commons.lang.tire.domain.SmartForest;
 import org.nlpcn.commons.lang.util.StringUtil;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -353,17 +356,37 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
         String key = (String) params.get("key");
 
+        final SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new SpecialPermission());
+        }
+
         try {
             if (key.startsWith(DicLibrary.DEFAULT)) {
-                DicLibrary.reload(key);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    DicLibrary.reload(key);
+                    return null;
+                });
             } else if (key.startsWith(StopLibrary.DEFAULT)) {
-                StopLibrary.reload(key);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    StopLibrary.reload(key);
+                    return null;
+                });
             } else if (key.startsWith(SynonymsLibrary.DEFAULT)) {
-                SynonymsLibrary.reload(key);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    SynonymsLibrary.reload(key);
+                    return null;
+                });
             } else if (key.startsWith(AmbiguityLibrary.DEFAULT)) {
-                AmbiguityLibrary.reload(key);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    AmbiguityLibrary.reload(key);
+                    return null;
+                });
             } else if (key.startsWith(CrfLibrary.DEFAULT)) {
-                CrfLibrary.reload(key);
+                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                    CrfLibrary.reload(key);
+                    return null;
+                });
             } else if (key.equals("ansj_config")) {
                 this.cfg.reloadConfig();
             } else {
