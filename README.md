@@ -40,7 +40,51 @@
 | 5.4.3         |     5.4.3     |
 | 5.5.0         |     5.5.0     |
 | 5.5.1         |     5.5.1     |
-| master        |     5.5.2     |
+| 5.5.2         |     5.5.2     |
+| 5.5.3         |     5.5.3     |
+| 5.6.0         |     5.6.0     |
+| 5.6.1         |     5.6.1     |
+| master        |     5.6.2     |
+
+## 5.6.2 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.2/elasticsearch-analysis-ansj-5.6.2.0-release.zip
+```
+
+## 5.6.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.1/elasticsearch-analysis-ansj-5.6.1.0-release.zip
+```
+
+## 5.6.0 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.0/elasticsearch-analysis-ansj-5.6.0.0-release.zip
+```
+
+## 5.5.3 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.5.3/elasticsearch-analysis-ansj-5.5.3.0-release.zip
+```
 
 ## 5.5.2 插件安装
 
@@ -561,7 +605,7 @@ http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%8
 
 ## 分词文件配置:
 ### 2.4.2或5.2.0以上:
-- 配置文件config/ansj.cfg.yml，需要放入$ES_HOME/config/analysis-ansj/ansj.cfg.yml或者$ES_HOME/plugins/elasticsearch-analysis-ansj-*/config/ansj.cfg.yml
+- 配置文件config/ansj.cfg.yml，需要放入$ES_HOME/config/elasticsearch-analysis-ansj/ansj.cfg.yml或者$ES_HOME/plugins/elasticsearch-analysis-ansj-*/config/ansj.cfg.yml
 ```yaml
 # 全局变量配置方式一
 ansj:
