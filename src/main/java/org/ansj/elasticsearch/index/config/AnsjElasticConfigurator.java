@@ -39,7 +39,7 @@ public class AnsjElasticConfigurator {
 
     @Inject
     public AnsjElasticConfigurator(Environment env) {
-        Path configFilePath = env.configFile().resolve(AnalysisAnsjPlugin.PLUGIN_NAME).resolve(CONFIG_FILE_NAME);
+        Path configFilePath = env.configFile().resolve("elasticsearch-analysis-ansj").resolve(CONFIG_FILE_NAME);
         LOG.info("try to load ansj config file: {}", configFilePath);
         if (!Files.exists(configFilePath)) {
             configFilePath = Paths.get(new File(AnsjElasticConfigurator.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getParent(), "config").resolve(CONFIG_FILE_NAME);
