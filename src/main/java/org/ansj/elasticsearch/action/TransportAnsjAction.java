@@ -37,7 +37,8 @@ import org.nlpcn.commons.lang.util.StringUtil;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by zhangqinghua on 16/2/2.
@@ -229,7 +230,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
         final AnsjRequest req = new AnsjRequest("/_ansj/flush/config/single");
 
-        final AtomicInteger ai = new AtomicInteger(nodes.getSize());
+        final CountDownLatch countDownLatch = new CountDownLatch(nodes.getSize());
 
         final Map<String, String> result = new HashMap<>();
 
@@ -246,14 +247,14 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
                 @Override
                 public void handleResponse(AnsjResponse response) {
                     LOG.info("[{}] response: {}", node, response.asMap());
-                    ai.decrementAndGet();
+                    countDownLatch.countDown();
                     result.put(node.getAddress().toString(), "success");
                 }
 
                 @Override
                 public void handleException(TransportException exp) {
                     LOG.warn("failed to send request[path:{},args:{}] to [{}]: {}", req.getPath(), req.asMap(), node, exp);
-                    ai.decrementAndGet();
+                    countDownLatch.countDown();
                     result.put(node.getAddress().toString(), "err :" + exp.getMessage());
                 }
 
@@ -266,12 +267,10 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
             transportService.sendRequest(node, AnsjAction.NAME, req, rep);
         }
 
-        for (int i = 0; i < 20 && ai.get() > 0; ++i) {
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            countDownLatch.await(20, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            LOG.error("failed to send request[path:{},args:{}] nodes [{}]: {}", req.getPath(), req.asMap(), nodes, e);
         }
 
         return new AnsjResponse(result);
@@ -299,7 +298,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
         req.put("key", request.get("key"));
 
-        final AtomicInteger ai = new AtomicInteger(nodes.getSize());
+        final CountDownLatch countDownLatch = new CountDownLatch(nodes.getSize());
 
         final Map<String, String> result = new HashMap<>();
 
@@ -316,14 +315,14 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
                 @Override
                 public void handleResponse(AnsjResponse response) {
                     LOG.info("[{}] response: {}", node, response.asMap());
-                    ai.decrementAndGet();
+                    countDownLatch.countDown();
                     result.put(node.getAddress().toString(), "success");
                 }
 
                 @Override
                 public void handleException(TransportException exp) {
                     LOG.warn("failed to send request[path:{},args:{}] to [{}]: {}", req.getPath(), req.asMap(), node, exp);
-                    ai.decrementAndGet();
+                    countDownLatch.countDown();
                     result.put(node.getAddress().toString(), "err :" + exp.getMessage());
                 }
 
@@ -334,12 +333,10 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
             });
         }
 
-        for (int i = 0; i < 20 && ai.get() > 0; i++) {
-            try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            countDownLatch.await(20, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            LOG.error("failed to send request[path:{},args:{}] nodes [{}]: {}", req.getPath(), req.asMap(), nodes, e);
         }
 
         return new AnsjResponse(result);
