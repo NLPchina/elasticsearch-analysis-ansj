@@ -30,6 +30,11 @@ public class RestAnsjAction extends BaseRestHandler {
     }
 
     @Override
+    public String getName() {
+        return "ansj_action";
+    }
+
+    @Override
     protected RestChannelConsumer prepareRequest(RestRequest request, NodeClient client) throws IOException {
         AnsjRequest ansjRequest = new AnsjRequest();
 

@@ -30,6 +30,11 @@ public class AnalyzerCatAction extends AbstractCatAction {
     }
 
     @Override
+    public String getName() {
+        return "ansj_cat_analyzer_action";
+    }
+
+    @Override
     protected RestChannelConsumer doCatRequest(RestRequest request, NodeClient client) {
         String[] texts = request.paramAsStringArrayOrEmptyIfAll("text");
 

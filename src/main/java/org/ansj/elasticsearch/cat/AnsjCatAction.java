@@ -33,6 +33,11 @@ public class AnsjCatAction extends AbstractCatAction {
     }
 
     @Override
+    public String getName() {
+        return "ansj_cat_action";
+    }
+
+    @Override
     protected RestChannelConsumer doCatRequest(RestRequest request, NodeClient client) {
         AnsjRequest ansjRequest = new AnsjRequest(request.path());
 

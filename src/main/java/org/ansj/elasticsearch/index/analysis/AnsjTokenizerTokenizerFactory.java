@@ -20,7 +20,7 @@
 package org.ansj.elasticsearch.index.analysis;
 
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
-import org.ansj.lucene6.AnsjAnalyzer;
+import org.ansj.lucene7.AnsjAnalyzer;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.inject.Inject;
@@ -36,19 +36,22 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
     private static final Logger LOG = Loggers.getLogger(AnsjTokenizerTokenizerFactory.class);
 
+    private String name;
+
     @Inject
     public AnsjTokenizerTokenizerFactory(IndexSettings indexSettings, @Assisted String name, @Assisted Settings settings) {
         super(indexSettings, name, settings);
+        this.name = name;
     }
 
     @Override
     public Tokenizer create() {
-        Settings settings = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + name());
+        Settings settings = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + this.name);
 
         Map<String, String> args = settings.getAsMap();
         if (args.isEmpty()) {
             args = AnsjElasticConfigurator.getDefaults();
-            args.put("type", name());
+            args.put("type", this.name);
         }
 
         LOG.debug("instance tokenizer settings : {}", args);

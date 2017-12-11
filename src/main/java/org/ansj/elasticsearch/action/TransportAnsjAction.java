@@ -4,7 +4,7 @@ import org.ansj.domain.Result;
 import org.ansj.domain.Term;
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.library.*;
-import org.ansj.lucene6.AnsjAnalyzer;
+import org.ansj.lucene7.AnsjAnalyzer;
 import org.ansj.recognition.impl.StopRecognition;
 import org.ansj.recognition.impl.SynonymsRecgnition;
 import org.ansj.splitWord.Analysis;
@@ -247,15 +247,15 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
                 @Override
                 public void handleResponse(AnsjResponse response) {
                     LOG.info("[{}] response: {}", node, response.asMap());
-                    countDownLatch.countDown();
                     result.put(node.getAddress().toString(), "success");
+                    countDownLatch.countDown();
                 }
 
                 @Override
                 public void handleException(TransportException exp) {
                     LOG.warn("failed to send request[path:{},args:{}] to [{}]: {}", req.getPath(), req.asMap(), node, exp);
-                    countDownLatch.countDown();
                     result.put(node.getAddress().toString(), "err :" + exp.getMessage());
+                    countDownLatch.countDown();
                 }
 
                 @Override
