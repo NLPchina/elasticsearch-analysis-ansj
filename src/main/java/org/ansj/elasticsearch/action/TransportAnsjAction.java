@@ -247,15 +247,15 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
                 @Override
                 public void handleResponse(AnsjResponse response) {
                     LOG.info("[{}] response: {}", node, response.asMap());
-                    countDownLatch.countDown();
                     result.put(node.getAddress().toString(), "success");
+                    countDownLatch.countDown();
                 }
 
                 @Override
                 public void handleException(TransportException exp) {
                     LOG.warn("failed to send request[path:{},args:{}] to [{}]: {}", req.getPath(), req.asMap(), node, exp);
-                    countDownLatch.countDown();
                     result.put(node.getAddress().toString(), "err :" + exp.getMessage());
+                    countDownLatch.countDown();
                 }
 
                 @Override
