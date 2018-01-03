@@ -11,6 +11,7 @@ import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractIndexAnalyzerProvider;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnalyzer> {
 
@@ -24,7 +25,7 @@ public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnal
 
         Settings settings2 = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + name());
 
-        Map<String, String> args = settings2.getAsMap();
+        Map<String, String> args = settings2.keySet().stream().collect(Collectors.toMap(k -> k, settings2::get));
         if (args.isEmpty()) {
             args = AnsjElasticConfigurator.getDefaults();
             args.put("type", name());

@@ -1,7 +1,6 @@
 package org.ansj.elasticsearch.index.config;
 
 import org.ansj.dic.PathToStream;
-import org.ansj.elasticsearch.plugin.AnalysisAnsjPlugin;
 import org.ansj.library.*;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
@@ -24,6 +23,7 @@ import java.nio.file.Paths;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AnsjElasticConfigurator {
 
@@ -76,8 +76,8 @@ public class AnsjElasticConfigurator {
         MyStaticValue.ENV.clear();
 
         // 插入到变量中
-        if (ansjSettings != null) {
-            MyStaticValue.ENV.putAll(ansjSettings.getAsMap());
+        if (ansjSettings != null && !ansjSettings.isEmpty()) {
+            MyStaticValue.ENV.putAll(ansjSettings.keySet().stream().collect(Collectors.toMap(k -> k, ansjSettings::get)));
         }
 
         // 设置全局变量
