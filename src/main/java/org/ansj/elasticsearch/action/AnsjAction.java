@@ -9,7 +9,7 @@ import org.elasticsearch.client.ElasticsearchClient;
 public class AnsjAction extends Action<AnsjRequest, AnsjResponse, AnsjRequestBuilder> {
 
     public static final AnsjAction INSTANCE = new AnsjAction();
-    static final String NAME = "ansj:analyze";
+    static final String NAME = "indices:admin/ansj/analyze";
 
     private AnsjAction() {
         super(NAME);
