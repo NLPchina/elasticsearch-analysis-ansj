@@ -23,6 +23,7 @@ import org.elasticsearch.cluster.node.DiscoveryNodes;
 import org.elasticsearch.cluster.routing.ShardsIterator;
 import org.elasticsearch.cluster.service.ClusterService;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.shard.ShardId;
@@ -34,6 +35,7 @@ import org.nlpcn.commons.lang.tire.domain.Forest;
 import org.nlpcn.commons.lang.tire.domain.SmartForest;
 import org.nlpcn.commons.lang.util.StringUtil;
 
+import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.*;
@@ -239,8 +241,10 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
             TransportResponseHandler<AnsjResponse> rep = new TransportResponseHandler<AnsjResponse>() {
                 @Override
-                public AnsjResponse newInstance() {
-                    return newResponse();
+                public AnsjResponse read(StreamInput in) throws IOException {
+                    AnsjResponse instance = newResponse();
+                    instance.readFrom(in);
+                    return instance;
                 }
 
                 @Override
@@ -307,22 +311,24 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
             transportService.sendRequest(node, AnsjAction.NAME, req, new TransportResponseHandler<AnsjResponse>() {
                 @Override
-                public AnsjResponse newInstance() {
-                    return newResponse();
+                public AnsjResponse read(StreamInput in) throws IOException {
+                    AnsjResponse instance = newResponse();
+                    instance.readFrom(in);
+                    return instance;
                 }
 
                 @Override
                 public void handleResponse(AnsjResponse response) {
                     LOG.info("[{}] response: {}", node, response.asMap());
-                    countDownLatch.countDown();
                     result.put(node.getAddress().toString(), "success");
+                    countDownLatch.countDown();
                 }
 
                 @Override
                 public void handleException(TransportException exp) {
                     LOG.warn("failed to send request[path:{},args:{}] to [{}]: {}", req.getPath(), req.asMap(), node, exp);
-                    countDownLatch.countDown();
                     result.put(node.getAddress().toString(), "err :" + exp.getMessage());
+                    countDownLatch.countDown();
                 }
 
                 @Override
