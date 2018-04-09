@@ -21,4 +21,5 @@ grant {
   permission java.lang.RuntimePermission "getClassLoader";
   permission java.lang.RuntimePermission "setContextClassLoader";
   permission java.io.FilePermission "<<ALL FILES>>", "read,write";
+  // permission java.net.SocketPermission "*:*", "accept,connect,resolve";
 };
