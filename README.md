@@ -51,6 +51,7 @@
 | 5.6.6         |     5.6.6     |
 | 5.6.7         |     5.6.7     |
 | 5.6.8         |     5.6.8     |
+| 5.6.9         |     5.6.9     |
 | 6.0.0         |     6.0.0     |
 | 6.0.1         |     6.0.1     |
 | 6.1.0         |     6.1.0     |
@@ -61,7 +62,18 @@
 | 6.2.0         |     6.2.0     |
 | 6.2.1         |     6.2.1     |
 | 6.2.2         |     6.2.2     |
-| master        |     6.2.3     |
+| 6.2.3         |     6.2.3     |
+| master        |     6.2.4     |
+
+## 6.2.4 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.2.4/elasticsearch-analysis-ansj-6.2.4.0-release.zip
+````
 
 ## 6.2.3 插件安装
 
@@ -171,6 +183,16 @@
 进入es目录执行如下命令
 
 ./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.0.0/elasticsearch-analysis-ansj-6.0.0.0-release.zip
+````
+
+## 5.6.9 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.9/elasticsearch-analysis-ansj-5.6.9.0-release.zip
 ````
 
 ## 5.6.8 插件安装
