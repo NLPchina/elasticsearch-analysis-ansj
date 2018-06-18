@@ -11,11 +11,11 @@
     <fileSets>  
         <fileSet>
             <directory>${project.basedir}/config/dic</directory>
-            <outputDirectory>/elasticsearch</outputDirectory>
+            <outputDirectory>/</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/config</directory>
-            <outputDirectory>/elasticsearch/config</outputDirectory>
+            <outputDirectory>/config</outputDirectory>
             <excludes>
                 <exclude>**/dic/**</exclude>
             </excludes>
@@ -23,19 +23,17 @@
 
         <fileSet>
             <directory>${project.basedir}/src/main/plugin-metadata</directory>
-            <outputDirectory>/elasticsearch</outputDirectory>
+            <outputDirectory>/</outputDirectory>
         </fileSet>
     </fileSets>
     <files>
         <file>
             <source>${project.basedir}/src/main/resources/plugin-descriptor.properties</source>
             <filtered>true</filtered>
-            <outputDirectory>/elasticsearch</outputDirectory>
         </file>
     </files>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>/elasticsearch</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <excludes>
                 <exclude>org.elasticsearch:elasticsearch</exclude>

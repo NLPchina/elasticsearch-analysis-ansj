@@ -13,7 +13,7 @@ ansj:
   # jar中文件加载
   #dic_d2: jar://org.ansj.dic.DicReader|/dic2.dic
   # 从数据库中加载
-  #dic_d3: jdbc:mysql://xxxx:3306/ttt?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull|username|password|select name as name,nature,freq from dic where type=1
+  #dic_d3: jdbc://jdbc:mysql://xxxx:3306/ttt?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull|username|password|select name as name,nature,freq from dic where type=1
   # 从自定义类中加载,YourClas  extends PathToStream
   #dic_d3: class://xxx.xxx.YourClas|ohterparam
 
