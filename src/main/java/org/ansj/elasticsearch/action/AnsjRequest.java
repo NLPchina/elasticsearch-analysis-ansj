@@ -85,7 +85,7 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
     }
 
     public AnsjRequest source(XContentBuilder builder) {
-        this.source = builder.bytes();
+        this.source = BytesReference.bytes(builder);
         return this;
     }
 
