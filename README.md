@@ -52,6 +52,7 @@
 | 5.6.7         |     5.6.7     |
 | 5.6.8         |     5.6.8     |
 | 5.6.9         |     5.6.9     |
+| 5.6.10        |     5.6.10    |
 | 6.0.0         |     6.0.0     |
 | 6.0.1         |     6.0.1     |
 | 6.1.0         |     6.1.0     |
@@ -63,7 +64,18 @@
 | 6.2.1         |     6.2.1     |
 | 6.2.2         |     6.2.2     |
 | 6.2.3         |     6.2.3     |
-| master        |     6.2.4     |
+| 6.2.4         |     6.2.4     |
+| master        |     6.3.0     |
+
+## 6.3.0 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.3.0/elasticsearch-analysis-ansj-6.3.0.0-release.zip
+````
 
 ## 6.2.4 插件安装
 
@@ -183,6 +195,16 @@
 进入es目录执行如下命令
 
 ./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.0.0/elasticsearch-analysis-ansj-6.0.0.0-release.zip
+````
+
+## 5.6.10 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.10/elasticsearch-analysis-ansj-5.6.10.0-release.zip
 ````
 
 ## 5.6.9 插件安装
@@ -814,7 +836,7 @@ http://127.0.0.1:9200/_cat/test/analyze?text=%E5%85%AD%E5%91%B3%E5%9C%B0%E9%BB%8
 
 ## 分词文件配置:
 ### 2.4.2或5.2.0以上:
-- 配置文件config/ansj.cfg.yml，需要放入$ES_HOME/config/elasticsearch-analysis-ansj/ansj.cfg.yml或者$ES_HOME/plugins/elasticsearch-analysis-ansj-*/config/ansj.cfg.yml
+- 5.2.0以上配置文件config/ansj.cfg.yml，需要放入$ES_HOME/config/elasticsearch-analysis-ansj/ansj.cfg.yml或者$ES_HOME/plugins/elasticsearch-analysis-ansj-*/config/ansj.cfg.yml
 ```yaml
 # 全局变量配置方式一
 ansj:
@@ -831,7 +853,7 @@ ansj:
   # jar中文件加载
   #dic_d2: jar://org.ansj.dic.DicReader|/dic2.dic
   # 从数据库中加载
-  #dic_d3: jdbc:mysql://xxxx:3306/ttt?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull|username|password|select name as name,nature,freq from dic where type=1
+  #dic_d3: jdbc://jdbc:mysql://xxxx:3306/ttt?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull|username|password|select name as name,nature,freq from dic where type=1
   # 从自定义类中加载,YourClas  extends PathToStream
   #dic_d3: class://xxx.xxx.YourClas|ohterparam
 
