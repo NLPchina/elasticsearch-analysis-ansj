@@ -71,7 +71,18 @@
 | 6.3.1         |     6.3.1     |
 | 6.3.2         |     6.3.2     |
 | 6.4.0         |     6.4.0     |
-| master        |     6.4.1     |
+| 6.4.1         |     6.4.1     |
+| master        |     6.4.2     |
+
+## 6.4.2 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.4.2/elasticsearch-analysis-ansj-6.4.2.0-release.zip
+````
 
 ## 6.4.1 插件安装
 
