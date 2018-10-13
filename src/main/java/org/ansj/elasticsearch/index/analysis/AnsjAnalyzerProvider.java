@@ -27,7 +27,7 @@ public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnal
 
         Map<String, String> args = settings2.keySet().stream().collect(Collectors.toMap(k -> k, settings2::get));
         if (args.isEmpty()) {
-            args = AnsjElasticConfigurator.getDefaults();
+            args.putAll(AnsjElasticConfigurator.getDefaults());
             args.put("type", name());
         }
 

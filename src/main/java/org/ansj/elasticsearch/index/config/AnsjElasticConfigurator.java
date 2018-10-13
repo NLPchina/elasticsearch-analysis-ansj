@@ -37,8 +37,19 @@ public class AnsjElasticConfigurator {
 
     private File configDir;
 
+    private Environment env;
+
     @Inject
     public AnsjElasticConfigurator(Environment env) {
+        this.env = env;
+
+        //
+        init();
+
+        LOG.info("init ansj plugin ok , goodluck youyou");
+    }
+
+    private void init() {
         Path configFilePath = env.configFile().resolve("elasticsearch-analysis-ansj").resolve(CONFIG_FILE_NAME);
         LOG.info("try to load ansj config file: {}", configFilePath);
         if (!Files.exists(configFilePath)) {
@@ -58,18 +69,14 @@ public class AnsjElasticConfigurator {
         }
 
         Settings settings = builder.build();
-
         path = settings.get("ansj_config");
-
         ansjSettings = settings.getAsSettings("ansj");
-
         configDir = env.configFile().toFile();
 
         flushConfig();
 
         // 进行一次测试分词
         preheat();
-        LOG.info("init ansj plugin ok , goodluck youyou");
     }
 
     private void flushConfig() {
@@ -94,10 +101,7 @@ public class AnsjElasticConfigurator {
     }
 
     private void initConfig(String path, boolean printErr) {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new SpecialPermission());
-        }
+        SpecialPermission.check();
         AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
             try (BufferedReader br = IOUtil.getReader(PathToStream.stream(path), "utf-8")) {
                 String temp;
@@ -123,11 +127,7 @@ public class AnsjElasticConfigurator {
     }
 
     private void initDic() {
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new SpecialPermission());
-        }
-
+        SpecialPermission.check();
         MyStaticValue.ENV.forEach((k, v) -> {
             if (k.startsWith(DicLibrary.DEFAULT)) {
                 AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
@@ -195,7 +195,8 @@ public class AnsjElasticConfigurator {
     }
 
     public void reloadConfig() {
-        flushConfig();
+        init();
+        LOG.info("reload ansj plugin config successfully");
 
         LOG.info("to remove DicLibrary keys not in MyStaticValue.ENV");
         DicLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
@@ -230,6 +231,6 @@ public class AnsjElasticConfigurator {
                 .put(StopLibrary.DEFAULT, StopLibrary.DEFAULT)
                 .put(SynonymsLibrary.DEFAULT, SynonymsLibrary.DEFAULT)
                 .put(AmbiguityLibrary.DEFAULT, AmbiguityLibrary.DEFAULT)
-                .map();
+                .immutableMap();
     }
 }

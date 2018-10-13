@@ -51,7 +51,7 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
         Map<String, String> args = settings.keySet().stream().collect(Collectors.toMap(k -> k, settings::get));
         if (args.isEmpty()) {
-            args = AnsjElasticConfigurator.getDefaults();
+            args.putAll(AnsjElasticConfigurator.getDefaults());
             args.put("type", this.name);
         }
 

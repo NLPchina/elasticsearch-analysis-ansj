@@ -358,10 +358,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
         String key = (String) params.get("key");
 
-        final SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            sm.checkPermission(new SpecialPermission());
-        }
+        SpecialPermission.check();
 
         try {
             if (key.startsWith(DicLibrary.DEFAULT)) {
