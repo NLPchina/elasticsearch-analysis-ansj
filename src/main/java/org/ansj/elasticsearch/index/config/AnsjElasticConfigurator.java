@@ -113,7 +113,7 @@ public class AnsjElasticConfigurator {
 
                     index = temp.indexOf('=');
 
-                    MyStaticValue.ENV.put(temp.substring(0, index).trim(), temp.substring(index + 1, temp.length()).trim());
+                    MyStaticValue.ENV.put(temp.substring(0, index).trim(), temp.substring(index + 1).trim());
                 }
             } catch (Exception e) {
                 if (printErr) {
@@ -128,7 +128,7 @@ public class AnsjElasticConfigurator {
 
     private void initDic() {
         SpecialPermission.check();
-        MyStaticValue.ENV.forEach((k, v) -> {
+        for (String k : MyStaticValue.ENV.keySet()) {
             if (k.startsWith(DicLibrary.DEFAULT)) {
                 AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
                     DicLibrary.get(k);
@@ -155,7 +155,7 @@ public class AnsjElasticConfigurator {
                     return null;
                 });
             }
-        });
+        }
     }
 
     private void preheat() {
