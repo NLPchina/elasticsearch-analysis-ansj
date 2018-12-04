@@ -10,6 +10,7 @@ import org.ansj.recognition.impl.SynonymsRecgnition;
 import org.ansj.splitWord.Analysis;
 import org.ansj.splitWord.analysis.*;
 import org.ansj.util.MyStaticValue;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.action.support.ActionFilters;
@@ -24,7 +25,6 @@ import org.elasticsearch.cluster.routing.ShardsIterator;
 import org.elasticsearch.cluster.service.ClusterService;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.io.stream.StreamInput;
-import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.shard.ShardId;
 import org.elasticsearch.threadpool.ThreadPool;
@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest, AnsjResponse> {
 
-    private static final Logger LOG = Loggers.getLogger(TransportAnsjAction.class);
+    private static final Logger LOG = LogManager.getLogger();
 
     private static final String MESSAGE = "flush ok";
 

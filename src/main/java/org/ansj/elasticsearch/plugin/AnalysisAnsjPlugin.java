@@ -9,6 +9,7 @@ import org.ansj.elasticsearch.index.analysis.AnsjTokenizerTokenizerFactory;
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.elasticsearch.rest.RestAnsjAction;
 import org.ansj.lucene7.AnsjAnalyzer;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.elasticsearch.action.ActionRequest;
@@ -17,7 +18,6 @@ import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
 import org.elasticsearch.cluster.node.DiscoveryNodes;
 import org.elasticsearch.common.inject.AbstractModule;
 import org.elasticsearch.common.inject.Module;
-import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.ClusterSettings;
 import org.elasticsearch.common.settings.IndexScopedSettings;
 import org.elasticsearch.common.settings.Settings;
@@ -36,7 +36,7 @@ import java.util.function.Supplier;
 
 public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, ActionPlugin {
 
-    private static final Logger LOG = Loggers.getLogger(AnalysisAnsjPlugin.class);
+    private static final Logger LOG = LogManager.getLogger();
 
     @Override
     public Collection<Module> createGuiceModules() {

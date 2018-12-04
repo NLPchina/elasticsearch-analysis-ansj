@@ -4,11 +4,11 @@ import org.ansj.dic.PathToStream;
 import org.ansj.library.*;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.common.collect.MapBuilder;
 import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 import org.nlpcn.commons.lang.util.IOUtil;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class AnsjElasticConfigurator {
 
-    private static final Logger LOG = Loggers.getLogger("ansj-initializer");
+    private static final Logger LOG = LogManager.getLogger("ansj-initializer");
 
     private static final String CONFIG_FILE_NAME = "ansj.cfg.yml";
 

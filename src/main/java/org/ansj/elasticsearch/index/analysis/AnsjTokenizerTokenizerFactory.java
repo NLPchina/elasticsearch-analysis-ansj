@@ -21,11 +21,11 @@ package org.ansj.elasticsearch.index.analysis;
 
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.lucene7.AnsjAnalyzer;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.inject.assistedinject.Assisted;
-import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractTokenizerFactory;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
-    private static final Logger LOG = Loggers.getLogger(AnsjTokenizerTokenizerFactory.class);
+    private static final Logger LOG = LogManager.getLogger();
 
     private String name;
 
