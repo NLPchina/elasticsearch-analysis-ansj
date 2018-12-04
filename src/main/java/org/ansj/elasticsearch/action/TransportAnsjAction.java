@@ -209,8 +209,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
      * 显示全部配置
      */
     private AnsjResponse showConfig() {
-        Map<String, Object> map = new HashMap<>();
-        map.putAll(MyStaticValue.ENV);
+        Map<String, Object> map = new HashMap<>(MyStaticValue.ENV);
         map.put("dic", DicLibrary.keys());
         map.put("stop", StopLibrary.keys());
         map.put("synonyms", SynonymsLibrary.keys());

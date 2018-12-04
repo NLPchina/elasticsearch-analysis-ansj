@@ -1,7 +1,6 @@
 package org.ansj.elasticsearch.index.config;
 
 import org.ansj.dic.PathToStream;
-import org.ansj.elasticsearch.plugin.AnalysisAnsjPlugin;
 import org.ansj.library.*;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
@@ -37,8 +36,19 @@ public class AnsjElasticConfigurator {
 
     private File configDir;
 
+    private Environment env;
+
     @Inject
     public AnsjElasticConfigurator(Environment env) {
+        this.env = env;
+
+        //
+        init();
+
+        LOG.info("init ansj plugin ok , goodluck youyou");
+    }
+
+    private void init() {
         Path configFilePath = env.configFile().resolve("elasticsearch-analysis-ansj").resolve(CONFIG_FILE_NAME);
         LOG.info("try to load ansj config file: {}", configFilePath);
         if (!Files.exists(configFilePath)) {
@@ -58,25 +68,21 @@ public class AnsjElasticConfigurator {
         }
 
         Settings settings = builder.build();
-
         path = settings.get("ansj_config");
-
         ansjSettings = settings.getAsSettings("ansj");
-
         configDir = env.configFile().toFile();
 
         flushConfig();
 
         // 进行一次测试分词
         preheat();
-        LOG.info("init ansj plugin ok , goodluck youyou");
     }
 
     private void flushConfig() {
         MyStaticValue.ENV.clear();
 
         // 插入到变量中
-        if (ansjSettings != null) {
+        if (ansjSettings != null && !ansjSettings.isEmpty()) {
             MyStaticValue.ENV.putAll(ansjSettings.getAsMap());
         }
 
@@ -109,7 +115,7 @@ public class AnsjElasticConfigurator {
 
                     index = temp.indexOf('=');
 
-                    MyStaticValue.ENV.put(temp.substring(0, index).trim(), temp.substring(index + 1, temp.length()).trim());
+                    MyStaticValue.ENV.put(temp.substring(0, index).trim(), temp.substring(index + 1).trim());
                 }
             } catch (Exception e) {
                 if (printErr) {
@@ -127,8 +133,7 @@ public class AnsjElasticConfigurator {
         if (sm != null) {
             sm.checkPermission(new SpecialPermission());
         }
-
-        MyStaticValue.ENV.forEach((k, v) -> {
+        for (String k : MyStaticValue.ENV.keySet()) {
             if (k.startsWith(DicLibrary.DEFAULT)) {
                 AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
                     DicLibrary.get(k);
@@ -155,7 +160,7 @@ public class AnsjElasticConfigurator {
                     return null;
                 });
             }
-        });
+        }
     }
 
     private void preheat() {
@@ -195,7 +200,8 @@ public class AnsjElasticConfigurator {
     }
 
     public void reloadConfig() {
-        flushConfig();
+        init();
+        LOG.info("reload ansj plugin config successfully");
 
         LOG.info("to remove DicLibrary keys not in MyStaticValue.ENV");
         DicLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
@@ -230,6 +236,6 @@ public class AnsjElasticConfigurator {
                 .put(StopLibrary.DEFAULT, StopLibrary.DEFAULT)
                 .put(SynonymsLibrary.DEFAULT, SynonymsLibrary.DEFAULT)
                 .put(AmbiguityLibrary.DEFAULT, AmbiguityLibrary.DEFAULT)
-                .map();
+                .immutableMap();
     }
 }

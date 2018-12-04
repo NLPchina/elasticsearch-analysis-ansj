@@ -38,8 +38,6 @@ public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, Action
 
     private static final Logger LOG = Loggers.getLogger(AnalysisAnsjPlugin.class);
 
-    public static final String PLUGIN_NAME = "analysis-ansj";
-
     @Override
     public Collection<Module> createGuiceModules() {
         return Collections.singletonList(new AnsjModule());
