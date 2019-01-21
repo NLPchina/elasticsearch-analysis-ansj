@@ -56,6 +56,7 @@
 | 5.6.11        |     5.6.11    |
 | 5.6.12        |     5.6.12    |
 | 5.6.13        |     5.6.13    |
+| 5.6.14        |     5.6.14    |
 | 6.0.0         |     6.0.0     |
 | 6.0.1         |     6.0.1     |
 | 6.1.0         |     6.1.0     |
@@ -76,7 +77,40 @@
 | 6.4.2         |     6.4.2     |
 | 6.4.3         |     6.4.3     |
 | 6.5.0         |     6.5.0     |
-| master        |     6.5.1     |
+| 6.5.1         |     6.5.1     |
+| 6.5.2         |     6.5.2     |
+| 6.5.3         |     6.5.3     |
+| master        |     6.5.4     |
+
+## 6.5.4 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.5.4/elasticsearch-analysis-ansj-6.5.4.0-release.zip
+````
+
+## 6.5.3 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.5.3/elasticsearch-analysis-ansj-6.5.3.0-release.zip
+````
+
+## 6.5.2 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.5.2/elasticsearch-analysis-ansj-6.5.2.0-release.zip
+````
 
 ## 6.5.1 插件安装
 
@@ -286,6 +320,16 @@
 进入es目录执行如下命令
 
 ./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.0.0/elasticsearch-analysis-ansj-6.0.0.0-release.zip
+````
+
+## 5.6.14 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v5.6.14/elasticsearch-analysis-ansj-5.6.14.0-release.zip
 ````
 
 ## 5.6.13 插件安装
@@ -769,6 +813,10 @@
 
 
 ==========
+
+## 2019年1月20日
++ ansj_seg升级至5.1.6
+
 
 ## 2017年4月9日
 + ansj_seg升级至5.1.1
