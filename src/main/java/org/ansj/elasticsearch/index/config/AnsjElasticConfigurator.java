@@ -128,28 +128,33 @@ public class AnsjElasticConfigurator {
 
     private void initDic() {
         SpecialPermission.check();
-        for (String k : MyStaticValue.ENV.keySet()) {
+        for (String k : MyStaticValue.ENV.keySet().toArray(new String[0])) {
             if (k.startsWith(DicLibrary.DEFAULT)) {
+                DicLibrary.keys().removeIf(k::equals);
                 AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
                     DicLibrary.get(k);
                     return null;
                 });
             } else if (k.startsWith(StopLibrary.DEFAULT)) {
+                StopLibrary.keys().removeIf(k::equals);
                 AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
                     StopLibrary.get(k);
                     return null;
                 });
             } else if (k.startsWith(SynonymsLibrary.DEFAULT)) {
+                SynonymsLibrary.keys().removeIf(k::equals);
                 AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
                     SynonymsLibrary.get(k);
                     return null;
                 });
             } else if (k.startsWith(AmbiguityLibrary.DEFAULT)) {
+                AmbiguityLibrary.keys().removeIf(k::equals);
                 AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
                     AmbiguityLibrary.get(k);
                     return null;
                 });
             } else if (k.startsWith(CrfLibrary.DEFAULT)) {
+                CrfLibrary.keys().removeIf(k::equals);
                 AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
                     CrfLibrary.get(k);
                     return null;
