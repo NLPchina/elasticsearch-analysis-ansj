@@ -30,6 +30,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractTokenizerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
@@ -45,7 +46,7 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
     public Tokenizer create() {
         Settings settings = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + name());
 
-        Map<String, String> args = settings.getAsMap();
+        Map<String, String> args = new HashMap<>(settings.getAsMap());
         if (args.isEmpty()) {
             args.putAll(AnsjElasticConfigurator.getDefaults());
             args.put("type", name());
