@@ -167,7 +167,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
         // 是否保留原字符
         if (StringUtil.isNotBlank(temp = request.get("isRealName"))) {
-            analysis.setIsRealName(Boolean.valueOf(temp));
+            analysis.setIsRealName(Boolean.parseBoolean(temp));
         }
 
         Result parse = analysis.parseStr(request.get("text"));
