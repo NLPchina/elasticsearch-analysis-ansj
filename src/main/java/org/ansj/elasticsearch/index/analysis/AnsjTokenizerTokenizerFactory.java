@@ -41,7 +41,7 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
     @Inject
     public AnsjTokenizerTokenizerFactory(IndexSettings indexSettings, @Assisted String name, @Assisted Settings settings) {
-        super(indexSettings, name, settings);
+        super(indexSettings, settings);
         this.name = name;
     }
 

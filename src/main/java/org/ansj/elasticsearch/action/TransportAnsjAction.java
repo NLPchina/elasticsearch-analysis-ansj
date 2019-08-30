@@ -25,6 +25,7 @@ import org.elasticsearch.cluster.routing.ShardsIterator;
 import org.elasticsearch.cluster.service.ClusterService;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.io.stream.StreamInput;
+import org.elasticsearch.common.io.stream.Writeable;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.shard.ShardId;
 import org.elasticsearch.threadpool.ThreadPool;
@@ -51,6 +52,8 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
     private static final String MESSAGE = "flush ok";
 
+    private final Settings settings;
+
     private final AnsjElasticConfigurator cfg;
 
     @Inject
@@ -59,8 +62,12 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
                                TransportService transportService, ActionFilters actionFilters,
                                IndexNameExpressionResolver indexNameExpressionResolver,
                                AnsjElasticConfigurator cfg) {
-        super(settings, AnsjAction.NAME, threadPool, clusterService, transportService, actionFilters, indexNameExpressionResolver, AnsjRequest::new, ThreadPool.Names.INDEX);
-
+        super(AnsjAction.NAME, threadPool, clusterService, transportService, actionFilters, indexNameExpressionResolver, in -> {
+            AnsjRequest request = new AnsjRequest();
+            request.readFrom(in);
+            return request;
+        }, "index");
+        this.settings = settings;
         this.cfg = cfg;
     }
 
@@ -88,6 +95,15 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
         }
 
         return new AnsjResponse().put("message", "not find any by path " + path);
+    }
+
+    @Override
+    protected Writeable.Reader<AnsjResponse> getResponseReader() {
+        return in -> {
+            AnsjResponse response = newResponse();
+            response.readFrom(in);
+            return response;
+        };
     }
 
     /**
@@ -177,8 +193,9 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
             String[] split = temp.split(",");
             for (String key : split) {
                 StopRecognition stop = StopLibrary.get(key.trim());
-                if (stop != null)
+                if (stop != null) {
                     parse.recognition(stop);
+                }
             }
         }
 
@@ -187,8 +204,9 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
             String[] split = temp.split(",");
             for (String key : split) {
                 SmartForest<List<String>> sf = SynonymsLibrary.get(key.trim());
-                if (sf != null)
+                if (sf != null) {
                     parse.recognition(new SynonymsRecgnition(sf));
+                }
             }
         }
 
@@ -401,7 +419,6 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
         }
     }
 
-    @Override
     protected AnsjResponse newResponse() {
         return new AnsjResponse();
     }
