@@ -1,12 +1,12 @@
 package org.ansj.elasticsearch.action;
 
 import org.elasticsearch.action.Action;
-import org.elasticsearch.client.ElasticsearchClient;
+import org.elasticsearch.common.io.stream.Writeable;
 
 /**
  * Created by zhangqinghua on 16/2/2.
  */
-public class AnsjAction extends Action<AnsjRequest, AnsjResponse, AnsjRequestBuilder> {
+public class AnsjAction extends Action<AnsjResponse> {
 
     public static final AnsjAction INSTANCE = new AnsjAction();
     static final String NAME = "cluster:admin/ansj/analyze";
@@ -17,11 +17,15 @@ public class AnsjAction extends Action<AnsjRequest, AnsjResponse, AnsjRequestBui
 
     @Override
     public AnsjResponse newResponse() {
-        return new AnsjResponse();
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public AnsjRequestBuilder newRequestBuilder(ElasticsearchClient client) {
-        return new AnsjRequestBuilder(client, this);
+    public Writeable.Reader<AnsjResponse> getResponseReader() {
+        return in -> {
+            AnsjResponse response = new AnsjResponse();
+            response.readFrom(in);
+            return response;
+        };
     }
 }

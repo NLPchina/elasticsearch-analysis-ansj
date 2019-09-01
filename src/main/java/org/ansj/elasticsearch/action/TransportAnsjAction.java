@@ -3,12 +3,20 @@ package org.ansj.elasticsearch.action;
 import org.ansj.domain.Result;
 import org.ansj.domain.Term;
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
-import org.ansj.library.*;
+import org.ansj.library.AmbiguityLibrary;
+import org.ansj.library.CrfLibrary;
+import org.ansj.library.DicLibrary;
+import org.ansj.library.StopLibrary;
+import org.ansj.library.SynonymsLibrary;
 import org.ansj.lucene7.AnsjAnalyzer;
 import org.ansj.recognition.impl.StopRecognition;
 import org.ansj.recognition.impl.SynonymsRecgnition;
 import org.ansj.splitWord.Analysis;
-import org.ansj.splitWord.analysis.*;
+import org.ansj.splitWord.analysis.BaseAnalysis;
+import org.ansj.splitWord.analysis.DicAnalysis;
+import org.ansj.splitWord.analysis.IndexAnalysis;
+import org.ansj.splitWord.analysis.NlpAnalysis;
+import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +33,6 @@ import org.elasticsearch.cluster.routing.ShardsIterator;
 import org.elasticsearch.cluster.service.ClusterService;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.io.stream.StreamInput;
-import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.shard.ShardId;
 import org.elasticsearch.threadpool.ThreadPool;
 import org.elasticsearch.transport.TransportException;
@@ -38,7 +45,11 @@ import org.nlpcn.commons.lang.util.StringUtil;
 import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -54,12 +65,11 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
     private final AnsjElasticConfigurator cfg;
 
     @Inject
-    public TransportAnsjAction(Settings settings,
-                               ThreadPool threadPool, ClusterService clusterService,
+    public TransportAnsjAction(ThreadPool threadPool, ClusterService clusterService,
                                TransportService transportService, ActionFilters actionFilters,
                                IndexNameExpressionResolver indexNameExpressionResolver,
                                AnsjElasticConfigurator cfg) {
-        super(settings, AnsjAction.NAME, threadPool, clusterService, transportService, actionFilters, indexNameExpressionResolver, AnsjRequest::new, ThreadPool.Names.INDEX);
+        super(AnsjAction.NAME, threadPool, clusterService, transportService, actionFilters, indexNameExpressionResolver, AnsjRequest::new, ThreadPool.Names.GENERIC);
 
         this.cfg = cfg;
     }
@@ -177,8 +187,9 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
             String[] split = temp.split(",");
             for (String key : split) {
                 StopRecognition stop = StopLibrary.get(key.trim());
-                if (stop != null)
+                if (stop != null) {
                     parse.recognition(stop);
+                }
             }
         }
 
@@ -187,8 +198,9 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
             String[] split = temp.split(",");
             for (String key : split) {
                 SmartForest<List<String>> sf = SynonymsLibrary.get(key.trim());
-                if (sf != null)
+                if (sf != null) {
                     parse.recognition(new SynonymsRecgnition(sf));
+                }
             }
         }
 
