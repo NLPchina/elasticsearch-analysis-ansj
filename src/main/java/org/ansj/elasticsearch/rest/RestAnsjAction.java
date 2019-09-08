@@ -2,7 +2,11 @@ package org.ansj.elasticsearch.rest;
 
 import org.ansj.elasticsearch.action.AnsjAction;
 import org.ansj.elasticsearch.action.AnsjRequest;
-import org.ansj.library.*;
+import org.ansj.library.AmbiguityLibrary;
+import org.ansj.library.CrfLibrary;
+import org.ansj.library.DicLibrary;
+import org.ansj.library.StopLibrary;
+import org.ansj.library.SynonymsLibrary;
 import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.BaseRestHandler;
@@ -12,6 +16,7 @@ import org.elasticsearch.rest.action.RestToXContentListener;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,6 +54,6 @@ public class RestAnsjAction extends BaseRestHandler {
         responseParams.addAll(Arrays.asList("text", "index", "field", "analyzer", "tokenizer", "filters", "token_filters", "char_filters", "type", "key",
                 "isNameRecognition", "isNumRecognition", "isQuantifierRecognition", "isRealName", "isSkipUserDefine",
                 CrfLibrary.DEFAULT, DicLibrary.DEFAULT, AmbiguityLibrary.DEFAULT, StopLibrary.DEFAULT, SynonymsLibrary.DEFAULT));
-        return responseParams;
+        return Collections.unmodifiableSet(responseParams);
     }
 }

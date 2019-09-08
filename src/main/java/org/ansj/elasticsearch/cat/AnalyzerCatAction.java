@@ -1,8 +1,11 @@
 package org.ansj.elasticsearch.cat;
 
-import org.ansj.library.*;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeRequest;
-import org.elasticsearch.action.admin.indices.analyze.AnalyzeResponse;
+import org.ansj.library.AmbiguityLibrary;
+import org.ansj.library.CrfLibrary;
+import org.ansj.library.DicLibrary;
+import org.ansj.library.StopLibrary;
+import org.ansj.library.SynonymsLibrary;
+import org.elasticsearch.action.admin.indices.analyze.AnalyzeAction;
 import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.common.Table;
 import org.elasticsearch.common.settings.Settings;
@@ -14,6 +17,7 @@ import org.elasticsearch.rest.action.cat.AbstractCatAction;
 import org.nlpcn.commons.lang.util.StringUtil;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,7 +42,7 @@ public class AnalyzerCatAction extends AbstractCatAction {
     protected RestChannelConsumer doCatRequest(RestRequest request, NodeClient client) {
         String[] texts = request.paramAsStringArrayOrEmptyIfAll("text");
 
-        AnalyzeRequest analyzeRequest = new AnalyzeRequest(request.param("index"));
+        AnalyzeAction.Request analyzeRequest = new AnalyzeAction.Request(request.param("index"));
         analyzeRequest.field(request.param("field"));
 
         String tokenizer = request.param("tokenizer");
@@ -49,9 +53,9 @@ public class AnalyzerCatAction extends AbstractCatAction {
         if (texts == null || texts.length == 0) {
             analyzeRequest.text("null");
             analyzeRequest.analyzer("index_ansj");
-            return channel -> client.admin().indices().analyze(analyzeRequest, new RestResponseListener<AnalyzeResponse>(channel) {
+            return channel -> client.admin().indices().analyze(analyzeRequest, new RestResponseListener<AnalyzeAction.Response>(channel) {
                 @Override
-                public RestResponse buildResponse(final AnalyzeResponse analyzeResponse) throws Exception {
+                public RestResponse buildResponse(final AnalyzeAction.Response analyzeResponse) throws Exception {
                     return ChineseRestTable.response(channel,
                             "err args example : /_cat/analyze?text=中国&analyzer=index_ansj, other params: [field,tokenizer,token_filters,char_filters]");
                 }
@@ -70,9 +74,9 @@ public class AnalyzerCatAction extends AbstractCatAction {
                 analyzeRequest.addCharFilter(filter);
             }
 
-            return channel -> client.admin().indices().analyze(analyzeRequest, new RestResponseListener<AnalyzeResponse>(channel) {
+            return channel -> client.admin().indices().analyze(analyzeRequest, new RestResponseListener<AnalyzeAction.Response>(channel) {
                 @Override
-                public RestResponse buildResponse(final AnalyzeResponse analyzeResponse) throws Exception {
+                public RestResponse buildResponse(final AnalyzeAction.Response analyzeResponse) throws Exception {
                     return ChineseRestTable.buildResponse(buildTable(analyzeResponse, request), channel);
                 }
             });
@@ -103,12 +107,12 @@ public class AnalyzerCatAction extends AbstractCatAction {
         responseParams.addAll(Arrays.asList("text", "index", "field", "analyzer", "tokenizer", "filters", "token_filters", "char_filters", "type", "key",
                 "isNameRecognition", "isNumRecognition", "isQuantifierRecognition", "isRealName", "isSkipUserDefine",
                 CrfLibrary.DEFAULT, DicLibrary.DEFAULT, AmbiguityLibrary.DEFAULT, StopLibrary.DEFAULT, SynonymsLibrary.DEFAULT));
-        return responseParams;
+        return Collections.unmodifiableSet(responseParams);
     }
 
-    private Table buildTable(final AnalyzeResponse analyzeResponse, final RestRequest request) {
+    private Table buildTable(final AnalyzeAction.Response analyzeResponse, final RestRequest request) {
         Table t = getTableWithHeader(request);
-        for (AnalyzeResponse.AnalyzeToken token : analyzeResponse.getTokens()) {
+        for (AnalyzeAction.AnalyzeToken token : analyzeResponse.getTokens()) {
             t.startRow();
             t.addCell(token.getTerm());
             t.addCell(token.getStartOffset());

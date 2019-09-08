@@ -33,6 +33,10 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
         this.path = path;
     }
 
+    public AnsjRequest(StreamInput in) throws IOException {
+        readFrom(in);
+    }
+
     public String getPath() {
         return path;
     }
