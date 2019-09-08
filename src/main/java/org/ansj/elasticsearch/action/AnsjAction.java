@@ -22,10 +22,6 @@ public class AnsjAction extends Action<AnsjResponse> {
 
     @Override
     public Writeable.Reader<AnsjResponse> getResponseReader() {
-        return in -> {
-            AnsjResponse response = new AnsjResponse();
-            response.readFrom(in);
-            return response;
-        };
+        return AnsjResponse::new;
     }
 }

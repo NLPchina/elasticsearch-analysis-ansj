@@ -26,6 +26,10 @@ public class AnsjResponse extends ActionResponse implements ToXContentObject {
         this.map.putAll(map);
     }
 
+    public AnsjResponse(StreamInput in) throws IOException {
+        readFrom(in);
+    }
+
     public AnsjResponse put(String key, Object value) {
         map.put(key, value);
         return this;

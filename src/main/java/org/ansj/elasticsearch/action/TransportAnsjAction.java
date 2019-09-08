@@ -33,6 +33,7 @@ import org.elasticsearch.cluster.routing.ShardsIterator;
 import org.elasticsearch.cluster.service.ClusterService;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.io.stream.StreamInput;
+import org.elasticsearch.common.io.stream.Writeable;
 import org.elasticsearch.index.shard.ShardId;
 import org.elasticsearch.threadpool.ThreadPool;
 import org.elasticsearch.transport.TransportException;
@@ -245,7 +246,8 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
         final CountDownLatch countDownLatch = new CountDownLatch(nodes.getSize());
 
-        final Map<String, String> result = new HashMap<>();
+        final Map<String, String> result = new HashMap<>(16);
+        final Writeable.Reader<AnsjResponse> reader = getResponseReader();
 
         for (final DiscoveryNode node : nodes) {
 
@@ -254,9 +256,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
             TransportResponseHandler<AnsjResponse> rep = new TransportResponseHandler<AnsjResponse>() {
                 @Override
                 public AnsjResponse read(StreamInput in) throws IOException {
-                    AnsjResponse instance = newResponse();
-                    instance.readFrom(in);
-                    return instance;
+                    return reader.read(in);
                 }
 
                 @Override
@@ -315,7 +315,8 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
         final CountDownLatch countDownLatch = new CountDownLatch(nodes.getSize());
 
-        final Map<String, String> result = new HashMap<>();
+        final Map<String, String> result = new HashMap<>(16);
+        final Writeable.Reader<AnsjResponse> reader = getResponseReader();
 
         for (final DiscoveryNode node : nodes) {
 
@@ -324,9 +325,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
             transportService.sendRequest(node, AnsjAction.NAME, req, new TransportResponseHandler<AnsjResponse>() {
                 @Override
                 public AnsjResponse read(StreamInput in) throws IOException {
-                    AnsjResponse instance = newResponse();
-                    instance.readFrom(in);
-                    return instance;
+                    return reader.read(in);
                 }
 
                 @Override
@@ -398,7 +397,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
                     CrfLibrary.reload(key);
                     return null;
                 });
-            } else if (key.equals("ansj_config")) {
+            } else if ("ansj_config".equals(key)) {
                 this.cfg.reloadConfig();
             } else {
                 return new AnsjResponse().put("status", "not find any by " + key);
@@ -414,8 +413,8 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
     }
 
     @Override
-    protected AnsjResponse newResponse() {
-        return new AnsjResponse();
+    protected Writeable.Reader<AnsjResponse> getResponseReader() {
+        return AnsjResponse::new;
     }
 
     @Override
