@@ -86,7 +86,150 @@
 | 6.6.0         |     6.6.0     |
 | 6.6.1         |     6.6.1     |
 | 6.6.2         |     6.6.2     |
-| master        |     6.7.0     |
+| 6.7.0         |     6.7.0     |
+| 6.7.1         |     6.7.1     |
+| 6.7.2         |     6.7.2     |
+| 6.8.0         |     6.8.0     |
+| 6.8.1         |     6.8.1     |
+| 6.8.2         |     6.8.2     |
+| 7.0.0         |     7.0.0     |
+| 7.0.1         |     7.0.1     |
+| 7.1.0         |     7.1.0     |
+| 7.1.1         |     7.1.1     |
+| 7.2.0         |     7.2.0     |
+| 7.2.1         |     7.2.1     |
+| 7.3.0         |     7.3.0     |
+| master        |     7.3.1     |
+
+## 7.3.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.3.1/elasticsearch-analysis-ansj-7.3.1.0-release.zip
+````
+
+## 7.3.0 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.3.0/elasticsearch-analysis-ansj-7.3.0.0-release.zip
+````
+
+## 7.2.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.2.1/elasticsearch-analysis-ansj-7.2.1.0-release.zip
+````
+
+## 7.2.0 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.2.0/elasticsearch-analysis-ansj-7.2.0.0-release.zip
+````
+
+## 7.1.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.1.1/elasticsearch-analysis-ansj-7.1.1.0-release.zip
+````
+
+## 7.1.0 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.1.0/elasticsearch-analysis-ansj-7.1.0.0-release.zip
+````
+
+## 7.0.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.0.1/elasticsearch-analysis-ansj-7.0.1.0-release.zip
+````
+
+## 7.0.0 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v7.0.0/elasticsearch-analysis-ansj-7.0.0.0-release.zip
+````
+
+## 6.8.2 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.8.2/elasticsearch-analysis-ansj-6.8.2.0-release.zip
+````
+
+## 6.8.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.8.1/elasticsearch-analysis-ansj-6.8.1.0-release.zip
+````
+
+## 6.8.0 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.8.0/elasticsearch-analysis-ansj-6.8.0.0-release.zip
+````
+
+## 6.7.2 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.7.2/elasticsearch-analysis-ansj-6.7.2.0-release.zip
+````
+
+## 6.7.1 插件安装
+
+进入Elasticsearch目录运行如下命令
+
+````
+进入es目录执行如下命令
+
+./bin/elasticsearch-plugin install https://github.com/NLPchina/elasticsearch-analysis-ansj/releases/download/v6.7.1/elasticsearch-analysis-ansj-6.7.1.0-release.zip
+````
 
 ## 6.7.0 插件安装
 
@@ -920,7 +1063,7 @@
 * 创建测试索引
 
 ```linux
-curl -XPUT 127.0.0.1:9200/test -d '{
+curl -X PUT "127.0.0.1:9200/test" -H 'Content-Type: application/json' -d '{
     "settings" : {
         "number_of_shards" : 1,
         "number_of_replicas" : 0
@@ -940,7 +1083,7 @@ curl -XPUT 127.0.0.1:9200/test -d '{
 * 添加索引内容
 
 ````
-curl -XPUT 'http://127.0.0.1:9200/test/test/1' -d '{
+curl -X PUT "127.0.0.1:9200/test/test/1" -H 'Content-Type: application/json' -d '{
     "name" : "中国人民万岁",
     "post_date" : "2009-11-15T14:12:12",
     "message" : "trying out Elasticsearch"
