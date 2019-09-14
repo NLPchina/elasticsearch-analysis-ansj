@@ -1,4 +1,6 @@
 ## 前言
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNLPchina%2Felasticsearch-analysis-ansj.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FNLPchina%2Felasticsearch-analysis-ansj?ref=badge_shield)
+
 
 这是一个elasticsearch的中文分词插件，基于ansj,感谢群内热心的朋友。
 并宣传一下我们的群QQ211682609
@@ -1356,3 +1358,7 @@ publish ansj_term a:d:减肥瘦身
 
 ## 结束
 就写这么多吧，有啥问题，QQ找我
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNLPchina%2Felasticsearch-analysis-ansj.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FNLPchina%2Felasticsearch-analysis-ansj?ref=badge_large)
