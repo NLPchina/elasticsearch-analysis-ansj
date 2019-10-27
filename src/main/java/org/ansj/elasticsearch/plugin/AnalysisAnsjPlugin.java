@@ -31,7 +31,12 @@ import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestHandler;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, ActionPlugin {
@@ -81,9 +86,9 @@ public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, Action
     @Override
     public List<RestHandler> getRestHandlers(Settings settings, RestController restController, ClusterSettings clusterSettings, IndexScopedSettings indexScopedSettings, SettingsFilter settingsFilter, IndexNameExpressionResolver indexNameExpressionResolver, Supplier<DiscoveryNodes> nodesInCluster) {
         return Arrays.asList(
-                new RestAnsjAction(settings, restController),
-                new AnalyzerCatAction(settings, restController),
-                new AnsjCatAction(settings, restController));
+                new RestAnsjAction(restController),
+                new AnalyzerCatAction(restController),
+                new AnsjCatAction(restController));
     }
 
     private class AnsjModule extends AbstractModule {

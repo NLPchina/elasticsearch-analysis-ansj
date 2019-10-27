@@ -8,7 +8,6 @@ import org.ansj.library.DicLibrary;
 import org.ansj.library.StopLibrary;
 import org.ansj.library.SynonymsLibrary;
 import org.elasticsearch.client.node.NodeClient;
-import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.BaseRestHandler;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestRequest;
@@ -28,8 +27,7 @@ import static org.elasticsearch.rest.RestRequest.Method.POST;
  */
 public class RestAnsjAction extends BaseRestHandler {
 
-    public RestAnsjAction(Settings settings, RestController controller) {
-        super(settings);
+    public RestAnsjAction(RestController controller) {
         controller.registerHandler(GET, "/_ansj", this);
         controller.registerHandler(POST, "/_ansj", this);
     }

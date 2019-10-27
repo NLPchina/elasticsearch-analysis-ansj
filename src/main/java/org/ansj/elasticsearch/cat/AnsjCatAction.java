@@ -10,7 +10,6 @@ import org.ansj.library.StopLibrary;
 import org.ansj.library.SynonymsLibrary;
 import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.common.Table;
-import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.RestResponse;
@@ -27,8 +26,7 @@ import java.util.Set;
  */
 public class AnsjCatAction extends AbstractCatAction {
 
-    public AnsjCatAction(Settings settings, RestController controller) {
-        super(settings);
+    public AnsjCatAction(RestController controller) {
         controller.registerHandler(RestRequest.Method.GET, "/_cat/ansj", this);
         controller.registerHandler(RestRequest.Method.GET, "/_cat/ansj/config", this);
         controller.registerHandler(RestRequest.Method.GET, "/_ansj/flush/config", this);

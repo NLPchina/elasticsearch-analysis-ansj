@@ -34,7 +34,10 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
     }
 
     public AnsjRequest(StreamInput in) throws IOException {
-        readFrom(in);
+        super(in);
+        path = in.readString();
+        args = in.readMap();
+        source = in.readBytesReference();
     }
 
     public String getPath() {
@@ -52,14 +55,6 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
     @Override
     public ActionRequestValidationException validate() {
         return null;
-    }
-
-    @Override
-    public void readFrom(StreamInput in) throws IOException {
-        super.readFrom(in);
-        path = in.readString();
-        args = in.readMap();
-        source = in.readBytesReference();
     }
 
     @Override

@@ -37,22 +37,19 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
     private static final Logger LOG = LogManager.getLogger();
 
-    private String name;
-
     @Inject
     public AnsjTokenizerTokenizerFactory(IndexSettings indexSettings, @Assisted String name, @Assisted Settings settings) {
-        super(indexSettings, settings);
-        this.name = name;
+        super(indexSettings, settings, name);
     }
 
     @Override
     public Tokenizer create() {
-        Settings settings = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + this.name);
+        Settings settings = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + name());
 
         Map<String, String> args = settings.keySet().stream().collect(Collectors.toMap(k -> k, settings::get));
         if (args.isEmpty()) {
             args.putAll(AnsjElasticConfigurator.getDefaults());
-            args.put("type", this.name);
+            args.put("type", name());
         }
 
         LOG.debug("instance tokenizer settings : {}", args);

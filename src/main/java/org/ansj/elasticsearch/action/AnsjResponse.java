@@ -27,7 +27,8 @@ public class AnsjResponse extends ActionResponse implements ToXContentObject {
     }
 
     public AnsjResponse(StreamInput in) throws IOException {
-        readFrom(in);
+        super(in);
+        map = in.readMap();
     }
 
     public AnsjResponse put(String key, Object value) {
@@ -45,19 +46,12 @@ public class AnsjResponse extends ActionResponse implements ToXContentObject {
     }
 
     @Override
-    public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+    public XContentBuilder toXContent(XContentBuilder builder, Params params) {
         return builder;
     }
 
     @Override
-    public void readFrom(StreamInput in) throws IOException {
-        super.readFrom(in);
-        map = in.readMap();
-    }
-
-    @Override
     public void writeTo(StreamOutput out) throws IOException {
-        super.writeTo(out);
         out.writeMap(map);
     }
 }
