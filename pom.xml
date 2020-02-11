@@ -12,7 +12,7 @@
 	<repositories>
 		<repository>
 			<id>mvn-repo</id>
-			<url>http://maven.nlpcn.org/</url>
+			<url>https://maven.nlpcn.org/</url>
 		</repository>
 	</repositories>
 
