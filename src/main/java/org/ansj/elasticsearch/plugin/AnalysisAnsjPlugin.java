@@ -85,10 +85,7 @@ public class AnalysisAnsjPlugin extends Plugin implements AnalysisPlugin, Action
 
     @Override
     public List<RestHandler> getRestHandlers(Settings settings, RestController restController, ClusterSettings clusterSettings, IndexScopedSettings indexScopedSettings, SettingsFilter settingsFilter, IndexNameExpressionResolver indexNameExpressionResolver, Supplier<DiscoveryNodes> nodesInCluster) {
-        return Arrays.asList(
-                new RestAnsjAction(restController),
-                new AnalyzerCatAction(restController),
-                new AnsjCatAction(restController));
+        return Arrays.asList(new RestAnsjAction(), new AnalyzerCatAction(), new AnsjCatAction());
     }
 
     private class AnsjModule extends AbstractModule {

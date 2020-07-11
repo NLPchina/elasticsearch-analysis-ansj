@@ -9,7 +9,6 @@ import org.ansj.library.StopLibrary;
 import org.ansj.library.SynonymsLibrary;
 import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.rest.BaseRestHandler;
-import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.action.RestToXContentListener;
 
@@ -17,24 +16,27 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import static org.elasticsearch.rest.RestRequest.Method.GET;
-import static org.elasticsearch.rest.RestRequest.Method.POST;
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * Created by zhangqinghua on 16/2/2.
  */
 public class RestAnsjAction extends BaseRestHandler {
 
-    public RestAnsjAction(RestController controller) {
-        controller.registerHandler(GET, "/_ansj", this);
-        controller.registerHandler(POST, "/_ansj", this);
-    }
-
     @Override
     public String getName() {
         return "ansj_action";
+    }
+
+    @Override
+    public List<Route> routes() {
+        return unmodifiableList(asList(
+                new Route(RestRequest.Method.GET, "/_ansj"),
+                new Route(RestRequest.Method.POST, "/_ansj")));
     }
 
     @Override

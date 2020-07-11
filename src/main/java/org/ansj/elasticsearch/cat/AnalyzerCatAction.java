@@ -8,7 +8,6 @@ import org.ansj.library.SynonymsLibrary;
 import org.elasticsearch.action.admin.indices.analyze.AnalyzeAction;
 import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.common.Table;
-import org.elasticsearch.rest.RestController;
 import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.RestResponse;
 import org.elasticsearch.rest.action.RestResponseListener;
@@ -18,7 +17,11 @@ import org.nlpcn.commons.lang.util.StringUtil;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * 分词的cat
@@ -26,14 +29,16 @@ import java.util.Set;
  */
 public class AnalyzerCatAction extends AbstractCatAction {
 
-    public AnalyzerCatAction(RestController controller) {
-        controller.registerHandler(RestRequest.Method.GET, "/_cat/analyze", this);
-        controller.registerHandler(RestRequest.Method.GET, "/_cat/{index}/analyze", this);
-    }
-
     @Override
     public String getName() {
         return "ansj_cat_analyzer_action";
+    }
+
+    @Override
+    public List<Route> routes() {
+        return unmodifiableList(asList(
+                new Route(RestRequest.Method.GET, "/_cat/analyze"),
+                new Route(RestRequest.Method.GET, "/_cat/{index}/analyze")));
     }
 
     @Override

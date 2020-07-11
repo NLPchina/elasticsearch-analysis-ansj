@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class AnsjResponse extends ActionResponse implements ToXContentObject {
 
-    private Map<String, Object> map;
+    private final Map<String, Object> map;
 
     public AnsjResponse() {
         this.map = new HashMap<>();
