@@ -4,24 +4,17 @@
 
 	<groupId>org.ansj</groupId>
 	<artifactId>elasticsearch-analysis-ansj</artifactId>
-	<version>6.8.4.0</version>
+	<version>6.8.5.0</version>
 	<description>elasticsearch analysis by ansj</description>
 	<name>elasticsearch-analysis-ansj</name>
 	<url>http://maven.nlpcn.org</url>
-
-	<repositories>
-		<repository>
-			<id>mvn-repo</id>
-			<url>http://maven.nlpcn.org/</url>
-		</repository>
-	</repositories>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<runSuite>**/MainTestSuite.class</runSuite>
 		<elasticsearch.plugin.name>elasticsearch-analysis-ansj</elasticsearch.plugin.name>
         <elasticsearch.plugin.java.version>1.8</elasticsearch.plugin.java.version>
-		<elasticsearch.version>6.8.4</elasticsearch.version>
+		<elasticsearch.version>6.8.5</elasticsearch.version>
 		<elasticsearch.plugin.classname>org.ansj.elasticsearch.plugin.AnalysisAnsjPlugin</elasticsearch.plugin.classname>
 	</properties>
 
