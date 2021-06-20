@@ -20,7 +20,6 @@ import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.action.support.ActionFilters;
 import org.elasticsearch.action.support.single.shard.TransportSingleShardAction;
 import org.elasticsearch.cluster.ClusterState;
@@ -44,8 +43,6 @@ import org.nlpcn.commons.lang.tire.domain.SmartForest;
 import org.nlpcn.commons.lang.util.StringUtil;
 
 import java.io.IOException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -369,34 +366,13 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
 
         String key = (String) params.get("key");
 
-        SpecialPermission.check();
-
         try {
-            if (key.startsWith(DicLibrary.DEFAULT)) {
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    DicLibrary.reload(key);
-                    return null;
-                });
-            } else if (key.startsWith(StopLibrary.DEFAULT)) {
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    StopLibrary.reload(key);
-                    return null;
-                });
-            } else if (key.startsWith(SynonymsLibrary.DEFAULT)) {
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    SynonymsLibrary.reload(key);
-                    return null;
-                });
-            } else if (key.startsWith(AmbiguityLibrary.DEFAULT)) {
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    AmbiguityLibrary.reload(key);
-                    return null;
-                });
-            } else if (key.startsWith(CrfLibrary.DEFAULT)) {
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    CrfLibrary.reload(key);
-                    return null;
-                });
+            if (key.startsWith(DicLibrary.DEFAULT) ||
+                    key.startsWith(StopLibrary.DEFAULT) ||
+                    key.startsWith(SynonymsLibrary.DEFAULT) ||
+                    key.startsWith(AmbiguityLibrary.DEFAULT) ||
+                    key.startsWith(CrfLibrary.DEFAULT)) {
+                this.cfg.reloadLibrary(key);
             } else if ("ansj_config".equals(key)) {
                 this.cfg.reloadConfig();
             } else {

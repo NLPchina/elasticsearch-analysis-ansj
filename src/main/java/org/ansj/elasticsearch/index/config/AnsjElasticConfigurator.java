@@ -1,7 +1,11 @@
 package org.ansj.elasticsearch.index.config;
 
 import org.ansj.dic.PathToStream;
-import org.ansj.library.*;
+import org.ansj.library.AmbiguityLibrary;
+import org.ansj.library.CrfLibrary;
+import org.ansj.library.DicLibrary;
+import org.ansj.library.StopLibrary;
+import org.ansj.library.SynonymsLibrary;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +41,7 @@ public class AnsjElasticConfigurator {
 
     private File configDir;
 
-    private Environment env;
+    private final Environment env;
 
     @Inject
     public AnsjElasticConfigurator(Environment env) {
@@ -97,9 +101,17 @@ public class AnsjElasticConfigurator {
         }
 
         // 加载词典
-        initDic();
+        for (String k : MyStaticValue.ENV.keySet().toArray(new String[0])) {
+            reloadLibrary(k);
+        }
     }
 
+    /**
+     * 读取配置文件并将配置放入MyStaticValue.ENV
+     *
+     * @param path
+     * @param printErr
+     */
     private void initConfig(String path, boolean printErr) {
         SpecialPermission.check();
         AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
@@ -124,43 +136,6 @@ public class AnsjElasticConfigurator {
             }
             return null;
         });
-    }
-
-    private void initDic() {
-        SpecialPermission.check();
-        for (String k : MyStaticValue.ENV.keySet().toArray(new String[0])) {
-            if (k.startsWith(DicLibrary.DEFAULT)) {
-                DicLibrary.keys().removeIf(k::equals);
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    DicLibrary.get(k);
-                    return null;
-                });
-            } else if (k.startsWith(StopLibrary.DEFAULT)) {
-                StopLibrary.keys().removeIf(k::equals);
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    StopLibrary.get(k);
-                    return null;
-                });
-            } else if (k.startsWith(SynonymsLibrary.DEFAULT)) {
-                SynonymsLibrary.keys().removeIf(k::equals);
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    SynonymsLibrary.get(k);
-                    return null;
-                });
-            } else if (k.startsWith(AmbiguityLibrary.DEFAULT)) {
-                AmbiguityLibrary.keys().removeIf(k::equals);
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    AmbiguityLibrary.get(k);
-                    return null;
-                });
-            } else if (k.startsWith(CrfLibrary.DEFAULT)) {
-                CrfLibrary.keys().removeIf(k::equals);
-                AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                    CrfLibrary.get(k);
-                    return null;
-                });
-            }
-        }
     }
 
     private void preheat() {
@@ -193,27 +168,135 @@ public class AnsjElasticConfigurator {
             MyStaticValue.isRealName = Boolean.valueOf(map.get("isRealName"));
         }
 
-        // 是否用户辞典不加载相同的词
+        // 是否用户词典不加载相同的词
         if (map.containsKey("isSkipUserDefine")) {
-            MyStaticValue.isSkipUserDefine = Boolean.valueOf(map.get("isSkipUserDefine"));
+            MyStaticValue.isSkipUserDefine = Boolean.parseBoolean(map.get("isSkipUserDefine"));
         }
     }
 
+    /**
+     * 重新加载配置
+     * 如果词典正在使用，重新加载
+     * 如果删除了正在使用的词典，清空
+     */
     public void reloadConfig() {
         init();
         LOG.info("reload ansj plugin config successfully");
 
-        LOG.info("to remove DicLibrary keys not in MyStaticValue.ENV");
-        DicLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
+        for (String key : DicLibrary.keys()) {
+            if (!MyStaticValue.ENV.containsKey(key)) {
+                DicLibrary.clear(key);
 
-        LOG.info("to remove StopLibrary keys not in MyStaticValue.ENV");
-        StopLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
+                LOG.info("clear DicLibrary: {}", key);
+            }
+        }
 
-        LOG.info("to remove SynonymsLibrary keys not in MyStaticValue.ENV");
-        SynonymsLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
+        for (String key : StopLibrary.keys()) {
+            if (!MyStaticValue.ENV.containsKey(key)) {
+                StopLibrary.get(key).clear();
 
-        LOG.info("to remove AmbiguityLibrary keys not in MyStaticValue.ENV");
-        AmbiguityLibrary.keys().removeIf(key -> !MyStaticValue.ENV.containsKey(key));
+                LOG.info("clear StopLibrary: {}", key);
+            }
+        }
+
+        for (String key : SynonymsLibrary.keys()) {
+            if (!MyStaticValue.ENV.containsKey(key)) {
+                SynonymsLibrary.get(key).clear();
+
+                LOG.info("clear SynonymsLibrary: {}", key);
+            }
+        }
+
+        for (String key : AmbiguityLibrary.keys()) {
+            if (!MyStaticValue.ENV.containsKey(key)) {
+                AmbiguityLibrary.get(key).clear();
+
+                LOG.info("clear AmbiguityLibrary: {}", key);
+            }
+        }
+    }
+
+    /**
+     * 重新加载词典，CRF词典有待处理
+     * 如果是正在使用的词典，重新加载
+     * 如果是已删除的并且还在使用的，清空
+     *
+     * @param key
+     */
+    public void reloadLibrary(String key) {
+        if (key.startsWith(DicLibrary.DEFAULT)) {
+            if (DicLibrary.keys().contains(key)) {
+                if (MyStaticValue.ENV.containsKey(key)) {
+                    SpecialPermission.check();
+                    AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                        DicLibrary.reload(key);
+                        return null;
+                    });
+
+                    LOG.info("reload DicLibrary: {}", key);
+                } else {
+                    DicLibrary.clear(key);
+
+                    LOG.info("clear DicLibrary: {}", key);
+                }
+            }
+        } else if (key.startsWith(StopLibrary.DEFAULT)) {
+            if (StopLibrary.keys().contains(key)) {
+                if (MyStaticValue.ENV.containsKey(key)) {
+                    SpecialPermission.check();
+                    AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                        StopLibrary.reload(key);
+                        return null;
+                    });
+
+                    LOG.info("reload StopLibrary: {}", key);
+                } else {
+                    StopLibrary.get(key).clear();
+
+                    LOG.info("clear StopLibrary: {}", key);
+                }
+            }
+        } else if (key.startsWith(SynonymsLibrary.DEFAULT)) {
+            if (SynonymsLibrary.keys().contains(key)) {
+                if (MyStaticValue.ENV.containsKey(key)) {
+                    SpecialPermission.check();
+                    AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                        SynonymsLibrary.reload(key);
+                        return null;
+                    });
+
+                    LOG.info("reload SynonymsLibrary: {}", key);
+                } else {
+                    SynonymsLibrary.get(key).clear();
+
+                    LOG.info("clear SynonymsLibrary: {}", key);
+                }
+            }
+        } else if (key.startsWith(AmbiguityLibrary.DEFAULT)) {
+            if (AmbiguityLibrary.keys().contains(key)) {
+                if (MyStaticValue.ENV.containsKey(key)) {
+                    SpecialPermission.check();
+                    AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                        AmbiguityLibrary.reload(key);
+                        return null;
+                    });
+
+                    LOG.info("reload AmbiguityLibrary: {}", key);
+                } else {
+                    AmbiguityLibrary.get(key).clear();
+
+                    LOG.info("clear AmbiguityLibrary: {}", key);
+                }
+            }
+        } else if (key.startsWith(CrfLibrary.DEFAULT)) {
+            SpecialPermission.check();
+            AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+                CrfLibrary.reload(key);
+                return null;
+            });
+
+            LOG.info("reload CrfLibrary: {}", key);
+        }
     }
 
     /**
@@ -229,7 +312,7 @@ public class AnsjElasticConfigurator {
                 .put("isQuantifierRecognition", MyStaticValue.isQuantifierRecognition.toString())
                 // 是否显示真实词语
                 .put("isRealName", MyStaticValue.isRealName.toString())
-                // 是否用户辞典不加载相同的词
+                // 是否用户词典不加载相同的词
                 .put("isSkipUserDefine", String.valueOf(MyStaticValue.isSkipUserDefine))
                 .put(CrfLibrary.DEFAULT, CrfLibrary.DEFAULT)
                 .put(DicLibrary.DEFAULT, DicLibrary.DEFAULT)
