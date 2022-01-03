@@ -224,79 +224,54 @@ public class AnsjElasticConfigurator {
      * @param key
      */
     public void reloadLibrary(String key) {
-        if (key.startsWith(DicLibrary.DEFAULT)) {
-            if (DicLibrary.keys().contains(key)) {
-                if (MyStaticValue.ENV.containsKey(key)) {
-                    SpecialPermission.check();
-                    AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+        SpecialPermission.check();
+        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            if (key.startsWith(DicLibrary.DEFAULT)) {
+                if (DicLibrary.keys().contains(key)) {
+                    if (MyStaticValue.ENV.containsKey(key)) {
                         DicLibrary.reload(key);
-                        return null;
-                    });
-
-                    LOG.info("reload DicLibrary: {}", key);
-                } else {
-                    DicLibrary.clear(key);
-
-                    LOG.info("clear DicLibrary: {}", key);
+                        LOG.info("reload DicLibrary: {}", key);
+                    } else {
+                        DicLibrary.clear(key);
+                        LOG.info("clear DicLibrary: {}", key);
+                    }
                 }
-            }
-        } else if (key.startsWith(StopLibrary.DEFAULT)) {
-            if (StopLibrary.keys().contains(key)) {
-                if (MyStaticValue.ENV.containsKey(key)) {
-                    SpecialPermission.check();
-                    AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            } else if (key.startsWith(StopLibrary.DEFAULT)) {
+                if (StopLibrary.keys().contains(key)) {
+                    if (MyStaticValue.ENV.containsKey(key)) {
                         StopLibrary.reload(key);
-                        return null;
-                    });
-
-                    LOG.info("reload StopLibrary: {}", key);
-                } else {
-                    StopLibrary.get(key).clear();
-
-                    LOG.info("clear StopLibrary: {}", key);
+                        LOG.info("reload StopLibrary: {}", key);
+                    } else {
+                        StopLibrary.get(key).clear();
+                        LOG.info("clear StopLibrary: {}", key);
+                    }
                 }
-            }
-        } else if (key.startsWith(SynonymsLibrary.DEFAULT)) {
-            if (SynonymsLibrary.keys().contains(key)) {
-                if (MyStaticValue.ENV.containsKey(key)) {
-                    SpecialPermission.check();
-                    AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            } else if (key.startsWith(SynonymsLibrary.DEFAULT)) {
+                if (SynonymsLibrary.keys().contains(key)) {
+                    if (MyStaticValue.ENV.containsKey(key)) {
                         SynonymsLibrary.reload(key);
-                        return null;
-                    });
-
-                    LOG.info("reload SynonymsLibrary: {}", key);
-                } else {
-                    SynonymsLibrary.get(key).clear();
-
-                    LOG.info("clear SynonymsLibrary: {}", key);
+                        LOG.info("reload SynonymsLibrary: {}", key);
+                    } else {
+                        SynonymsLibrary.get(key).clear();
+                        LOG.info("clear SynonymsLibrary: {}", key);
+                    }
                 }
-            }
-        } else if (key.startsWith(AmbiguityLibrary.DEFAULT)) {
-            if (AmbiguityLibrary.keys().contains(key)) {
-                if (MyStaticValue.ENV.containsKey(key)) {
-                    SpecialPermission.check();
-                    AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            } else if (key.startsWith(AmbiguityLibrary.DEFAULT)) {
+                if (AmbiguityLibrary.keys().contains(key)) {
+                    if (MyStaticValue.ENV.containsKey(key)) {
                         AmbiguityLibrary.reload(key);
-                        return null;
-                    });
-
-                    LOG.info("reload AmbiguityLibrary: {}", key);
-                } else {
-                    AmbiguityLibrary.get(key).clear();
-
-                    LOG.info("clear AmbiguityLibrary: {}", key);
+                        LOG.info("reload AmbiguityLibrary: {}", key);
+                    } else {
+                        AmbiguityLibrary.get(key).clear();
+                        LOG.info("clear AmbiguityLibrary: {}", key);
+                    }
                 }
-            }
-        } else if (key.startsWith(CrfLibrary.DEFAULT)) {
-            SpecialPermission.check();
-            AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+            } else if (key.startsWith(CrfLibrary.DEFAULT)) {
                 CrfLibrary.reload(key);
-                return null;
-            });
-
-            LOG.info("reload CrfLibrary: {}", key);
-        }
+                LOG.info("reload CrfLibrary: {}", key);
+            }
+            return null;
+        });
     }
 
     /**
