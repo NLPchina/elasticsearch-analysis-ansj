@@ -32,5 +32,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{github.event.inputs.tag}}"
           title: "支持es${{github.event.inputs.es-version}}版本的分词插件"
+          prerelease: false
           files: |
             staging/*.zip
