@@ -6,6 +6,7 @@ import org.ansj.library.CrfLibrary;
 import org.ansj.library.DicLibrary;
 import org.ansj.library.StopLibrary;
 import org.ansj.library.SynonymsLibrary;
+import org.ansj.recognition.impl.StopRecognition;
 import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,7 @@ import org.elasticsearch.common.collect.MapBuilder;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
+import org.nlpcn.commons.lang.tire.domain.SmartForest;
 import org.nlpcn.commons.lang.util.IOUtil;
 import org.nlpcn.commons.lang.util.StringUtil;
 
@@ -27,6 +29,7 @@ import java.nio.file.Paths;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AnsjElasticConfigurator {
@@ -49,6 +52,9 @@ public class AnsjElasticConfigurator {
 
         //
         init();
+
+        // 进行一次测试分词
+        preheat();
 
         LOG.info("init ansj plugin ok , goodluck youyou");
     }
@@ -78,27 +84,25 @@ public class AnsjElasticConfigurator {
         configDir = env.configFile().toFile();
 
         flushConfig();
-
-        // 进行一次测试分词
-        preheat();
     }
 
     private void flushConfig() {
         MyStaticValue.ENV.clear();
 
-        // 插入到变量中
+        // ansj.cfg.yml文件，插入到变量中
         if (ansjSettings != null && !ansjSettings.isEmpty()) {
             MyStaticValue.ENV.putAll(ansjSettings.keySet().stream().collect(Collectors.toMap(k -> k, ansjSettings::get)));
         }
 
-        // 设置全局变量
-        setGlobalVar(MyStaticValue.ENV);
-
+        // ansj.cfg.yml文件中ansj_config指定的文件或者配置文件目录下的ansj_library.properties
         if (path != null) {
             initConfig(path, true);
         } else {
             initConfig(new File(configDir, "ansj_library.properties").getAbsolutePath(), false);
         }
+
+        // 设置全局变量
+        setGlobalVar(MyStaticValue.ENV);
 
         // 加载词典
         for (String k : MyStaticValue.ENV.keySet().toArray(new String[0])) {
@@ -185,7 +189,7 @@ public class AnsjElasticConfigurator {
 
         for (String key : DicLibrary.keys()) {
             if (!MyStaticValue.ENV.containsKey(key)) {
-                DicLibrary.clear(key);
+                Optional.ofNullable(DicLibrary.get(key)).ifPresent(SmartForest::clear);
 
                 LOG.info("clear DicLibrary: {}", key);
             }
@@ -193,7 +197,7 @@ public class AnsjElasticConfigurator {
 
         for (String key : StopLibrary.keys()) {
             if (!MyStaticValue.ENV.containsKey(key)) {
-                StopLibrary.get(key).clear();
+                Optional.ofNullable(StopLibrary.get(key)).ifPresent(StopRecognition::clear);
 
                 LOG.info("clear StopLibrary: {}", key);
             }
@@ -201,7 +205,7 @@ public class AnsjElasticConfigurator {
 
         for (String key : SynonymsLibrary.keys()) {
             if (!MyStaticValue.ENV.containsKey(key)) {
-                SynonymsLibrary.get(key).clear();
+                Optional.ofNullable(SynonymsLibrary.get(key)).ifPresent(SmartForest::clear);
 
                 LOG.info("clear SynonymsLibrary: {}", key);
             }
@@ -209,7 +213,7 @@ public class AnsjElasticConfigurator {
 
         for (String key : AmbiguityLibrary.keys()) {
             if (!MyStaticValue.ENV.containsKey(key)) {
-                AmbiguityLibrary.get(key).clear();
+                Optional.ofNullable(AmbiguityLibrary.get(key)).ifPresent(SmartForest::clear);
 
                 LOG.info("clear AmbiguityLibrary: {}", key);
             }
@@ -227,44 +231,44 @@ public class AnsjElasticConfigurator {
         SpecialPermission.check();
         AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
             if (key.startsWith(DicLibrary.DEFAULT)) {
-                if (DicLibrary.keys().contains(key)) {
-                    if (MyStaticValue.ENV.containsKey(key)) {
-                        DicLibrary.reload(key);
-                        LOG.info("reload DicLibrary: {}", key);
-                    } else {
-                        DicLibrary.clear(key);
-                        LOG.info("clear DicLibrary: {}", key);
-                    }
+                if (MyStaticValue.ENV.containsKey(key)) {
+                    DicLibrary.reload(key);
+                    LOG.info("reload DicLibrary: {}", key);
+                } else if (DicLibrary.keys().contains(key)) {
+                    Optional.ofNullable(DicLibrary.get(key)).ifPresent(SmartForest::clear);
+                    LOG.info("clear DicLibrary: {}", key);
+                } else {
+                    LOG.warn("DicLibrary[{}] not found", key);
                 }
             } else if (key.startsWith(StopLibrary.DEFAULT)) {
-                if (StopLibrary.keys().contains(key)) {
-                    if (MyStaticValue.ENV.containsKey(key)) {
-                        StopLibrary.reload(key);
-                        LOG.info("reload StopLibrary: {}", key);
-                    } else {
-                        StopLibrary.get(key).clear();
-                        LOG.info("clear StopLibrary: {}", key);
-                    }
+                if (MyStaticValue.ENV.containsKey(key)) {
+                    StopLibrary.reload(key);
+                    LOG.info("reload StopLibrary: {}", key);
+                } else if (StopLibrary.keys().contains(key)) {
+                    Optional.ofNullable(StopLibrary.get(key)).ifPresent(StopRecognition::clear);
+                    LOG.info("clear StopLibrary: {}", key);
+                } else {
+                    LOG.warn("StopLibrary[{}] not found", key);
                 }
             } else if (key.startsWith(SynonymsLibrary.DEFAULT)) {
-                if (SynonymsLibrary.keys().contains(key)) {
-                    if (MyStaticValue.ENV.containsKey(key)) {
-                        SynonymsLibrary.reload(key);
-                        LOG.info("reload SynonymsLibrary: {}", key);
-                    } else {
-                        SynonymsLibrary.get(key).clear();
-                        LOG.info("clear SynonymsLibrary: {}", key);
-                    }
+                if (MyStaticValue.ENV.containsKey(key)) {
+                    SynonymsLibrary.reload(key);
+                    LOG.info("reload SynonymsLibrary: {}", key);
+                } else if (SynonymsLibrary.keys().contains(key)) {
+                    Optional.ofNullable(SynonymsLibrary.get(key)).ifPresent(SmartForest::clear);
+                    LOG.info("clear SynonymsLibrary: {}", key);
+                } else {
+                    LOG.warn("SynonymsLibrary[{}] not found", key);
                 }
             } else if (key.startsWith(AmbiguityLibrary.DEFAULT)) {
-                if (AmbiguityLibrary.keys().contains(key)) {
-                    if (MyStaticValue.ENV.containsKey(key)) {
-                        AmbiguityLibrary.reload(key);
-                        LOG.info("reload AmbiguityLibrary: {}", key);
-                    } else {
-                        AmbiguityLibrary.get(key).clear();
-                        LOG.info("clear AmbiguityLibrary: {}", key);
-                    }
+                if (MyStaticValue.ENV.containsKey(key)) {
+                    AmbiguityLibrary.reload(key);
+                    LOG.info("reload AmbiguityLibrary: {}", key);
+                } else if (AmbiguityLibrary.keys().contains(key)) {
+                    Optional.ofNullable(AmbiguityLibrary.get(key)).ifPresent(SmartForest::clear);
+                    LOG.info("clear AmbiguityLibrary: {}", key);
+                } else {
+                    LOG.warn("AmbiguityLibrary[{}] not found", key);
                 }
             } else if (key.startsWith(CrfLibrary.DEFAULT)) {
                 CrfLibrary.reload(key);
