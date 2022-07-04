@@ -7,7 +7,7 @@ ansj:
   isRealName: false #是否保留真实词语,建议保留false
 
   #用户自定词典配置
-  dic: default.dic #也可以写成 file://default.dic , 如果未配置dic,则此词典默认加载
+  #dic: default.dic #也可以写成 file://default.dic , 如果未配置dic,则此词典默认加载
   # http方式加载
   #dic_d1: http://xxx/xx.dic
   # jar中文件加载
@@ -32,27 +32,27 @@ ansj:
 
 
 # 全局变量配置方式二 通过配置文件的方式配置,优先级高于es本身的配置
-ansj_config: ansj_library.properties #http,file,jar,class,jdbc 都支持,格式参见ansj_library.properties
+# ansj_config: ansj_library.properties #http,file,jar,class,jdbc 都支持,格式参见ansj_library.properties
 
 # 配置自定义分词器
 
 
 
-index:
-  analysis:
-    tokenizer :
-      my_dic :
-        type : dic_ansj
-        dic: dic
-        stop: stop
-        ambiguity: ambiguity
-        synonyms: synonyms
-        isNameRecognition: true
-        isNumRecognition: true
-        isQuantifierRecognition: true
-        isRealName: false
-
-    analyzer:
-      my_dic:
-        type: custom
-        tokenizer: my_dic
+#index:
+#  analysis:
+#    tokenizer :
+#      my_dic :
+#        type : dic_ansj
+#        dic: dic
+#        stop: stop
+#        ambiguity: ambiguity
+#        synonyms: synonyms
+#        isNameRecognition: true
+#        isNumRecognition: true
+#        isQuantifierRecognition: true
+#        isRealName: false
+#
+#    analyzer:
+#      my_dic:
+#        type: custom
+#        tokenizer: my_dic
