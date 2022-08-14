@@ -25,7 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Tokenizer;
 import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.inject.assistedinject.Assisted;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractTokenizerFactory;
@@ -37,9 +36,13 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
     private static final Logger LOG = LogManager.getLogger();
 
+    private final IndexSettings indexSettings;
+
     @Inject
-    public AnsjTokenizerTokenizerFactory(IndexSettings indexSettings, @Assisted String name, @Assisted Settings settings) {
+    public AnsjTokenizerTokenizerFactory(IndexSettings indexSettings, String name, Settings settings) {
         super(indexSettings, settings, name);
+
+        this.indexSettings = indexSettings;
     }
 
     @Override

@@ -52,6 +52,6 @@ public class AnsjResponse extends ActionResponse implements ToXContentObject {
 
     @Override
     public void writeTo(StreamOutput out) throws IOException {
-        out.writeMap(map);
+        out.writeGenericMap(map);
     }
 }

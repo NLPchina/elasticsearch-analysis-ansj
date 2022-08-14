@@ -19,21 +19,29 @@ package org.ansj.elasticsearch.cat;
  * under the License.
  */
 
-import org.elasticsearch.core.Booleans;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.Table;
 import org.elasticsearch.common.io.UTF8StreamWriter;
-import org.elasticsearch.common.io.stream.BytesStreamOutput;
+import org.elasticsearch.common.io.stream.BytesStream;
 import org.elasticsearch.common.regex.Regex;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.SizeValue;
+import org.elasticsearch.core.Booleans;
 import org.elasticsearch.core.TimeValue;
+import org.elasticsearch.rest.BytesRestResponse;
+import org.elasticsearch.rest.RestChannel;
+import org.elasticsearch.rest.RestRequest;
+import org.elasticsearch.rest.RestResponse;
+import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.xcontent.XContentBuilder;
 import org.elasticsearch.xcontent.XContentType;
-import org.elasticsearch.rest.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  */
@@ -42,7 +50,7 @@ public class ChineseRestTable {
     public static RestResponse buildResponse(Table table, RestChannel channel) throws Exception {
         RestRequest request = channel.request();
         XContentType xContentType = XContentType
-                .fromMediaTypeOrFormat(request.param("format", request.header("Content-Type")));
+                .fromMediaType(request.param("format", request.header("Content-Type")));
         if (xContentType != null) {
             return buildXContentBuilder(table, channel);
         }
@@ -50,7 +58,7 @@ public class ChineseRestTable {
     }
 
     public static RestResponse response(RestChannel channel, String text) throws IOException {
-        try (UTF8StreamWriter out = new UTF8StreamWriter(); BytesStreamOutput bytesOut = channel.bytesOutput()) {
+        try (UTF8StreamWriter out = new UTF8StreamWriter(); BytesStream bytesOut = channel.bytesOutput()) {
             out.setOutput(bytesOut);
             out.append(text);
             return new BytesRestResponse(RestStatus.OK, BytesRestResponse.TEXT_CONTENT_TYPE, bytesOut.bytes());
@@ -89,7 +97,7 @@ public class ChineseRestTable {
         List<DisplayHeader> headers = buildDisplayHeaders(table, request);
         int[] width = buildWidths(table, request, verbose, headers);
 
-        try (BytesStreamOutput bytesOut = channel.bytesOutput(); UTF8StreamWriter out = new UTF8StreamWriter().setOutput(bytesOut)) {
+        try (BytesStream bytesOut = channel.bytesOutput(); UTF8StreamWriter out = new UTF8StreamWriter().setOutput(bytesOut)) {
             if (verbose) {
                 for (int col = 0; col < headers.size(); col++) {
                     DisplayHeader header = headers.get(col);

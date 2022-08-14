@@ -13,7 +13,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.common.collect.MapBuilder;
-import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 import org.nlpcn.commons.lang.tire.domain.SmartForest;
@@ -46,7 +45,6 @@ public class AnsjElasticConfigurator {
 
     private final Environment env;
 
-    @Inject
     public AnsjElasticConfigurator(Environment env) {
         this.env = env;
 

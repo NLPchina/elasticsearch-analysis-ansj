@@ -7,12 +7,11 @@ import org.ansj.library.CrfLibrary;
 import org.ansj.library.DicLibrary;
 import org.ansj.library.StopLibrary;
 import org.ansj.library.SynonymsLibrary;
-import org.elasticsearch.client.node.NodeClient;
+import org.elasticsearch.client.internal.node.NodeClient;
 import org.elasticsearch.rest.BaseRestHandler;
 import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.action.RestToXContentListener;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -40,7 +39,7 @@ public class RestAnsjAction extends BaseRestHandler {
     }
 
     @Override
-    protected RestChannelConsumer prepareRequest(RestRequest request, NodeClient client) throws IOException {
+    protected RestChannelConsumer prepareRequest(RestRequest request, NodeClient client) {
         AnsjRequest ansjRequest = new AnsjRequest();
 
         ansjRequest.asMap().putAll(request.params());
