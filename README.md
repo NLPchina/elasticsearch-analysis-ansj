@@ -370,4 +370,4 @@ ansj:
 | 8.3.2.x |     8.3.2     |
 
 # 版权
-`elasticsearch-analysis-ansj` is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/NLPchina/elasticsearch-analysis-ansj/master/blob/LICENSE) file for details.
+`elasticsearch-analysis-ansj` is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/NLPchina/elasticsearch-analysis-ansj/blob/master/LICENSE) file for details.
