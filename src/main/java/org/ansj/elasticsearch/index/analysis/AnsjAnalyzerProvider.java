@@ -5,7 +5,6 @@ import org.ansj.lucene7.AnsjAnalyzer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.inject.assistedinject.Assisted;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.IndexSettings;
 import org.elasticsearch.index.analysis.AbstractIndexAnalyzerProvider;
@@ -20,8 +19,8 @@ public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnal
     private final AnsjAnalyzer analyzer;
 
     @Inject
-    public AnsjAnalyzerProvider(IndexSettings indexSettings, @Assisted String name, @Assisted Settings settings) {
-        super(indexSettings, name, settings);
+    public AnsjAnalyzerProvider(IndexSettings indexSettings, String name, Settings settings) {
+        super(name, settings);
 
         Settings settings2 = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + name());
 

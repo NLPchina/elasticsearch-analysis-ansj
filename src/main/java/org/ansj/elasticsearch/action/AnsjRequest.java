@@ -3,7 +3,7 @@ package org.ansj.elasticsearch.action;
 import org.elasticsearch.ElasticsearchGenerationException;
 import org.elasticsearch.action.ActionRequestValidationException;
 import org.elasticsearch.action.support.single.shard.SingleShardRequest;
-import org.elasticsearch.client.Requests;
+import org.elasticsearch.client.internal.Requests;
 import org.elasticsearch.common.bytes.BytesArray;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.io.stream.StreamInput;
@@ -61,7 +61,7 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
     public void writeTo(StreamOutput out) throws IOException {
         super.writeTo(out);
         out.writeString(path);
-        out.writeMap(args);
+        out.writeGenericMap(args);
         out.writeBytesReference(source);
     }
 
