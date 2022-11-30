@@ -28,7 +28,6 @@ import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.SizeValue;
 import org.elasticsearch.core.Booleans;
 import org.elasticsearch.core.TimeValue;
-import org.elasticsearch.rest.BytesRestResponse;
 import org.elasticsearch.rest.RestChannel;
 import org.elasticsearch.rest.RestRequest;
 import org.elasticsearch.rest.RestResponse;
@@ -61,14 +60,14 @@ public class ChineseRestTable {
         try (UTF8StreamWriter out = new UTF8StreamWriter(); BytesStream bytesOut = channel.bytesOutput()) {
             out.setOutput(bytesOut);
             out.append(text);
-            return new BytesRestResponse(RestStatus.OK, BytesRestResponse.TEXT_CONTENT_TYPE, bytesOut.bytes());
+            return new RestResponse(RestStatus.OK, RestResponse.TEXT_CONTENT_TYPE, bytesOut.bytes());
         }
     }
 
     public static RestResponse response(RestChannel channel, Map<String, Object> map) throws IOException {
         try (XContentBuilder builder = channel.newBuilder()) {
             builder.map(map);
-            return new BytesRestResponse(RestStatus.OK, builder);
+            return new RestResponse(RestStatus.OK, builder);
         }
     }
 
@@ -86,7 +85,7 @@ public class ChineseRestTable {
                 builder.endObject();
             }
             builder.endArray();
-            return new BytesRestResponse(RestStatus.OK, builder);
+            return new RestResponse(RestStatus.OK, builder);
         }
     }
 
@@ -114,7 +113,7 @@ public class ChineseRestTable {
                 }
                 out.append("\n");
             }
-            return new BytesRestResponse(RestStatus.OK, BytesRestResponse.TEXT_CONTENT_TYPE, bytesOut.bytes());
+            return new RestResponse(RestStatus.OK, RestResponse.TEXT_CONTENT_TYPE, bytesOut.bytes());
         }
     }
 
