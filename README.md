@@ -381,12 +381,14 @@ ansj:
 | 7.17.7  |     7.17.7    |
 | 7.17.8  |     7.17.8    |
 | 7.17.9  |     7.17.9    |
+| 7.17.10 |     7.17.10   |
 | 8.3.3   |     8.3.3     |
 | 8.5.3   |     8.5.3     |
 | 8.6.0   |     8.6.0     |
 | 8.6.1   |     8.6.1     |
 | 8.6.2   |     8.6.2     |
 | 8.7.0   |     8.7.0     |
+| 8.7.1   |     8.7.1     |
 
 # 版权
 `elasticsearch-analysis-ansj` is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/NLPchina/elasticsearch-analysis-ansj/blob/master/LICENSE) file for details.
