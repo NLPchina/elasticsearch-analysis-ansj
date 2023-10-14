@@ -8,7 +8,7 @@ import org.ansj.library.CrfLibrary;
 import org.ansj.library.DicLibrary;
 import org.ansj.library.StopLibrary;
 import org.ansj.library.SynonymsLibrary;
-import org.ansj.lucene7.AnsjAnalyzer;
+import org.ansj.lucene9.AnsjAnalyzer;
 import org.ansj.recognition.impl.StopRecognition;
 import org.ansj.recognition.impl.SynonymsRecgnition;
 import org.ansj.splitWord.Analysis;

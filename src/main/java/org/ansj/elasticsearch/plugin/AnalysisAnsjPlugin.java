@@ -8,7 +8,7 @@ import org.ansj.elasticsearch.index.analysis.AnsjAnalyzerProvider;
 import org.ansj.elasticsearch.index.analysis.AnsjTokenizerTokenizerFactory;
 import org.ansj.elasticsearch.index.config.AnsjElasticConfigurator;
 import org.ansj.elasticsearch.rest.RestAnsjAction;
-import org.ansj.lucene7.AnsjAnalyzer;
+import org.ansj.lucene9.AnsjAnalyzer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
