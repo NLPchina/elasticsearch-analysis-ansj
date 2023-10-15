@@ -12,7 +12,7 @@ import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.elasticsearch.SpecialPermission;
-import org.elasticsearch.common.collect.MapBuilder;
+import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
 import org.nlpcn.commons.lang.tire.domain.SmartForest;
@@ -280,22 +280,22 @@ public class AnsjElasticConfigurator {
      * 默认配置
      */
     public static Map<String, String> getDefaults() {
-        return MapBuilder.<String, String>newMapBuilder()
+        return ImmutableOpenMap.<String, String>builder(10)
                 // 是否开启人名识别
-                .put("isNameRecognition", MyStaticValue.isNameRecognition.toString())
+                .fPut("isNameRecognition", MyStaticValue.isNameRecognition.toString())
                 // 是否开启数字识别
-                .put("isNumRecognition", MyStaticValue.isNumRecognition.toString())
+                .fPut("isNumRecognition", MyStaticValue.isNumRecognition.toString())
                 // 是否数字和量词合并
-                .put("isQuantifierRecognition", MyStaticValue.isQuantifierRecognition.toString())
+                .fPut("isQuantifierRecognition", MyStaticValue.isQuantifierRecognition.toString())
                 // 是否显示真实词语
-                .put("isRealName", MyStaticValue.isRealName.toString())
+                .fPut("isRealName", MyStaticValue.isRealName.toString())
                 // 是否用户词典不加载相同的词
-                .put("isSkipUserDefine", String.valueOf(MyStaticValue.isSkipUserDefine))
-                .put(CrfLibrary.DEFAULT, CrfLibrary.DEFAULT)
-                .put(DicLibrary.DEFAULT, DicLibrary.DEFAULT)
-                .put(StopLibrary.DEFAULT, StopLibrary.DEFAULT)
-                .put(SynonymsLibrary.DEFAULT, SynonymsLibrary.DEFAULT)
-                .put(AmbiguityLibrary.DEFAULT, AmbiguityLibrary.DEFAULT)
-                .immutableMap();
+                .fPut("isSkipUserDefine", String.valueOf(MyStaticValue.isSkipUserDefine))
+                .fPut(CrfLibrary.DEFAULT, CrfLibrary.DEFAULT)
+                .fPut(DicLibrary.DEFAULT, DicLibrary.DEFAULT)
+                .fPut(StopLibrary.DEFAULT, StopLibrary.DEFAULT)
+                .fPut(SynonymsLibrary.DEFAULT, SynonymsLibrary.DEFAULT)
+                .fPut(AmbiguityLibrary.DEFAULT, AmbiguityLibrary.DEFAULT)
+                .build();
     }
 }

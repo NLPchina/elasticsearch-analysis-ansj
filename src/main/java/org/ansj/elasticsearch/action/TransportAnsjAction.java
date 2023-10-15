@@ -49,6 +49,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -271,8 +272,8 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
                 }
 
                 @Override
-                public String executor() {
-                    return ThreadPool.Names.SAME;
+                public Executor executor(ThreadPool threadPool) {
+                    return TransportResponseHandler.TRANSPORT_WORKER;
                 }
             };
 
@@ -340,8 +341,8 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
                 }
 
                 @Override
-                public String executor() {
-                    return ThreadPool.Names.SAME;
+                public Executor executor(ThreadPool threadPool) {
+                    return TransportResponseHandler.TRANSPORT_WORKER;
                 }
             });
         }
