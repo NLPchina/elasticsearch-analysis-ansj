@@ -68,7 +68,7 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
                                TransportService transportService, ActionFilters actionFilters,
                                IndexNameExpressionResolver indexNameExpressionResolver,
                                AnsjElasticConfigurator cfg) {
-        super(AnsjAction.NAME, threadPool, clusterService, transportService, actionFilters, indexNameExpressionResolver, AnsjRequest::new, ThreadPool.Names.GENERIC);
+        super(AnsjAction.NAME, threadPool, clusterService, transportService, actionFilters, indexNameExpressionResolver, AnsjRequest::new, threadPool.executor(ThreadPool.Names.GENERIC));
 
         this.cfg = cfg;
     }
