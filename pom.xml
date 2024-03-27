@@ -14,7 +14,7 @@
 		<runSuite>**/MainTestSuite.class</runSuite>
 		<elasticsearch.plugin.name>elasticsearch-analysis-ansj</elasticsearch.plugin.name>
 		<elasticsearch.plugin.java.version>17</elasticsearch.plugin.java.version>
-		<elasticsearch.version>8.11.3</elasticsearch.version>
+		<elasticsearch.version>8.13.0</elasticsearch.version>
 		<elasticsearch.plugin.classname>org.ansj.elasticsearch.plugin.AnalysisAnsjPlugin</elasticsearch.plugin.classname>
 	</properties>
 
