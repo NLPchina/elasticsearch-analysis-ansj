@@ -416,6 +416,19 @@ ansj:
 | 8.11.1  |     8.11.1    |
 | 8.11.2  |     8.11.2    |
 | 8.11.3  |     8.11.3    |
+| 8.11.4  |     8.11.4    |
+| 8.12.0  |     8.12.0    |
+| 8.12.1  |     8.12.1    |
+| 8.12.2  |     8.12.2    |
+| 8.13.0  |     8.13.0    |
+| 8.13.1  |     8.13.1    |
+| 8.13.2  |     8.13.2    |
+| 8.13.3  |     8.13.3    |
+| 8.13.4  |     8.13.4    |
+| 8.14.0  |     8.14.0    |
+| 8.14.1  |     8.14.1    |
+| 8.14.2  |     8.14.2    |
+| 8.14.3  |     8.14.3    |
 
 # 版权
 `elasticsearch-analysis-ansj` is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/NLPchina/elasticsearch-analysis-ansj/blob/master/LICENSE) file for details.
