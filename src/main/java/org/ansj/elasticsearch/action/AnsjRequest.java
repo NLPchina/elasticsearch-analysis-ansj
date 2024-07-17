@@ -36,7 +36,7 @@ public class AnsjRequest extends SingleShardRequest<AnsjRequest> {
     public AnsjRequest(StreamInput in) throws IOException {
         super(in);
         path = in.readString();
-        args = in.readMap();
+        args = in.readGenericMap();
         source = in.readBytesReference();
     }
 

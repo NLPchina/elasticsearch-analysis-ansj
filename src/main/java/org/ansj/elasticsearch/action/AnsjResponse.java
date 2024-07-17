@@ -28,7 +28,7 @@ public class AnsjResponse extends ActionResponse implements ToXContentObject {
 
     public AnsjResponse(StreamInput in) throws IOException {
         super(in);
-        map = in.readMap();
+        map = in.readGenericMap();
     }
 
     public AnsjResponse put(String key, Object value) {
