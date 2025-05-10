@@ -450,6 +450,12 @@ ansj:
 | 8.17.2  |     8.17.2    |
 | 8.17.3  |     8.17.3    |
 | 8.17.4  |     8.17.4    |
+| 8.17.5  |     8.17.5    |
+| 8.17.6  |     8.17.6    |
+| 8.18.0  |     8.18.0    |
+| 8.18.1  |     8.18.1    |
+| 9.0.0   |     9.0.0     |
+| 9.0.1   |     9.0.1     |
 
 # 版权
 `elasticsearch-analysis-ansj` is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/NLPchina/elasticsearch-analysis-ansj/blob/master/LICENSE) file for details.
