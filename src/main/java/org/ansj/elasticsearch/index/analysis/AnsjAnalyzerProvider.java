@@ -20,7 +20,7 @@ public class AnsjAnalyzerProvider extends AbstractIndexAnalyzerProvider<AnsjAnal
 
     @Inject
     public AnsjAnalyzerProvider(IndexSettings indexSettings, String name, Settings settings) {
-        super(name, settings);
+        super(name);
 
         Settings settings2 = indexSettings.getSettings().getAsSettings("index.analysis.tokenizer." + name());
 

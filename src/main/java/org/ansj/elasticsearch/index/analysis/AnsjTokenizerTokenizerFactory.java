@@ -40,7 +40,7 @@ public class AnsjTokenizerTokenizerFactory extends AbstractTokenizerFactory {
 
     @Inject
     public AnsjTokenizerTokenizerFactory(IndexSettings indexSettings, String name, Settings settings) {
-        super(indexSettings, settings, name);
+        super(name);
 
         this.indexSettings = indexSettings;
     }
