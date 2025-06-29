@@ -456,6 +456,8 @@ ansj:
 | 8.18.1  |     8.18.1    |
 | 9.0.0   |     9.0.0     |
 | 9.0.1   |     9.0.1     |
+| 9.0.2   |     9.0.2     |
+| 9.0.3   |     9.0.3     |
 
 # 版权
 `elasticsearch-analysis-ansj` is licenced under the Apache License Version 2.0. See the [LICENSE](https://github.com/NLPchina/elasticsearch-analysis-ansj/blob/master/LICENSE) file for details.
