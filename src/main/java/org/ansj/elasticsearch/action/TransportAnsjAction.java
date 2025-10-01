@@ -23,11 +23,13 @@ import org.apache.logging.log4j.Logger;
 import org.elasticsearch.action.support.ActionFilters;
 import org.elasticsearch.action.support.single.shard.TransportSingleShardAction;
 import org.elasticsearch.cluster.ClusterState;
+import org.elasticsearch.cluster.ProjectState;
 import org.elasticsearch.cluster.block.ClusterBlockException;
 import org.elasticsearch.cluster.block.ClusterBlockLevel;
 import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
 import org.elasticsearch.cluster.node.DiscoveryNode;
 import org.elasticsearch.cluster.node.DiscoveryNodes;
+import org.elasticsearch.cluster.project.ProjectResolver;
 import org.elasticsearch.cluster.routing.ShardsIterator;
 import org.elasticsearch.cluster.service.ClusterService;
 import org.elasticsearch.common.io.stream.StreamInput;
@@ -66,9 +68,10 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
     @Inject
     public TransportAnsjAction(ThreadPool threadPool, ClusterService clusterService,
                                TransportService transportService, ActionFilters actionFilters,
+                               ProjectResolver projectResolver,
                                IndexNameExpressionResolver indexNameExpressionResolver,
                                AnsjElasticConfigurator cfg) {
-        super(AnsjAction.NAME, threadPool, clusterService, transportService, actionFilters, indexNameExpressionResolver, AnsjRequest::new, threadPool.executor(ThreadPool.Names.GENERIC));
+        super(AnsjAction.NAME, threadPool, clusterService, transportService, actionFilters, projectResolver, indexNameExpressionResolver, AnsjRequest::new, threadPool.executor(ThreadPool.Names.GENERIC));
 
         this.cfg = cfg;
     }
@@ -400,13 +403,13 @@ public class TransportAnsjAction extends TransportSingleShardAction<AnsjRequest,
     }
 
     @Override
-    protected ShardsIterator shards(ClusterState clusterState, InternalRequest internalRequest) {
+    protected ShardsIterator shards(ProjectState state, InternalRequest request) {
         //just execute local
         return null;
     }
 
     @Override
-    protected ClusterBlockException checkRequestBlock(ClusterState state, InternalRequest request) {
+    protected ClusterBlockException checkRequestBlock(ProjectState state, InternalRequest request) {
         return null;
     }
 }
