@@ -25,7 +25,6 @@ import org.elasticsearch.common.io.Streams;
 import org.elasticsearch.common.io.stream.BytesStream;
 import org.elasticsearch.common.regex.Regex;
 import org.elasticsearch.common.unit.ByteSizeValue;
-import org.elasticsearch.common.unit.SizeValue;
 import org.elasticsearch.core.Booleans;
 import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.rest.RestChannel;
@@ -295,35 +294,16 @@ public class ChineseRestTable {
             String resolution = request.param("bytes");
             if ("b".equals(resolution)) {
                 return Long.toString(v.getBytes());
-            } else if ("k".equals(resolution)) {
+            } else if ("k".equals(resolution) || "kb".equals(resolution)) {
                 return Long.toString(v.getKb());
-            } else if ("m".equals(resolution)) {
+            } else if ("m".equals(resolution) || "mb".equals(resolution)) {
                 return Long.toString(v.getMb());
-            } else if ("g".equals(resolution)) {
+            } else if ("g".equals(resolution) || "gb".equals(resolution)) {
                 return Long.toString(v.getGb());
-            } else if ("t".equals(resolution)) {
+            } else if ("t".equals(resolution) || "tb".equals(resolution)) {
                 return Long.toString(v.getTb());
-            } else if ("p".equals(resolution)) {
+            } else if ("p".equals(resolution) || "pb".equals(resolution)) {
                 return Long.toString(v.getPb());
-            } else {
-                return v.toString();
-            }
-        }
-        if (value instanceof SizeValue) {
-            SizeValue v = (SizeValue) value;
-            String resolution = request.param("size");
-            if ("b".equals(resolution)) {
-                return Long.toString(v.singles());
-            } else if ("k".equals(resolution)) {
-                return Long.toString(v.kilo());
-            } else if ("m".equals(resolution)) {
-                return Long.toString(v.mega());
-            } else if ("g".equals(resolution)) {
-                return Long.toString(v.giga());
-            } else if ("t".equals(resolution)) {
-                return Long.toString(v.tera());
-            } else if ("p".equals(resolution)) {
-                return Long.toString(v.peta());
             } else {
                 return v.toString();
             }
@@ -331,7 +311,11 @@ public class ChineseRestTable {
         if (value instanceof TimeValue) {
             TimeValue v = (TimeValue) value;
             String resolution = request.param("time");
-            if ("ms".equals(resolution)) {
+            if ("nanos".equals(resolution)) {
+                return Long.toString(v.nanos());
+            } else if ("micros".equals(resolution)) {
+                return Long.toString(v.micros());
+            } else if ("ms".equals(resolution)) {
                 return Long.toString(v.millis());
             } else if ("s".equals(resolution)) {
                 return Long.toString(v.seconds());
@@ -339,6 +323,8 @@ public class ChineseRestTable {
                 return Long.toString(v.minutes());
             } else if ("h".equals(resolution)) {
                 return Long.toString(v.hours());
+            } else if ("d".equals(resolution)) {
+                return Long.toString(v.days());
             } else {
                 return v.toString();
             }
