@@ -11,7 +11,6 @@ import org.ansj.splitWord.analysis.ToAnalysis;
 import org.ansj.util.MyStaticValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.elasticsearch.SpecialPermission;
 import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.env.Environment;
@@ -115,7 +114,10 @@ public class AnsjElasticConfigurator {
      * @param printErr
      */
     private void initConfig(String path, boolean printErr) {
-        SpecialPermission.check();
+        SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new RuntimePermission("*"));
+        }
         AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
             try (BufferedReader br = IOUtil.getReader(PathToStream.stream(path), "utf-8")) {
                 String temp;
@@ -226,7 +228,10 @@ public class AnsjElasticConfigurator {
      * @param key
      */
     public void reloadLibrary(String key) {
-        SpecialPermission.check();
+        SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            sm.checkPermission(new RuntimePermission("*"));
+        }
         AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
             if (key.startsWith(DicLibrary.DEFAULT)) {
                 if (MyStaticValue.ENV.containsKey(key)) {
